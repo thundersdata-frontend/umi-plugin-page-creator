@@ -1,7 +1,7 @@
 import { IUiApi } from 'umi-types';
-import ManageConfigPanel from './manageConfig';
-import ScreenConfigPanel from './screenConfig';
-import AppConfigPanel from './appConfig';
+import ManageConfigPanel from './pages/manage';
+import ScreenConfigPanel from './pages/screen';
+import AppConfigPanel from './pages/mobile';
 
 export default (api: IUiApi) => {
   api.addPanel({

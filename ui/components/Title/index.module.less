@@ -1,0 +1,22 @@
+.title {
+  height: 32px;
+  line-height: 32px;
+
+  ::before {
+    content: '';
+    display: inline-block;
+    height: 16px;
+    width: 4px;
+    background: #0189fb;
+    margin-right: 10px;
+    transform: translateY(2px);
+  }
+
+  span {
+    display: inline-block;
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
