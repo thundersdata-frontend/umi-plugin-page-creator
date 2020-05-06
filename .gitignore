@@ -1,9 +1,8 @@
-/node_modules
-/yarn.lock
-/package-lock.json
-/example/dist
-/example/node_modules
-/example/pages/.umi
-/example/pages/.umi-production
+node_modules
+.changelog
+.umi
+.umi-test
+.umi-production
+.DS_Store
 /lib
-/dist
+dist

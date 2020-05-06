@@ -1,7 +1,7 @@
-import React from "react";
-import { Drawer, Form, Input, Button } from "antd";
-import { FormItemProps, FormItemType } from "ui/interfaces/common";
-import { Store } from "antd/lib/form/interface";
+import React from 'react';
+import { Drawer, Form, Input, Button } from 'antd';
+import { FormItemProps, FormItemType } from '../../interfaces/common';
+import { Store } from 'antd/lib/form/interface';
 
 export default ({
   visible,
@@ -12,7 +12,7 @@ export default ({
 }: {
   visible: boolean;
   onVisible: (visible: boolean) => void;
-  index: number;
+  index?: number;
   formItem: FormItemProps;
   onConfirm: (index: number, formItem: FormItemProps) => void;
 }) => {
@@ -20,8 +20,10 @@ export default ({
   const { name, type, label, placeholder, ...restProps } = formItem;
 
   const handleFinish = (values: Store) => {
-    onConfirm(index, { ...formItem, ...values });
-    onVisible(false);
+    if (index !== undefined) {
+      onConfirm(index, { ...formItem, ...values });
+      onVisible(false);
+    }
   };
 
   return (
@@ -43,7 +45,7 @@ export default ({
           label="标签"
           name="label"
           required
-          rules={[{ required: true, message: "请填写标签" }]}
+          rules={[{ required: true, message: '请填写标签' }]}
         >
           <Input />
         </Form.Item>
@@ -51,7 +53,7 @@ export default ({
           label="字段名"
           name="name"
           required
-          rules={[{ required: true, message: "请填写字段名" }]}
+          rules={[{ required: true, message: '请填写字段名' }]}
         >
           <Input />
         </Form.Item>
@@ -76,10 +78,10 @@ export default ({
  */
 function renderOtherProps(
   type: FormItemType,
-  props: { [key: string]: unknown }
+  props: { [key: string]: unknown },
 ) {
   switch (type) {
-    case "input":
+    case 'input':
       break;
 
     default:

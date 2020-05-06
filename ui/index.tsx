@@ -1,4 +1,4 @@
-import { IUiApi } from 'umi-types';
+import { IUiApi } from '@umijs/ui-types';
 import ManageConfigPanel from './pages/manage';
 import ScreenConfigPanel from './pages/screen';
 import AppConfigPanel from './pages/mobile';
@@ -22,4 +22,4 @@ export default (api: IUiApi) => {
     icon: 'home',
     component: () => <AppConfigPanel api={api} />,
   });
-}
+};

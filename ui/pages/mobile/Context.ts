@@ -1,5 +1,5 @@
 /*
- * @文件描述: 
+ * @文件描述:
  * @公司: thundersdata
  * @作者: 陈杰
  * @Date: 2020-04-29 11:29:07
@@ -7,8 +7,8 @@
  * @LastEditTime: 2020-04-29 11:29:42
  */
 import { createContext } from 'react';
-import { IUiApi } from 'umi-types';
+import { IUiApi } from '@umijs/ui-types';
 
-const UIContext = createContext({} as { api: IUiApi; });
+const UIContext = createContext({} as { api: IUiApi });
 
 export default UIContext;

@@ -1,7 +1,7 @@
 import { Button } from 'antd';
-import { IUiApi } from 'umi-types'
+import { IUiApi } from '@umijs/ui-types';
 
-export default ({api}: {api: IUiApi}) => {
+export default ({ api }: { api: IUiApi }) => {
   const { callRemote } = api;
   return (
     <Button
@@ -12,6 +12,8 @@ export default ({api}: {api: IUiApi}) => {
         });
         alert(data);
       }}
-    >Test</Button>
+    >
+      Test
+    </Button>
   );
-}
+};

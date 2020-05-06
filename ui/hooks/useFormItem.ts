@@ -4,10 +4,10 @@
  * @作者: 陈杰
  * @Date: 2020-04-30 11:31:49
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-04-30 15:52:14
+ * @LastEditTime: 2020-05-06 16:18:23
  */
-import { useState } from "react";
-import { FormItemProps } from "ui/interfaces/common";
+import { useState } from 'react';
+import { FormItemProps } from '../interfaces/common';
 
 export default function useFormItem() {
   const [formItems, setFormItems] = useState<FormItemProps[]>([]);

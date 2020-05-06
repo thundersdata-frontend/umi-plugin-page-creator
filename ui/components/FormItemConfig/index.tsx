@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Form,
   Input,
@@ -15,17 +15,20 @@ import {
   TimePicker,
   InputNumber,
   Rate,
-} from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import { FormItemProps } from "ui/interfaces/common";
-import ConfigActions from "../ConfigActions";
-import styles from "./index.module.less";
-import { LabeledValue } from "antd/lib/select";
+} from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
+import { FormItemProps } from '../../interfaces/common';
+import ConfigActions from '../ConfigActions';
+import styles from './index.module.less';
+import { LabeledValue } from 'antd/lib/select';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-const defaultOptions = [{label: '男', value: '1'}, {label: '女', value: '0'}]
+const defaultOptions = [
+  { label: '男', value: '1' },
+  { label: '女', value: '0' },
+];
 
 /** 根据选择的表单组件类型，渲染成真实的表单元素 */
 export default ({
@@ -44,7 +47,7 @@ export default ({
   const { type, label, name, placeholder, ...restProps } = formItem;
 
   switch (type) {
-    case "input":
+    case 'input':
     default:
       const inputItem = (
         <Form.Item label={label} name={name}>
@@ -66,7 +69,7 @@ export default ({
       }
       return inputItem;
 
-    case "password":
+    case 'password':
       const passwordItem = (
         <Form.Item label={label} name={name}>
           <Input.Password placeholder={placeholder as string} {...restProps} />
@@ -86,7 +89,7 @@ export default ({
       }
       return passwordItem;
 
-    case "textarea":
+    case 'textarea':
       const textareaItem = (
         <Form.Item label={label} name={name}>
           <Input.TextArea placeholder={placeholder as string} {...restProps} />
@@ -106,7 +109,7 @@ export default ({
       }
       return textareaItem;
 
-    case "cascader":
+    case 'cascader':
       const cascaderItem = (
         <Form.Item label={label} name={name}>
           <Cascader placeholder={placeholder as string} {...restProps} />
@@ -127,12 +130,12 @@ export default ({
       }
       return cascaderItem;
 
-    case "date":
+    case 'date':
       const dateItem = (
         <Form.Item label={label} name={name}>
           <DatePicker
             placeholder={placeholder as string}
-            style={{ width: "100%" }}
+            style={{ width: '100%' }}
             {...restProps}
           />
         </Form.Item>
@@ -151,12 +154,12 @@ export default ({
       }
       return dateItem;
 
-    case "range":
+    case 'range':
       const rangeItem = (
         <Form.Item label={label} name={name}>
           <RangePicker
             placeholder={placeholder as [string, string]}
-            style={{ width: "100%" }}
+            style={{ width: '100%' }}
             {...restProps}
           />
         </Form.Item>
@@ -175,12 +178,12 @@ export default ({
       }
       return rangeItem;
 
-    case "time":
+    case 'time':
       const timeItem = (
         <Form.Item label={label} name={name}>
           <TimePicker
             placeholder={placeholder as string}
-            style={{ width: "100%" }}
+            style={{ width: '100%' }}
             {...restProps}
           />
         </Form.Item>
@@ -199,12 +202,12 @@ export default ({
       }
       return timeItem;
 
-    case "number":
+    case 'number':
       const numberItem = (
         <Form.Item label={label} name={name}>
           <InputNumber
             placeholder={placeholder as string}
-            style={{ width: "100%" }}
+            style={{ width: '100%' }}
             {...restProps}
           />
         </Form.Item>
@@ -223,7 +226,7 @@ export default ({
       }
       return numberItem;
 
-    case "checkbox":
+    case 'checkbox':
       const checkboxItem = (
         <Form.Item label={label} name={name}>
           <Checkbox.Group options={defaultOptions} {...restProps} />
@@ -243,7 +246,7 @@ export default ({
       }
       return checkboxItem;
 
-    case "radio":
+    case 'radio':
       const radioItem = (
         <Form.Item label={label} name={name}>
           <Radio.Group options={defaultOptions} {...restProps} />
@@ -263,7 +266,7 @@ export default ({
       }
       return radioItem;
 
-    case "switch":
+    case 'switch':
       const switchItem = (
         <Form.Item label={label} name={name} valuePropName="checked">
           <Switch {...restProps} />
@@ -283,7 +286,7 @@ export default ({
       }
       return switchItem;
 
-    case "slider":
+    case 'slider':
       const sliderItem = (
         <Form.Item label={label} name={name}>
           <Slider {...restProps} />
@@ -303,11 +306,11 @@ export default ({
       }
       return sliderItem;
 
-    case "select":
+    case 'select':
       const selectItem = (
         <Form.Item label={label} name={name}>
           <Select {...restProps}>
-            {((formItem.options as LabeledValue[]) || []).map((option) => (
+            {((formItem.options as LabeledValue[]) || []).map(option => (
               <Option key={option.value} value={option.value}>
                 {option.label}
               </Option>
@@ -329,7 +332,7 @@ export default ({
       }
       return selectItem;
 
-    case "treeselect":
+    case 'treeselect':
       const treeselectItem = (
         <Form.Item label={label} name={name}>
           <TreeSelect {...restProps} />
@@ -349,7 +352,7 @@ export default ({
       }
       return treeselectItem;
 
-    case "upload":
+    case 'upload':
       const uploadItem = (
         <Form.Item label={label} name={name}>
           <Upload {...restProps}>
@@ -373,7 +376,7 @@ export default ({
       }
       return uploadItem;
 
-    case "rate":
+    case 'rate':
       const rateItem = (
         <Form.Item label={label} name={name}>
           <Rate />

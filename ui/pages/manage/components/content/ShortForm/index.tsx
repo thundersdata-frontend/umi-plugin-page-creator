@@ -1,13 +1,13 @@
-import React, { useContext, useState } from "react";
-import { Form, Button, Card, message } from "antd";
-import Title from "ui/components/Title";
-import FormItemConfig from "ui/components/FormItemConfig";
-import FormComponentsDrawer from "ui/components/FormComponentsDrawer";
-import { FormItemType, AjaxResponse } from "ui/interfaces/common";
-import FormItemConfigDrawer from "ui/components/FormItemConfigDrawer";
-import useFormItem from "ui/hooks/useFormItem";
-import Context from "../../../Context";
-import DropdownActions from "ui/components/DropdownActions";
+import React, { useContext, useState } from 'react';
+import { Form, Button, Card, message } from 'antd';
+import Title from '../../../../../components/Title';
+import FormItemConfig from '../../../../../components/FormItemConfig';
+import FormComponentsDrawer from '../../../../../components/FormComponentsDrawer';
+import { FormItemType, AjaxResponse } from '../../../../../interfaces/common';
+import FormItemConfigDrawer from '../../../../../components/FormItemConfigDrawer';
+import useFormItem from '../../../../../hooks/useFormItem';
+import Context from '../../../Context';
+import DropdownActions from '../../../../../components/DropdownActions';
 
 const formItemLayout = {
   labelCol: {
@@ -22,8 +22,14 @@ const formItemLayout = {
 };
 
 export default () => {
-  const { api, shortFormConfig, templateType, setVisible: setFormConfigDrawerVisible } = useContext(Context);
+  const {
+    api,
+    shortFormConfig,
+    templateType,
+    setVisible: setFormConfigDrawerVisible,
+  } = useContext(Context);
   const [visible, setVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const {
     formItems,
     setFormItems,
@@ -42,22 +48,25 @@ export default () => {
    * @param checkedComponents
    */
   const handleSubmit = (checkedComponents: FormItemType[]) => {
-    const newFormItems = checkedComponents.map((type) => ({
+    const newFormItems = checkedComponents.map(type => ({
       type,
-      name: "",
-      label: "",
+      name: '',
+      label: '',
     }));
-    setFormItems((formItems) => [...formItems, ...newFormItems]);
+    setFormItems(formItems => [...formItems, ...newFormItems]);
     setVisible(false);
-    message.success("添加成功");
+    message.success('添加成功');
   };
 
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async () => {
-    console.log(shortFormConfig, formItems);
+  const remoteCall = async (path: string) => {
     // 对formItems进行遍历，如果其中有任一项没有配置label/name，则不允许提交
+    if (formItems.length === 0) {
+      message.error('您还没有添加表单项，不能提交！');
+      return;
+    }
     if (formItems.some(item => !item.label || !item.name)) {
       message.error('您还有表单项没有配置，不能提交！');
       return;
@@ -68,13 +77,15 @@ export default () => {
         payload: {
           formConfig: shortFormConfig,
           formItems,
-        }
+          path,
+        },
       });
       message.success((result as AjaxResponse<string>).message);
+      setModalVisible(false);
     } catch (error) {
-      message.error(error.message);   
+      message.error(error.message);
     }
-  }
+  };
 
   return (
     <>
@@ -93,7 +104,7 @@ export default () => {
           <Button
             onClick={() => setVisible(true)}
             type="dashed"
-            style={{ width: "100%", marginBottom: 32 }}
+            style={{ width: '100%', marginBottom: 32 }}
           >
             添加表单元素
           </Button>
@@ -113,7 +124,13 @@ export default () => {
           onConfirm={onConfirm}
         />
       )}
-      <DropdownActions setVisible={setFormConfigDrawerVisible} templateType={templateType} onRemoteCall={remoteCall} />
+      <DropdownActions
+        setVisible={setFormConfigDrawerVisible}
+        templateType={templateType}
+        onRemoteCall={remoteCall}
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+      />
     </>
   );
 };

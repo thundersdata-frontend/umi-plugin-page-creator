@@ -6,17 +6,18 @@
  * @LastEditors: 陈杰
  * @LastEditTime: 2020-04-30 15:42:51
  */
-import React, { useContext } from "react";
-import { Form, Button, Input, Drawer } from "antd";
+import React, { useContext } from 'react';
+import { Form, Button, Input, Drawer } from 'antd';
 
-import Context from "../../../Context";
-import { ShortFormConfig } from "ui/interfaces/common";
+import Context from '../../../Context';
+import { ShortFormConfig } from '../../../../../interfaces/common';
+import { Store } from 'antd/lib/form/interface';
 
 export default () => {
   const [form] = Form.useForm();
   const { addShortFormConfig, visible, setVisible } = useContext(Context);
 
-  const handleFinish = (values: ShortFormConfig) => {
+  const handleFinish = (values: Store) => {
     addShortFormConfig(values);
     setVisible(false);
   };
@@ -33,7 +34,7 @@ export default () => {
           label="表单title"
           name="title"
           required
-          rules={[{ required: true, message: "请填写表单title" }]}
+          rules={[{ required: true, message: '请填写表单title' }]}
         >
           <Input placeholder="单列表单" />
         </Form.Item>

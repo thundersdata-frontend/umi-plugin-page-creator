@@ -6,16 +6,14 @@
  * @LastEditors: 陈杰
  * @LastEditTime: 2020-04-29 22:00:14
  */
-import React, { useState, useContext } from "react";
-import { Button, Tooltip, Modal } from "antd";
-import { EyeOutlined, PlusOutlined } from "@ant-design/icons";
+import React, { useState, useContext } from 'react';
+import { Button, Tooltip, Modal } from 'antd';
+import { EyeOutlined, PlusOutlined } from '@ant-design/icons';
 import classnames from 'classnames';
 import Context from '../../Context';
-import templateList from "./template.json";
-import styles from "./index.module.less";
-import { Template } from "ui/interfaces/common";
-
-
+import templateList from './template.json';
+import styles from './index.module.less';
+import { Template } from '../../../../interfaces/common';
 
 export default () => {
   const [visible, setVisible] = useState(false);
@@ -31,8 +29,14 @@ export default () => {
 
   return (
     <div className={styles.row}>
-      {(templateList as Template[]).map((template) => (
-        <div key={template.name} className={classnames(styles.col, templateType === template.type ? styles.selected : null)}>
+      {(templateList as Template[]).map(template => (
+        <div
+          key={template.name}
+          className={classnames(
+            styles.col,
+            templateType === template.type ? styles.selected : null,
+          )}
+        >
           <div className={styles.hover}>
             <Tooltip title="添加模板">
               <Button type="primary" onClick={() => addTemplate(template.type)}>
@@ -49,7 +53,7 @@ export default () => {
               </Button>
             </Tooltip>
           </div>
-          <div style={{ height: "100%" }}>
+          <div style={{ height: '100%' }}>
             <img src={template.image} alt={template.name} />
             <div className={styles.name}>{template.name}</div>
           </div>
@@ -62,7 +66,7 @@ export default () => {
         width="80vw"
         centered
       >
-        {image && <img src={image} style={{ width: "100%" }} />}
+        {image && <img src={image} style={{ width: '100%' }} />}
       </Modal>
     </div>
   );
