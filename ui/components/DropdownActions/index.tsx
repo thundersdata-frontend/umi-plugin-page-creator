@@ -44,13 +44,6 @@ export default ({
       </Button>
       <Button
         type="primary"
-        onClick={() => setVisible(true)}
-        className={classnames(styles.bubble, styles.space)}
-      >
-        预览
-      </Button>
-      <Button
-        type="primary"
         onClick={() => setModalVisible(true)}
         className={classnames(styles.bubble, styles.space)}
       >

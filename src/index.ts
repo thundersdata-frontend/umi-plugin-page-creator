@@ -1,25 +1,12 @@
-/*
- * @文件描述:
- * @公司: thundersdata
- * @作者: 陈杰
- * @Date: 2020-04-29 10:38:23
- * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-06 20:13:23
- */
 // ref:
 // - https://umijs.org/plugin/develop.html
 import { IApi } from '@umijs/types';
 import { join } from 'path';
 import { writeFileSync, mkdirSync, existsSync } from 'fs';
-import { Store } from 'antd/lib/form/interface';
-import { FormItemProps, AjaxResponse } from '../ui/interfaces/common';
+import { AjaxResponse } from '../ui/interfaces/common';
 import prettier from 'prettier';
-
-interface Payload {
-  formConfig: Store;
-  formItems: FormItemProps[];
-  path: string;
-}
+import { writeNewRoute } from './utils/writeNewRoute';
+import { generateShortFormCode } from './generate';
 
 export default function(api: IApi) {
   // @ts-ignore
@@ -35,28 +22,17 @@ export default function(api: IApi) {
         code = generateShortFormCode(payload);
         break;
     }
-    generateFile(code, payload, failure, success);
-  });
-
-  /**
-   * 将前端传来的数据组装成一个大的字符串。
-   * @param payload
-   */
-  function generateShortFormCode(payload: Payload): string {
-    const code = `
-      import React from 'react';
-    `;
-    return prettier.format(code, {
+    const formattedCode = prettier.format(code, {
       singleQuote: true,
       trailingComma: 'es5',
       printWidth: 100,
       parser: 'typescript',
     });
-  }
+    generateFile(formattedCode, payload, failure, success);
+  });
 
   /**
-   * 将前端传来的数据组装成一个大的字符串，并输出成文件到指定的目录。
-   * 文件生成好之后，需要同步更新路由，并重启服务
+   * 生成文件，然后更新路由，并重启服务
    * @param code
    * @param payload
    * @param failure
@@ -64,13 +40,12 @@ export default function(api: IApi) {
    */
   function generateFile(
     code: string,
-    payload: Payload,
+    payload: { path: string },
     failure: (data: AjaxResponse<null>) => void,
     success: (data: AjaxResponse<null>) => void,
   ) {
-    if (payload && payload.formConfig && payload.formItems && payload.path) {
-      const { formConfig, formItems, path } = payload;
-      console.log(formConfig, formItems);
+    if (payload && payload.path) {
+      const { path } = payload;
 
       const absPagesPath = api.paths.absPagesPath;
       if (!existsSync(absPagesPath + path)) {
@@ -79,6 +54,14 @@ export default function(api: IApi) {
         writeFileSync(absPagesPath + `${path}/index.tsx`, code, 'utf-8');
 
         // 更新路由
+        writeNewRoute(
+          {
+            path,
+            component: `.${path}`,
+          },
+          api.paths.cwd + '/config/config.ts',
+          api.paths.absSrcPath,
+        );
 
         success({ success: true, message: '恭喜你，文件创建成功' });
       } else {

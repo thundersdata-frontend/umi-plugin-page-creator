@@ -45,12 +45,12 @@ export function getNewRouteCode(configPath, newRoute, absSrcPath) {
       body.forEach(item => {
         if (t.isImportDeclaration(item)) {
           const { specifiers } = item;
-          const defaultEpecifier = specifiers.find(
+          const defaultSpecifier = specifiers.find(
             s => t.isImportDefaultSpecifier(s) && t.isIdentifier(s.local),
           );
-          if (defaultEpecifier && t.isStringLiteral(item.source)) {
+          if (defaultSpecifier && t.isStringLiteral(item.source)) {
             importModules.push({
-              identifierName: defaultEpecifier.local.name,
+              identifierName: defaultSpecifier.local.name,
               modulePath: item.source.value,
             });
           }
