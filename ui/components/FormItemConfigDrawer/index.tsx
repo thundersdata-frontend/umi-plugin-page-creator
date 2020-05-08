@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Drawer, Form, Input, Button } from 'antd';
 import { FormItemProps, FormItemType } from '../../interfaces/common';
 import { Store } from 'antd/lib/form/interface';
+import { inputProps } from './props';
+import renderFormItem from '../FormItemConfig';
 
 export default ({
   visible,
@@ -19,10 +21,15 @@ export default ({
   const [form] = Form.useForm();
   const { name, type, label, placeholder, ...restProps } = formItem;
 
+  useEffect(() => {
+    form.setFieldsValue(formItem);
+  }, [formItem]);
+
   const handleFinish = (values: Store) => {
     if (index !== undefined) {
-      onConfirm(index, { ...formItem, ...values });
+      onConfirm(index, { ...formItem, ...filterEmpty(values) });
       onVisible(false);
+      form.resetFields();
     }
   };
 
@@ -37,7 +44,6 @@ export default ({
       <Form
         form={form}
         onFinish={handleFinish}
-        initialValues={{ name, type, label, placeholder }}
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
       >
@@ -60,7 +66,7 @@ export default ({
         <Form.Item label="占位符" name="placeholder">
           <Input />
         </Form.Item>
-        {renderOtherProps(type, restProps)}
+        {renderOtherProps(type)}
         <Form.Item>
           <Button type="primary" htmlType="submit">
             确定
@@ -76,15 +82,25 @@ export default ({
  * @param type
  * @param props
  */
-function renderOtherProps(
-  type: FormItemType,
-  props: { [key: string]: unknown },
-) {
+function renderOtherProps(type: FormItemType) {
   switch (type) {
     case 'input':
-      break;
-
     default:
-      break;
+      return inputProps.map(item => renderFormItem({ formItem: item }));
   }
+}
+
+/**
+ * 过滤掉空数据
+ * @param values
+ */
+function filterEmpty(values: Store) {
+  const filteredValues = {};
+
+  Object.entries(values).forEach(([key, value]) => {
+    if (value !== '' && value !== undefined && value !== null) {
+      filteredValues[key] = value;
+    }
+  });
+  return filteredValues;
 }

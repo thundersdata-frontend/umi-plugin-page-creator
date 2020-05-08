@@ -31,27 +31,35 @@ const defaultOptions = [
 ];
 
 /** 根据选择的表单组件类型，渲染成真实的表单元素 */
-export default ({
+export default function renderFormItem({
   formItem,
-  config,
+  config = false,
   moveUp,
   moveDown,
   configItem,
+  deleteItem,
+  copyItem,
 }: {
   formItem: FormItemProps;
-  config: boolean;
-  moveUp: () => void;
-  moveDown: () => void;
-  configItem: () => void;
-}) => {
+  config?: boolean;
+  moveUp?: () => void;
+  moveDown?: () => void;
+  configItem?: () => void;
+  deleteItem?: () => void;
+  copyItem?: () => void;
+}) {
   const { type, label, name, placeholder, ...restProps } = formItem;
 
   switch (type) {
     case 'input':
     default:
+      console.log(convertStringToBoolean(restProps));
       const inputItem = (
         <Form.Item label={label} name={name}>
-          <Input placeholder={placeholder as string} {...restProps} />
+          <Input
+            placeholder={placeholder as string}
+            {...convertStringToBoolean(restProps)}
+          />
         </Form.Item>
       );
 
@@ -62,6 +70,8 @@ export default ({
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
+              deleteItem={deleteItem}
+              copyItem={copyItem}
             />
             {inputItem}
           </div>
@@ -72,7 +82,10 @@ export default ({
     case 'password':
       const passwordItem = (
         <Form.Item label={label} name={name}>
-          <Input.Password placeholder={placeholder as string} {...restProps} />
+          <Input.Password
+            placeholder={placeholder as string}
+            {...convertStringToBoolean(restProps)}
+          />
         </Form.Item>
       );
       if (config) {
@@ -82,6 +95,8 @@ export default ({
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
+              deleteItem={deleteItem}
+              copyItem={copyItem}
             />
             {passwordItem}
           </div>
@@ -92,7 +107,10 @@ export default ({
     case 'textarea':
       const textareaItem = (
         <Form.Item label={label} name={name}>
-          <Input.TextArea placeholder={placeholder as string} {...restProps} />
+          <Input.TextArea
+            placeholder={placeholder as string}
+            {...convertStringToBoolean(restProps)}
+          />
         </Form.Item>
       );
       if (config) {
@@ -102,6 +120,8 @@ export default ({
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
+              deleteItem={deleteItem}
+              copyItem={copyItem}
             />
             {textareaItem}
           </div>
@@ -112,7 +132,10 @@ export default ({
     case 'cascader':
       const cascaderItem = (
         <Form.Item label={label} name={name}>
-          <Cascader placeholder={placeholder as string} {...restProps} />
+          <Cascader
+            placeholder={placeholder as string}
+            {...convertStringToBoolean(restProps)}
+          />
         </Form.Item>
       );
 
@@ -123,6 +146,8 @@ export default ({
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
+              deleteItem={deleteItem}
+              copyItem={copyItem}
             />
             {cascaderItem}
           </div>
@@ -136,7 +161,7 @@ export default ({
           <DatePicker
             placeholder={placeholder as string}
             style={{ width: '100%' }}
-            {...restProps}
+            {...convertStringToBoolean(restProps)}
           />
         </Form.Item>
       );
@@ -147,6 +172,8 @@ export default ({
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
+              deleteItem={deleteItem}
+              copyItem={copyItem}
             />
             {dateItem}
           </div>
@@ -160,7 +187,7 @@ export default ({
           <RangePicker
             placeholder={placeholder as [string, string]}
             style={{ width: '100%' }}
-            {...restProps}
+            {...convertStringToBoolean(restProps)}
           />
         </Form.Item>
       );
@@ -171,6 +198,8 @@ export default ({
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
+              deleteItem={deleteItem}
+              copyItem={copyItem}
             />
             {rangeItem}
           </div>
@@ -184,7 +213,7 @@ export default ({
           <TimePicker
             placeholder={placeholder as string}
             style={{ width: '100%' }}
-            {...restProps}
+            {...convertStringToBoolean(restProps)}
           />
         </Form.Item>
       );
@@ -195,6 +224,8 @@ export default ({
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
+              deleteItem={deleteItem}
+              copyItem={copyItem}
             />
             {timeItem}
           </div>
@@ -208,7 +239,7 @@ export default ({
           <InputNumber
             placeholder={placeholder as string}
             style={{ width: '100%' }}
-            {...restProps}
+            {...convertStringToBoolean(restProps)}
           />
         </Form.Item>
       );
@@ -219,6 +250,8 @@ export default ({
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
+              deleteItem={deleteItem}
+              copyItem={copyItem}
             />
             {numberItem}
           </div>
@@ -229,7 +262,11 @@ export default ({
     case 'checkbox':
       const checkboxItem = (
         <Form.Item label={label} name={name}>
-          <Checkbox.Group options={defaultOptions} {...restProps} />
+          <Checkbox.Group
+            name={name}
+            options={defaultOptions || restProps.options}
+            {...convertStringToBoolean(restProps)}
+          />
         </Form.Item>
       );
       if (config) {
@@ -239,6 +276,8 @@ export default ({
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
+              deleteItem={deleteItem}
+              copyItem={copyItem}
             />
             {checkboxItem}
           </div>
@@ -249,7 +288,11 @@ export default ({
     case 'radio':
       const radioItem = (
         <Form.Item label={label} name={name}>
-          <Radio.Group options={defaultOptions} {...restProps} />
+          <Radio.Group
+            name={name}
+            options={defaultOptions || restProps.options}
+            {...convertStringToBoolean(restProps)}
+          />
         </Form.Item>
       );
       if (config) {
@@ -259,6 +302,8 @@ export default ({
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
+              deleteItem={deleteItem}
+              copyItem={copyItem}
             />
             {radioItem}
           </div>
@@ -269,7 +314,7 @@ export default ({
     case 'switch':
       const switchItem = (
         <Form.Item label={label} name={name} valuePropName="checked">
-          <Switch {...restProps} />
+          <Switch {...convertStringToBoolean(restProps)} />
         </Form.Item>
       );
       if (config) {
@@ -279,6 +324,8 @@ export default ({
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
+              deleteItem={deleteItem}
+              copyItem={copyItem}
             />
             {switchItem}
           </div>
@@ -289,7 +336,7 @@ export default ({
     case 'slider':
       const sliderItem = (
         <Form.Item label={label} name={name}>
-          <Slider {...restProps} />
+          <Slider {...convertStringToBoolean(restProps)} />
         </Form.Item>
       );
       if (config) {
@@ -299,6 +346,8 @@ export default ({
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
+              deleteItem={deleteItem}
+              copyItem={copyItem}
             />
             {sliderItem}
           </div>
@@ -309,7 +358,7 @@ export default ({
     case 'select':
       const selectItem = (
         <Form.Item label={label} name={name}>
-          <Select {...restProps}>
+          <Select {...convertStringToBoolean(restProps)}>
             {((formItem.options as LabeledValue[]) || []).map(option => (
               <Option key={option.value} value={option.value}>
                 {option.label}
@@ -325,6 +374,8 @@ export default ({
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
+              deleteItem={deleteItem}
+              copyItem={copyItem}
             />
             {selectItem}
           </div>
@@ -335,7 +386,7 @@ export default ({
     case 'treeselect':
       const treeselectItem = (
         <Form.Item label={label} name={name}>
-          <TreeSelect {...restProps} />
+          <TreeSelect {...convertStringToBoolean(restProps)} />
         </Form.Item>
       );
       if (config) {
@@ -345,6 +396,8 @@ export default ({
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
+              deleteItem={deleteItem}
+              copyItem={copyItem}
             />
             {treeselectItem}
           </div>
@@ -355,7 +408,7 @@ export default ({
     case 'upload':
       const uploadItem = (
         <Form.Item label={label} name={name}>
-          <Upload {...restProps}>
+          <Upload {...convertStringToBoolean(restProps)}>
             <Button>
               <UploadOutlined /> Click to Upload
             </Button>
@@ -369,6 +422,8 @@ export default ({
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
+              deleteItem={deleteItem}
+              copyItem={copyItem}
             />
             {uploadItem}
           </div>
@@ -389,6 +444,8 @@ export default ({
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
+              deleteItem={deleteItem}
+              copyItem={copyItem}
             />
             {rateItem}
           </div>
@@ -396,4 +453,18 @@ export default ({
       }
       return rateItem;
   }
-};
+}
+
+function convertStringToBoolean(props: { [key: string]: unknown }) {
+  const values = {};
+  Object.entries(props).forEach(([key, value]) => {
+    if (value === 'true') {
+      values[key] = true;
+    } else if (value === 'false') {
+      values[key] = false;
+    } else {
+      values[key] = value;
+    }
+  });
+  return values;
+}

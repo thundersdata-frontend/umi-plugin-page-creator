@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Form, Button, Card, message } from 'antd';
 import Title from '../../../../../components/Title';
-import FormItemConfig from '../../../../../components/FormItemConfig';
+import renderFormItem from '../../../../../components/FormItemConfig';
 import FormComponentsDrawer from '../../../../../components/FormComponentsDrawer';
 import { FormItemType, AjaxResponse } from '../../../../../interfaces/common';
 import FormItemConfigDrawer from '../../../../../components/FormItemConfigDrawer';
@@ -36,6 +36,8 @@ export default () => {
     moveUp,
     moveDown,
     configItem,
+    deleteItem,
+    copyItem,
     index,
     currentItem,
     visible: configDrawerVisible,
@@ -91,16 +93,17 @@ export default () => {
     <>
       <Card title={<Title text={shortFormConfig.title} />}>
         <Form {...formItemLayout}>
-          {formItems.map((formItem, index) => (
-            <FormItemConfig
-              key={index}
-              config
-              formItem={formItem}
-              moveUp={moveUp(index)}
-              moveDown={moveDown(index)}
-              configItem={configItem(formItem, index)}
-            />
-          ))}
+          {formItems.map((formItem, index) =>
+            renderFormItem({
+              formItem,
+              config: true,
+              moveUp: moveUp(index),
+              moveDown: moveDown(index),
+              configItem: configItem(formItem, index),
+              deleteItem: deleteItem(index),
+              copyItem: copyItem(index),
+            }),
+          )}
           <Button
             onClick={() => setVisible(true)}
             type="dashed"

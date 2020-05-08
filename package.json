@@ -11,6 +11,7 @@
   "scripts": {
     "start": "cross-env UMI_UI=1 APP_ROOT=example umi dev",
     "build": "father-build --watch",
+    "ui:build": "ui-build",
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
     "test": "umi-test",
     "test:coverage": "umi-test --coverage",
@@ -35,6 +36,7 @@
     "@umijs/preset-ui": "^2.1.13",
     "@umijs/test": "^3.0.10",
     "@umijs/test-utils": "^1.0.0",
+    "@umijs/ui-builder": "^0.0.5",
     "@umijs/ui-types": "^2.0.0-beta.2",
     "antd": "^4.2.0",
     "body-parser": "^1.18.2",

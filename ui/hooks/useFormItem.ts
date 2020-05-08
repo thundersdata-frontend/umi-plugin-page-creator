@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-04-30 11:31:49
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-06 16:18:23
+ * @LastEditTime: 2020-05-08 17:38:35
  */
 import { useState } from 'react';
 import { FormItemProps } from '../interfaces/common';
@@ -58,8 +58,35 @@ export default function useFormItem() {
   /** 表单元素配置项配置完成 */
   const handleConfirm = (index: number, formItem: FormItemProps) => {
     const _formItems = formItems.slice();
-    const item = _formItems[index];
-    Object.assign(item, formItem);
+    const item = _formItems.splice(index, 1);
+    const mergedItem = {
+      ...item[0],
+      ...formItem,
+    };
+    _formItems.splice(index, 0, mergedItem);
+    setFormItems(_formItems);
+  };
+
+  /**
+   * 删除配置项
+   * @param formItem
+   * @param index
+   */
+  const deleteItem = (index: number) => () => {
+    const _formItems = formItems.slice();
+    _formItems.splice(index, 1);
+    setFormItems(_formItems);
+  };
+
+  /**
+   * 复制配置项
+   * @param formItem
+   * @param index
+   */
+  const copyItem = (index: number) => () => {
+    const _formItems = formItems.slice();
+    const formItem = _formItems[index];
+    _formItems.splice(index + 1, 0, formItem);
 
     setFormItems(_formItems);
   };
@@ -70,6 +97,8 @@ export default function useFormItem() {
     moveUp,
     moveDown,
     configItem,
+    deleteItem,
+    copyItem,
     index,
     currentItem,
     visible,
