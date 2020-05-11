@@ -2,12 +2,15 @@ import React, { useContext, useState } from 'react';
 import { Form, Button, Card, message } from 'antd';
 import Title from '../../../../../components/Title';
 import renderFormItem from '../../../../../components/FormItemConfig';
-import FormComponentsDrawer from '../../../../../components/FormComponentsDrawer';
+import FormItemsDrawer from '../../../../../components/FormItemsDrawer';
 import { FormItemType, AjaxResponse } from '../../../../../interfaces/common';
 import FormItemConfigDrawer from '../../../../../components/FormItemConfigDrawer';
-import useFormItem from '../../../../../hooks/useFormItem';
 import Context from '../../../Context';
 import DropdownActions from '../../../../../components/DropdownActions';
+import { Store } from 'antd/lib/form/interface';
+import ShortFormConfigDrawer from '../../drawers/ShortFormConfigDrawer';
+import useConfigVisible from '@/hooks/useConfigVisible';
+import useFormItem from '../../../../../hooks/useFormItem';
 
 const formItemLayout = {
   labelCol: {
@@ -22,14 +25,22 @@ const formItemLayout = {
 };
 
 export default () => {
+  const { api } = useContext(Context);
+  const [formConfig, setFormConfig] = useState<Store>({
+    title: '单列表单',
+  });
+
   const {
-    api,
-    shortFormConfig,
-    templateType,
-    setVisible: setFormConfigDrawerVisible,
-  } = useContext(Context);
-  const [visible, setVisible] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+    formItemsDrawerVisible,
+    pathModalVisible,
+    formConfigDrawerVisible,
+    formItemConfigDrawerVisible,
+    setFormItemsDrawerVisible,
+    setPathModalVisible,
+    setFormConfigDrawerVisible,
+    setFormItemConfigDrawerVisible,
+  } = useConfigVisible();
+
   const {
     formItems,
     setFormItems,
@@ -40,8 +51,6 @@ export default () => {
     copyItem,
     index,
     currentItem,
-    visible: configDrawerVisible,
-    setVisible: setConfigDrawerVisible,
     onConfirm,
   } = useFormItem();
 
@@ -56,7 +65,7 @@ export default () => {
       label: '',
     }));
     setFormItems(formItems => [...formItems, ...newFormItems]);
-    setVisible(false);
+    setFormItemsDrawerVisible(false);
     message.success('添加成功');
   };
 
@@ -77,13 +86,13 @@ export default () => {
       const result = await api.callRemote({
         type: 'org.umi-plugin-page-creator.shortForm',
         payload: {
-          formConfig: shortFormConfig,
+          formConfig: formConfig,
           formItems,
           path,
         },
       });
       message.success((result as AjaxResponse<string>).message);
-      setModalVisible(false);
+      setPathModalVisible(false);
     } catch (error) {
       message.error(error.message);
     }
@@ -91,7 +100,17 @@ export default () => {
 
   return (
     <>
-      <Card title={<Title text={shortFormConfig.title} />}>
+      <Card
+        title={<Title text={formConfig.title} />}
+        extra={
+          <Button
+            type="primary"
+            onClick={() => setFormConfigDrawerVisible(true)}
+          >
+            配置
+          </Button>
+        }
+      >
         <Form {...formItemLayout}>
           {formItems.map((formItem, index) =>
             renderFormItem({
@@ -105,7 +124,7 @@ export default () => {
             }),
           )}
           <Button
-            onClick={() => setVisible(true)}
+            onClick={() => setFormItemsDrawerVisible(true)}
             type="dashed"
             style={{ width: '100%', marginBottom: 32 }}
           >
@@ -113,26 +132,37 @@ export default () => {
           </Button>
         </Form>
       </Card>
-      <FormComponentsDrawer
-        visible={visible}
-        setVisible={setVisible}
+
+      {/**表单配置 */}
+      <ShortFormConfigDrawer
+        visible={formConfigDrawerVisible}
+        setVisible={setFormConfigDrawerVisible}
+        onFinish={setFormConfig}
+      />
+
+      {/**表单项集合 */}
+      <FormItemsDrawer
+        visible={formItemsDrawerVisible}
+        setVisible={setFormItemsDrawerVisible}
         onSubmit={handleSubmit}
       />
+
+      {/**配置单个表单项 */}
       {currentItem && (
         <FormItemConfigDrawer
-          visible={configDrawerVisible}
-          onVisible={setConfigDrawerVisible}
+          visible={formItemConfigDrawerVisible}
+          onVisible={setFormItemConfigDrawerVisible}
           index={index}
           formItem={currentItem}
           onConfirm={onConfirm}
         />
       )}
+
+      {/**提交时候弹出的输入文件路径 */}
       <DropdownActions
-        setVisible={setFormConfigDrawerVisible}
-        templateType={templateType}
         onRemoteCall={remoteCall}
-        modalVisible={modalVisible}
-        setModalVisible={setModalVisible}
+        modalVisible={pathModalVisible}
+        setModalVisible={setPathModalVisible}
       />
     </>
   );

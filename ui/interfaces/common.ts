@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-04-29 21:58:39
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-06 19:52:24
+ * @LastEditTime: 2020-05-11 11:25:52
  */
 export type FormItemType =
   | 'input'
@@ -34,13 +34,12 @@ export type FormItemProps = {
 };
 
 export type TemplateType =
-  | 'login'
-  | 'register'
   | 'short-form'
   | 'long-form'
   | 'one-column-form-modal'
   | 'two-columns-form-modal'
-  | 'detail'
+  | 'short-detail'
+  | 'long-detail'
   | 'one-column-detail-modal'
   | 'two-columns-detail-modal'
   | 'table';
@@ -60,4 +59,9 @@ export type AjaxResponse<T> = {
   success: boolean;
   data?: T;
   message: string;
+};
+
+export type CardItemProps = {
+  title: string;
+  formItems: FormItemProps[];
 };

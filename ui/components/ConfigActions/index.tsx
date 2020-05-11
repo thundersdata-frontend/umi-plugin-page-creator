@@ -3,6 +3,8 @@ import { Button, Tooltip } from 'antd';
 import {
   ArrowUpOutlined,
   ArrowDownOutlined,
+  ArrowLeftOutlined,
+  ArrowRightOutlined,
   SettingOutlined,
   DeleteOutlined,
   CopyOutlined,
@@ -14,7 +16,9 @@ export default ({
   configItem,
   deleteItem,
   copyItem,
+  position = 'left',
 }: {
+  position?: 'left' | 'top';
   moveUp?: () => void;
   moveDown?: () => void;
   configItem?: () => void;
@@ -23,14 +27,22 @@ export default ({
 }) => {
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
-      <Tooltip overlay="上移" trigger={['hover']} placement="top">
+      <Tooltip
+        overlay={position === 'left' ? '上移' : '左移'}
+        trigger={['hover']}
+        placement="top"
+      >
         <Button style={{ marginRight: 10 }} onClick={moveUp}>
-          <ArrowUpOutlined />
+          {position === 'left' ? <ArrowUpOutlined /> : <ArrowLeftOutlined />}
         </Button>
       </Tooltip>
-      <Tooltip overlay="下移" trigger={['hover']} placement="top">
+      <Tooltip
+        overlay={position === 'left' ? '下移' : '右移'}
+        trigger={['hover']}
+        placement="top"
+      >
         <Button style={{ marginRight: 10 }} onClick={moveDown}>
-          <ArrowDownOutlined />
+          {position === 'left' ? <ArrowDownOutlined /> : <ArrowRightOutlined />}
         </Button>
       </Tooltip>
       <Tooltip overlay="删除" trigger={['hover']} placement="top">

@@ -7,6 +7,7 @@ import { AjaxResponse } from '../ui/interfaces/common';
 import prettier from 'prettier';
 import { writeNewRoute } from './utils/writeNewRoute';
 import { generateShortFormCode } from './generate';
+import generateLongFormCode from './generate/longForm';
 
 export default function(api: IApi) {
   // @ts-ignore
@@ -20,6 +21,9 @@ export default function(api: IApi) {
       case 'org.umi-plugin-page-creator.shortForm':
       default:
         code = generateShortFormCode(payload);
+        break;
+      case 'org.umi-plugin-page-creator.longForm':
+        code = generateLongFormCode(payload);
         break;
     }
     const formattedCode = prettier.format(code, {

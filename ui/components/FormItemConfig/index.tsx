@@ -21,19 +21,22 @@ import { FormItemProps } from '../../interfaces/common';
 import ConfigActions from '../ConfigActions';
 import styles from './index.module.less';
 import { LabeledValue } from 'antd/lib/select';
+import classNames from 'classnames';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-const defaultOptions = [
+const defaultRadioOptions = [
   { label: '男', value: '1' },
   { label: '女', value: '0' },
 ];
+const defaultCheckboxOptions = ['Apple', 'Pear'];
 
 /** 根据选择的表单组件类型，渲染成真实的表单元素 */
 export default function renderFormItem({
   formItem,
   config = false,
+  position = 'left',
   moveUp,
   moveDown,
   configItem,
@@ -42,6 +45,7 @@ export default function renderFormItem({
 }: {
   formItem: FormItemProps;
   config?: boolean;
+  position?: 'left' | 'top';
   moveUp?: () => void;
   moveDown?: () => void;
   configItem?: () => void;
@@ -53,7 +57,6 @@ export default function renderFormItem({
   switch (type) {
     case 'input':
     default:
-      console.log(convertStringToBoolean(restProps));
       const inputItem = (
         <Form.Item label={label} name={name}>
           <Input
@@ -65,8 +68,14 @@ export default function renderFormItem({
 
       if (config) {
         return (
-          <div className={styles.formItemConfig}>
+          <div
+            className={classNames(
+              styles.formItemConfig,
+              position === 'top' ? styles.top : '',
+            )}
+          >
             <ConfigActions
+              position={position}
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
@@ -90,8 +99,14 @@ export default function renderFormItem({
       );
       if (config) {
         return (
-          <div className={styles.formItemConfig}>
+          <div
+            className={classNames(
+              styles.formItemConfig,
+              position === 'top' ? styles.top : '',
+            )}
+          >
             <ConfigActions
+              position={position}
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
@@ -115,8 +130,14 @@ export default function renderFormItem({
       );
       if (config) {
         return (
-          <div className={styles.formItemConfig}>
+          <div
+            className={classNames(
+              styles.formItemConfig,
+              position === 'top' ? styles.top : '',
+            )}
+          >
             <ConfigActions
+              position={position}
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
@@ -141,8 +162,14 @@ export default function renderFormItem({
 
       if (config) {
         return (
-          <div className={styles.formItemConfig}>
+          <div
+            className={classNames(
+              styles.formItemConfig,
+              position === 'top' ? styles.top : '',
+            )}
+          >
             <ConfigActions
+              position={position}
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
@@ -167,8 +194,14 @@ export default function renderFormItem({
       );
       if (config) {
         return (
-          <div className={styles.formItemConfig}>
+          <div
+            className={classNames(
+              styles.formItemConfig,
+              position === 'top' ? styles.top : '',
+            )}
+          >
             <ConfigActions
+              position={position}
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
@@ -193,8 +226,14 @@ export default function renderFormItem({
       );
       if (config) {
         return (
-          <div className={styles.formItemConfig}>
+          <div
+            className={classNames(
+              styles.formItemConfig,
+              position === 'top' ? styles.top : '',
+            )}
+          >
             <ConfigActions
+              position={position}
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
@@ -219,8 +258,14 @@ export default function renderFormItem({
       );
       if (config) {
         return (
-          <div className={styles.formItemConfig}>
+          <div
+            className={classNames(
+              styles.formItemConfig,
+              position === 'top' ? styles.top : '',
+            )}
+          >
             <ConfigActions
+              position={position}
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
@@ -245,8 +290,14 @@ export default function renderFormItem({
       );
       if (config) {
         return (
-          <div className={styles.formItemConfig}>
+          <div
+            className={classNames(
+              styles.formItemConfig,
+              position === 'top' ? styles.top : '',
+            )}
+          >
             <ConfigActions
+              position={position}
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
@@ -264,15 +315,21 @@ export default function renderFormItem({
         <Form.Item label={label} name={name}>
           <Checkbox.Group
             name={name}
-            options={defaultOptions || restProps.options}
+            options={defaultCheckboxOptions || restProps.options}
             {...convertStringToBoolean(restProps)}
           />
         </Form.Item>
       );
       if (config) {
         return (
-          <div className={styles.formItemConfig}>
+          <div
+            className={classNames(
+              styles.formItemConfig,
+              position === 'top' ? styles.top : '',
+            )}
+          >
             <ConfigActions
+              position={position}
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
@@ -290,15 +347,21 @@ export default function renderFormItem({
         <Form.Item label={label} name={name}>
           <Radio.Group
             name={name}
-            options={defaultOptions || restProps.options}
+            options={defaultRadioOptions || restProps.options}
             {...convertStringToBoolean(restProps)}
           />
         </Form.Item>
       );
       if (config) {
         return (
-          <div className={styles.formItemConfig}>
+          <div
+            className={classNames(
+              styles.formItemConfig,
+              position === 'top' ? styles.top : '',
+            )}
+          >
             <ConfigActions
+              position={position}
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
@@ -319,8 +382,14 @@ export default function renderFormItem({
       );
       if (config) {
         return (
-          <div className={styles.formItemConfig}>
+          <div
+            className={classNames(
+              styles.formItemConfig,
+              position === 'top' ? styles.top : '',
+            )}
+          >
             <ConfigActions
+              position={position}
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
@@ -341,8 +410,14 @@ export default function renderFormItem({
       );
       if (config) {
         return (
-          <div className={styles.formItemConfig}>
+          <div
+            className={classNames(
+              styles.formItemConfig,
+              position === 'top' ? styles.top : '',
+            )}
+          >
             <ConfigActions
+              position={position}
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
@@ -369,8 +444,14 @@ export default function renderFormItem({
       );
       if (config) {
         return (
-          <div className={styles.formItemConfig}>
+          <div
+            className={classNames(
+              styles.formItemConfig,
+              position === 'top' ? styles.top : '',
+            )}
+          >
             <ConfigActions
+              position={position}
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
@@ -391,8 +472,14 @@ export default function renderFormItem({
       );
       if (config) {
         return (
-          <div className={styles.formItemConfig}>
+          <div
+            className={classNames(
+              styles.formItemConfig,
+              position === 'top' ? styles.top : '',
+            )}
+          >
             <ConfigActions
+              position={position}
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
@@ -417,8 +504,14 @@ export default function renderFormItem({
       );
       if (config) {
         return (
-          <div className={styles.formItemConfig}>
+          <div
+            className={classNames(
+              styles.formItemConfig,
+              position === 'top' ? styles.top : '',
+            )}
+          >
             <ConfigActions
+              position={position}
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}
@@ -439,8 +532,14 @@ export default function renderFormItem({
       );
       if (config) {
         return (
-          <div className={styles.formItemConfig}>
+          <div
+            className={classNames(
+              styles.formItemConfig,
+              position === 'top' ? styles.top : '',
+            )}
+          >
             <ConfigActions
+              position={position}
               moveUp={moveUp}
               moveDown={moveDown}
               configItem={configItem}

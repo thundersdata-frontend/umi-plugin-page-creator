@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-04-30 11:31:49
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-08 17:38:35
+ * @LastEditTime: 2020-05-11 15:45:56
  */
 import { useState } from 'react';
 import { FormItemProps } from '../interfaces/common';
@@ -13,7 +13,6 @@ export default function useFormItem() {
   const [formItems, setFormItems] = useState<FormItemProps[]>([]);
   const [index, setIndex] = useState<number>(); // 当前选中的表单元素的index
   const [currentItem, setCurrentItem] = useState<FormItemProps>(); // 当前选中的表单元素
-  const [visible, setVisible] = useState(false); // 是否显示表单元素配置的Drawer
 
   /**
    * 上移表单项
@@ -48,11 +47,11 @@ export default function useFormItem() {
   /**
    * 配置表单项
    * @param formItem
+   * @param index
    */
   const configItem = (formItem: FormItemProps, index: number) => () => {
     setIndex(index);
     setCurrentItem(formItem);
-    setVisible(true);
   };
 
   /** 表单元素配置项配置完成 */
@@ -69,7 +68,6 @@ export default function useFormItem() {
 
   /**
    * 删除配置项
-   * @param formItem
    * @param index
    */
   const deleteItem = (index: number) => () => {
@@ -80,7 +78,6 @@ export default function useFormItem() {
 
   /**
    * 复制配置项
-   * @param formItem
    * @param index
    */
   const copyItem = (index: number) => () => {
@@ -101,8 +98,6 @@ export default function useFormItem() {
     copyItem,
     index,
     currentItem,
-    visible,
-    setVisible,
     onConfirm: handleConfirm,
   };
 }

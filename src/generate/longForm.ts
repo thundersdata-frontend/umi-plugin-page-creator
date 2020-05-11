@@ -4,19 +4,18 @@
  * @作者: 陈杰
  * @Date: 2020-05-08 16:05:30
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-08 16:13:24
+ * @LastEditTime: 2020-05-11 20:26:40
  */
 import { Store } from 'antd/lib/form/interface';
-import { FormItemProps } from '@/interfaces/common';
+import { FormItemProps, CardItemProps } from '@/interfaces/common';
 
 export interface Payload {
-  formConfig: Store;
-  formItems: FormItemProps[];
+  cards: CardItemProps[];
 }
 
 export default function generateLongFormCode(payload: Payload): string {
-  if (payload && payload.formConfig && payload.formItems) {
-    const { formConfig, formItems } = payload;
+  if (payload && payload.cards) {
+    const { cards = [] } = payload;
 
     const code = `
       import React from 'react';
@@ -63,7 +62,7 @@ export default function generateLongFormCode(payload: Payload): string {
 
         return (
           <Form form={form} onFinish={handleFinish} layout="vertical">
-            <Card title={<Title text="${formConfig.title}" />} style={{ marginBottom: 16 }}>
+            <Card title={<Title text="" />} style={{ marginBottom: 16 }}>
               <Row gutter={16}>
                 <Col {...colLayout}>
                   <Form.Item

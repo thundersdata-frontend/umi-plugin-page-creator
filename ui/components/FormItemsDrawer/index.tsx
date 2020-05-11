@@ -171,7 +171,7 @@ export default ({
         >
           <Radio.Group defaultValue={1}>
             <Radio value={1}>男</Radio>
-            <Radio value={2}>女</Radio>
+            <Radio value={0}>女</Radio>
           </Radio.Group>
         </Form.Item>
         <Form.Item

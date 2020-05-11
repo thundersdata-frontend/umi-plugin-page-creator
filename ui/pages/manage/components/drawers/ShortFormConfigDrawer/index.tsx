@@ -4,22 +4,27 @@
  * @作者: 陈杰
  * @Date: 2020-04-29 17:56:31
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-04-30 15:42:51
+ * @LastEditTime: 2020-05-11 15:21:13
  */
-import React, { useContext } from 'react';
+import React from 'react';
 import { Form, Button, Input, Drawer } from 'antd';
 
-import Context from '../../../Context';
-import { ShortFormConfig } from '../../../../../interfaces/common';
 import { Store } from 'antd/lib/form/interface';
 
-export default () => {
+export default ({
+  visible,
+  setVisible,
+  onFinish,
+}: {
+  visible: boolean;
+  setVisible: (visible: boolean) => void;
+  onFinish: (values: Store) => void;
+}) => {
   const [form] = Form.useForm();
-  const { addShortFormConfig, visible, setVisible } = useContext(Context);
 
   const handleFinish = (values: Store) => {
-    addShortFormConfig(values);
     setVisible(false);
+    onFinish(values);
   };
 
   return (
