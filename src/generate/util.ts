@@ -4,9 +4,10 @@
  * @作者: 陈杰
  * @Date: 2020-05-08 13:56:59
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-08 14:38:43
+ * @LastEditTime: 2020-05-12 19:36:33
  */
 import { FormItemType, FormItemProps } from '@/interfaces/common';
+import { LabeledValue } from 'antd/lib/select';
 
 export function createFormComponentsByType(
   type: FormItemType,
@@ -20,49 +21,56 @@ export function createFormComponentsByType(
         <Input ${propsStr} />
       `;
     case 'cascader':
-      return ``;
+      return `<Cascader ${propsStr} />`;
 
     case 'checkbox':
-      return ``;
+      return `<Checkbox.Group ${propsStr} />`;
 
     case 'date':
-      return ``;
+      return `<DatePicker ${propsStr} />`;
 
     case 'number':
-      return ``;
+      return `<InputNumber ${propsStr} />`;
 
     case 'password':
-      return ``;
+      return `<Input.Password ${propsStr} />`;
 
     case 'radio':
-      return ``;
+      return `<Radio.Group ${propsStr} />`;
 
     case 'range':
-      return ``;
+      return `<DatePicker.RangePicker ${propsStr} />`;
 
     case 'rate':
-      return ``;
+      return `<Rate ${propsStr} />`;
 
     case 'select':
-      return ``;
+      const { options = [], ...restProps } = props;
+
+      return `<Select ${generatePropsStr(restProps)}>
+        ${(options as LabeledValue[]).map(
+          option =>
+            `<Select.Option value={${option.value}}>${option.label}</Select.Option>`,
+        )}
+      </Select>`;
 
     case 'slider':
-      return ``;
+      return `<Slider ${propsStr} />`;
 
     case 'switch':
-      return ``;
+      return `<Switch ${propsStr} />`;
 
     case 'textarea':
-      return ``;
+      return `<Input.TextArea ${propsStr} />`;
 
     case 'time':
-      return ``;
+      return `<TimePicker ${propsStr} />`;
 
     case 'treeselect':
-      return ``;
+      return `<TreeSelect ${propsStr} />`;
 
     case 'upload':
-      return ``;
+      return `<Upload ${propsStr}><Button>上传</Button></Upload>`;
   }
 }
 
@@ -92,4 +100,22 @@ function generatePropsStr(props: object): string {
     .join(' ')}`;
 
   return result;
+}
+
+/**
+ * 将一个数组按照指定的列拆分成N个二维数组
+ * @param formItems
+ * @param cols
+ */
+export function transformFormItemLines(formItems: FormItemProps[], cols = 3) {
+  let lineNum =
+    formItems.length % cols === 0
+      ? formItems.length / cols
+      : Math.floor(formItems.length / cols + 1);
+  let res = [];
+  for (let i = 0; i < lineNum; i++) {
+    let temp = formItems.slice(i * cols, i * cols + cols);
+    res.push(temp);
+  }
+  return res;
 }

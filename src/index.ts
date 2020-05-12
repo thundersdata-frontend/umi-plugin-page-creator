@@ -1,3 +1,11 @@
+/*
+ * @文件描述:
+ * @公司: thundersdata
+ * @作者: 陈杰
+ * @Date: 2020-04-29 10:38:23
+ * @LastEditors: 陈杰
+ * @LastEditTime: 2020-05-12 20:19:59
+ */
 // ref:
 // - https://umijs.org/plugin/develop.html
 import { IApi } from '@umijs/types';
@@ -6,8 +14,12 @@ import { writeFileSync, mkdirSync, existsSync } from 'fs';
 import { AjaxResponse } from '../ui/interfaces/common';
 import prettier from 'prettier';
 import { writeNewRoute } from './utils/writeNewRoute';
-import { generateShortFormCode } from './generate';
-import generateLongFormCode from './generate/longForm';
+import {
+  generateShortFormCode,
+  generateLongFormCode,
+  generateShortDetailCode,
+  generateLongDetailCode,
+} from './generate';
 
 export default function(api: IApi) {
   // @ts-ignore
@@ -24,6 +36,12 @@ export default function(api: IApi) {
         break;
       case 'org.umi-plugin-page-creator.longForm':
         code = generateLongFormCode(payload);
+        break;
+      case 'org.umi-plugin-page-creator.shortDetail':
+        code = generateShortDetailCode(payload);
+        break;
+      case 'org.umi-plugin-page-creator.longDetail':
+        code = generateLongDetailCode(payload);
         break;
     }
     const formattedCode = prettier.format(code, {

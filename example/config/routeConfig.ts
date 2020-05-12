@@ -8,6 +8,10 @@
  */
 export default [
   {
+    path: '/longdetail',
+    component: './longdetail',
+  },
+  {
     path: '/',
     component: './index',
   },

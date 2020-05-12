@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-05-07 14:04:41
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-08 16:10:34
+ * @LastEditTime: 2020-05-12 19:43:40
  */
 import { Store } from 'antd/lib/form/interface';
 import { FormItemProps } from '@/interfaces/common';
@@ -70,16 +70,18 @@ export default function generateShortFormCode(payload: Payload): string {
         return (
           <Card title={<Title text="${formConfig.title}" />}>
             <Form form={form} onFinish={handleFinish}>
-              ${formItems.map(item => {
-                const { label, name, type, ...restProps } = item;
-                return `<Form.Item
+              ${formItems
+                .map(item => {
+                  const { label, name, type, ...restProps } = item;
+                  return `<Form.Item
                     {...formItemLayout}
                     label="${label}"
                     name="${name}"
                   >
                     ${createFormComponentsByType(type, restProps)}
                   </Form.Item>`;
-              })}
+                })
+                .join('')}
               <Form.Item {...submitFormLayout} style={{ marginTop: 32 }}>
                 <Button type="primary" htmlType="submit" loading={submitBtn.state}>
                   提交

@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-04-29 17:56:31
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-11 15:21:13
+ * @LastEditTime: 2020-05-12 19:49:44
  */
 import React from 'react';
 import { Form, Button, Input, Drawer } from 'antd';
@@ -36,12 +36,12 @@ export default ({
     >
       <Form form={form} onFinish={handleFinish} layout="vertical">
         <Form.Item
-          label="表单title"
+          label="title"
           name="title"
           required
-          rules={[{ required: true, message: '请填写表单title' }]}
+          rules={[{ required: true, message: '请填写title' }]}
         >
-          <Input placeholder="单列表单" />
+          <Input placeholder="请填写title" />
         </Form.Item>
         <Form.Item label="Pont接口" name="pont">
           <Input />

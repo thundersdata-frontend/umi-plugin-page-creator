@@ -4,10 +4,10 @@
  * @作者: 陈杰
  * @Date: 2020-05-08 16:05:30
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-11 20:26:40
+ * @LastEditTime: 2020-05-12 19:43:31
  */
-import { Store } from 'antd/lib/form/interface';
-import { FormItemProps, CardItemProps } from '@/interfaces/common';
+import { CardItemProps } from '@/interfaces/common';
+import { createFormComponentsByType, transformFormItemLines } from './util';
 
 export interface Payload {
   cards: CardItemProps[];
@@ -26,18 +26,11 @@ export default function generateLongFormCode(payload: Payload): string {
         Card,
         Row,
         Col,
-        Select,
-        DatePicker,
-        TimePicker,
       } from 'antd';
       import { useToggle } from '@umijs/hooks';
       import { Store } from 'antd/es/form/interface';
       import Title from '@/components/Title';
       import FooterToolbar from '@/components/FooterToolbar';
-      import styles from './index.less';
-
-      const { Option } = Select;
-      const { RangePicker } = DatePicker;
 
       const colLayout = {
         lg: {
@@ -62,45 +55,46 @@ export default function generateLongFormCode(payload: Payload): string {
 
         return (
           <Form form={form} onFinish={handleFinish} layout="vertical">
-            <Card title={<Title text="" />} style={{ marginBottom: 16 }}>
-              <Row gutter={16}>
-                <Col {...colLayout}>
-                  <Form.Item
-                    label={fieldLabels.name}
-                    name="name"
-                    rules={[{ required: true, message: '请输入仓库名称' }]}
-                  >
-                    <Input placeholder="请输入仓库名称" />
-                  </Form.Item>
-                </Col>
-                <Col {...colLayout}>
-                  <Form.Item
-                    label={fieldLabels.url}
-                    name="url"
-                    rules={[{ required: true, message: '请选择' }]}
-                  >
-                    <Input
-                      style={{ width: '100%' }}
-                      addonBefore="http://"
-                      addonAfter=".com"
-                      placeholder="请输入"
-                    />
-                  </Form.Item>
-                </Col>
-                <Col {...colLayout}>
-                  <Form.Item
-                    label={fieldLabels.owner}
-                    name="owner"
-                    rules={[{ required: true, message: '请选择管理员' }]}
-                  >
-                    <Select placeholder="请选择管理员">
-                      <Option value="xiao">付晓晓</Option>
-                      <Option value="mao">周毛毛</Option>
-                    </Select>
-                  </Form.Item>
-                </Col>
-              </Row>
-            </Card>
+            ${cards.map(card => {
+              const { title = '', formItems = [] } = card;
+              const cols = 3;
+              // 把formItems分成3列
+              const formItemLines = transformFormItemLines(formItems, cols);
+
+              return `
+                <Card title={<Title text="${title}" />} style={{ marginBottom: 16 }}>
+                  ${formItemLines
+                    .map(line => {
+                      return `
+                      <Row gutter={16}>
+                        ${line
+                          .map(formItem => {
+                            const {
+                              label,
+                              name,
+                              type,
+                              ...restProps
+                            } = formItem;
+
+                            return `
+                            <Col {...colLayout}>
+                              <Form.Item
+                                label="${formItem.label}"
+                                name="${formItem.name}"
+                              >
+                                ${createFormComponentsByType(type, restProps)}
+                              </Form.Item>
+                            </Col>
+                          `;
+                          })
+                          .join('')}
+                      </Row>
+                    `;
+                    })
+                    .join('')}
+                </Card>
+              `;
+            })}
             <FooterToolbar>
               <Button
                 type="primary"
