@@ -11,6 +11,7 @@ import { Store } from 'antd/lib/form/interface';
 import ShortFormConfigDrawer from '../../drawers/ShortFormConfigDrawer';
 import useConfigVisible from '@/hooks/useConfigVisible';
 import useFormItem from '../../../../../hooks/useFormItem';
+import faker from 'faker';
 
 const formItemLayout = {
   labelCol: {
@@ -61,8 +62,8 @@ export default () => {
   const handleSubmit = (checkedComponents: FormItemType[]) => {
     const newFormItems = checkedComponents.map(type => ({
       type,
-      name: '',
-      label: '',
+      label: faker.name.title(),
+      name: faker.name.lastName(),
     }));
     setFormItems(formItems => [...formItems, ...newFormItems]);
     setFormItemsDrawerVisible(false);
@@ -76,10 +77,6 @@ export default () => {
     // 对formItems进行遍历，如果其中有任一项没有配置label/name，则不允许提交
     if (formItems.length === 0) {
       message.error('您还没有添加表单项，不能提交！');
-      return;
-    }
-    if (formItems.some(item => !item.label || !item.name)) {
-      message.error('您还有表单项没有配置，不能提交！');
       return;
     }
     try {
@@ -118,7 +115,10 @@ export default () => {
               config: true,
               moveUp: moveUp(index),
               moveDown: moveDown(index),
-              configItem: configItem(formItem, index),
+              configItem: () => {
+                configItem(formItem, index);
+                setFormItemConfigDrawerVisible(true);
+              },
               deleteItem: deleteItem(index),
               copyItem: copyItem(index),
             }),

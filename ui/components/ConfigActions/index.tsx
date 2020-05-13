@@ -26,7 +26,7 @@ export default ({
   copyItem?: () => void;
 }) => {
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
+    <div style={{ display: 'flex', alignItems: 'center', marginBottom: 5 }}>
       <Tooltip
         overlay={position === 'left' ? '上移' : '左移'}
         trigger={['hover']}

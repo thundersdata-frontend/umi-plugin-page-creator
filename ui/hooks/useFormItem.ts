@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-04-30 11:31:49
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-11 15:45:56
+ * @LastEditTime: 2020-05-13 10:32:59
  */
 import { useState } from 'react';
 import { FormItemProps } from '../interfaces/common';
@@ -49,7 +49,7 @@ export default function useFormItem() {
    * @param formItem
    * @param index
    */
-  const configItem = (formItem: FormItemProps, index: number) => () => {
+  const configItem = (formItem: FormItemProps, index: number) => {
     setIndex(index);
     setCurrentItem(formItem);
   };

@@ -14,6 +14,7 @@ import { transformFormItemLines } from '@/utils';
 import FormItemConfigDrawer from '@/components/FormItemConfigDrawer';
 import produce from 'immer';
 import faker from 'faker';
+import styles from './index.module.less';
 
 const formItemLayout = {
   labelCol: {
@@ -144,9 +145,36 @@ export default () => {
                 <Row key={index} gutter={16}>
                   {line.map((formItem, itemIndex) => (
                     <Col key={formItem.name} {...colLayout}>
-                      <Form.Item label={formItem.label} name={formItem.name}>
-                        <Input disabled />
-                      </Form.Item>
+                      <div className={styles.formItemConfig}>
+                        <ConfigActions
+                          position="top"
+                          moveUp={moveItemUp(
+                            index * cols + itemIndex,
+                            cardIndex,
+                          )}
+                          moveDown={moveItemDown(
+                            index * cols + itemIndex,
+                            cardIndex,
+                          )}
+                          configItem={() => {
+                            setCardIndex(cardIndex);
+                            setCurrentItem(formItem);
+                            setItemIndex(index * cols + itemIndex);
+                            setFormItemConfigDrawerVisible(true);
+                          }}
+                          deleteItem={deleteItem(
+                            index * cols + itemIndex,
+                            cardIndex,
+                          )}
+                          copyItem={copyItem(
+                            index * cols + itemIndex,
+                            cardIndex,
+                          )}
+                        />
+                        <Form.Item label={formItem.label} name={formItem.name}>
+                          <Input disabled />
+                        </Form.Item>
+                      </div>
                     </Col>
                   ))}
                 </Row>
@@ -182,6 +210,16 @@ export default () => {
         setVisible={setCardDrawerVisible}
         onFinish={configCard}
       />
+      {currentItem && (
+        <FormItemConfigDrawer
+          visible={formItemConfigDrawerVisible}
+          onVisible={setFormItemConfigDrawerVisible}
+          index={itemIndex}
+          formItem={currentItem}
+          onConfirm={configItem}
+          from="detail"
+        />
+      )}
       <DropdownActions
         onRemoteCall={remoteCall}
         modalVisible={pathModalVisible}

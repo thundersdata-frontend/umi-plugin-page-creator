@@ -69,14 +69,22 @@ export default function generateShortFormCode(payload: Payload): string {
 
         return (
           <Card title={<Title text="${formConfig.title}" />}>
-            <Form form={form} onFinish={handleFinish}>
+            <Form form={form} onFinish={handleFinish} validateMessages={validateMessages}>
               ${formItems
                 .map(item => {
-                  const { label, name, type, ...restProps } = item;
+                  const {
+                    label,
+                    name,
+                    type,
+                    required = false,
+                    customRules = [],
+                    ...restProps
+                  } = item;
                   return `<Form.Item
                     {...formItemLayout}
                     label="${label}"
                     name="${name}"
+                    required={${required}}
                   >
                     ${createFormComponentsByType(type, restProps)}
                   </Form.Item>`;

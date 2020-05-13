@@ -13,6 +13,8 @@ import useConfigVisible from '@/hooks/useConfigVisible';
 import useFormItem from '../../../../../hooks/useFormItem';
 import produce from 'immer';
 import faker from 'faker';
+import ConfigActions from '@/components/ConfigActions';
+import styles from './index.module.less';
 
 const formItemLayout = {
   labelCol: {
@@ -51,6 +53,9 @@ export default () => {
     configItem,
     deleteItem,
     copyItem,
+    currentItem,
+    index,
+    onConfirm,
   } = useFormItem();
 
   /**
@@ -108,9 +113,21 @@ export default () => {
       >
         <Form {...formItemLayout}>
           {formItems.map((formItem, index) => (
-            <Form.Item label={formItem.label} name={formItem.name}>
-              <Input disabled />
-            </Form.Item>
+            <div className={styles.formItemConfig}>
+              <ConfigActions
+                moveUp={moveUp(index)}
+                moveDown={moveDown(index)}
+                configItem={() => {
+                  configItem(formItem, index);
+                  setFormItemConfigDrawerVisible(true);
+                }}
+                deleteItem={deleteItem(index)}
+                copyItem={copyItem(index)}
+              />
+              <Form.Item label={formItem.label} name={formItem.name}>
+                <Input disabled />
+              </Form.Item>
+            </div>
           ))}
           <Button
             onClick={addDetailItem}
@@ -128,6 +145,18 @@ export default () => {
         setVisible={setFormConfigDrawerVisible}
         onFinish={setCardConfig}
       />
+
+      {/**配置单个表单项 */}
+      {currentItem && (
+        <FormItemConfigDrawer
+          visible={formItemConfigDrawerVisible}
+          onVisible={setFormItemConfigDrawerVisible}
+          index={index}
+          formItem={currentItem}
+          onConfirm={onConfirm}
+          from="detail"
+        />
+      )}
 
       {/**提交时候弹出的输入文件路径 */}
       <DropdownActions

@@ -76,6 +76,10 @@ export default () => {
    */
   const remoteCall = async (path: string) => {
     try {
+      if (cards.length === 0) {
+        message.error('你还没有添加Card');
+        return;
+      }
       const result = await api.callRemote({
         type: 'org.umi-plugin-page-creator.longForm',
         payload: {

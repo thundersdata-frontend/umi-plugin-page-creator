@@ -72,7 +72,7 @@ export default function useCard() {
     const newFormItems = checkedComponents.map(type => ({
       type,
       name: faker.name.lastName(),
-      label: '',
+      label: faker.name.title(),
     }));
     setCards(
       produce(cards, draft => {

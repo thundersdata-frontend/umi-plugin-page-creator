@@ -6,7 +6,7 @@ import { FormItemProps } from '@/interfaces/common';
  * @作者: 陈杰
  * @Date: 2020-04-30 15:27:34
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-08 19:06:35
+ * @LastEditTime: 2020-05-13 11:07:45
  */
 export const inputProps: FormItemProps[] = [
   {
