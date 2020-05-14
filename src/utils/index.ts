@@ -84,9 +84,7 @@ export const getFilesTreeData = (
         }
         const absPath = winPath(join(path, fileName));
         const absPagePath = winPath(join(parentPath, fileName));
-        const children = isDirectory
-          ? getFilesTreeData(absPath, absPagePath, depth + 1)
-          : [];
+        const children = isDirectory ? getFilesTreeData(absPath, absPagePath, depth + 1) : [];
         return {
           selectable: !isDirectory,
           key: absPagePath,

@@ -27,12 +27,7 @@ export default ({
   };
 
   return (
-    <Drawer
-      title="Card配置"
-      width={360}
-      visible={visible}
-      onClose={() => setVisible(false)}
-    >
+    <Drawer title="Card配置" width={360} visible={visible} onClose={() => setVisible(false)}>
       <Form form={form} onFinish={handleFinish} layout="vertical">
         <Form.Item
           label="卡片title"

@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-05-08 13:56:59
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-12 19:36:33
+ * @LastEditTime: 2020-05-14 11:54:38
  */
 import { FormItemType, FormItemProps } from '@/interfaces/common';
 import { LabeledValue } from 'antd/lib/select';
@@ -49,8 +49,7 @@ export function createFormComponentsByType(
 
       return `<Select ${generatePropsStr(restProps)}>
         ${(options as LabeledValue[]).map(
-          option =>
-            `<Select.Option value={${option.value}}>${option.label}</Select.Option>`,
+          option => `<Select.Option value={${option.value}}>${option.label}</Select.Option>`,
         )}
       </Select>`;
 
@@ -77,15 +76,11 @@ export function createFormComponentsByType(
 /**
  * 把属性打平成字符串
  */
-function generatePropsStr(props: object): string {
+export function generatePropsStr(props: object): string {
   const result = `${Object.entries(props)
     .map(item => {
       const [key, value] = item;
-      if (
-        typeof value === 'boolean' ||
-        typeof value === 'number' ||
-        typeof value === 'bigint'
-      ) {
+      if (typeof value === 'boolean' || typeof value === 'number' || typeof value === 'bigint') {
         return `${key}={${value}}`;
       } else if (typeof value === 'string') {
         return `${key}="${value}"`;

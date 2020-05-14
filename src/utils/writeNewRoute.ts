@@ -16,11 +16,7 @@ const debug = createDebug('umi-build-dev:writeNewRoute');
  * @param {*} absSrcPath 代码路径
  */
 export function writeNewRoute(newRoute, configPath, absSrcPath) {
-  const { code, routesPath } = getNewRouteCode(
-    configPath,
-    newRoute,
-    absSrcPath,
-  );
+  const { code, routesPath } = getNewRouteCode(configPath, newRoute, absSrcPath);
   writeFileSync(routesPath, code, 'utf-8');
 }
 
@@ -87,11 +83,7 @@ export function getNewRouteCode(configPath, newRoute, absSrcPath) {
       const { properties } = node;
       properties.forEach((p: any) => {
         const { key, value } = p;
-        if (
-          t.isObjectProperty(p) &&
-          t.isIdentifier(key) &&
-          key.name === 'routes'
-        ) {
+        if (t.isObjectProperty(p) && t.isIdentifier(key) && key.name === 'routes') {
           routesNode = value;
         }
       });
@@ -101,15 +93,9 @@ export function getNewRouteCode(configPath, newRoute, absSrcPath) {
   if (routesNode) {
     // routes 配置不在当前文件, 需要 load 对应的文件  export default { routes: pageRoutes } case 1
     if (!t.isArrayExpression(routesNode)) {
-      const source = importModules.find(
-        m => m.identifierName === routesNode.name,
-      );
+      const source = importModules.find(m => m.identifierName === routesNode.name);
       if (source) {
-        const newConfigPath = getModulePath(
-          configPath,
-          source.modulePath,
-          absSrcPath,
-        );
+        const newConfigPath = getModulePath(configPath, source.modulePath, absSrcPath);
         return getNewRouteCode(newConfigPath, newRoute, absSrcPath);
       }
       throw new Error(`can not find import of ${routesNode.name}`);
@@ -126,8 +112,7 @@ export function getNewRouteCode(configPath, newRoute, absSrcPath) {
 }
 
 function getNewRouteNode(newRoute: any) {
-  return (parser.parse(`(${JSON.stringify(newRoute)})`).program.body[0] as any)
-    .expression;
+  return (parser.parse(`(${JSON.stringify(newRoute)})`).program.body[0] as any).expression;
 }
 
 /**
@@ -136,9 +121,7 @@ function getNewRouteNode(newRoute: any) {
  * @param {*} newRoute 新的路由配置
  */
 export function writeRouteNode(targetNode, newRoute, currentPath = '/') {
-  debug(
-    `writeRouteNode currentPath newRoute.path: ${newRoute.path} currentPath: ${currentPath}`,
-  );
+  debug(`writeRouteNode currentPath newRoute.path: ${newRoute.path} currentPath: ${currentPath}`);
   const { elements } = targetNode;
   const paths = elements.map(ele => {
     if (!t.isObjectExpression(ele)) {
@@ -161,9 +144,7 @@ export function writeRouteNode(targetNode, newRoute, currentPath = '/') {
   });
   debug('paths', paths);
 
-  const matchedIndex = paths.findIndex(
-    p => p && newRoute.path.indexOf(winPath(p)) === 0,
-  );
+  const matchedIndex = paths.findIndex(p => p && newRoute.path.indexOf(winPath(p)) === 0);
 
   const newNode = getNewRouteNode(newRoute);
   if (matchedIndex === -1) {
@@ -174,9 +155,7 @@ export function writeRouteNode(targetNode, newRoute, currentPath = '/') {
   // matched, insert to children routes
   const matchedEle = elements[matchedIndex];
   const routesProp = matchedEle.properties.find(
-    p =>
-      p.key.name === 'routes' ||
-      (process.env.BIGFISH_COMPAT && p.key.name === 'childRoutes'),
+    p => p.key.name === 'routes' || (process.env.BIGFISH_COMPAT && p.key.name === 'childRoutes'),
   );
   if (!routesProp) {
     // not find children routes, insert before the matched element

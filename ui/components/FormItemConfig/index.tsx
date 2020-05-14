@@ -26,10 +26,7 @@ import classNames from 'classnames';
 const { RangePicker } = DatePicker;
 const { Option } = Select;
 
-const defaultRadioOptions = [
-  { label: '男', value: '1' },
-  { label: '女', value: '0' },
-];
+const defaultRadioOptions = [{ label: '男', value: '1' }, { label: '女', value: '0' }];
 const defaultCheckboxOptions = ['Apple', 'Pear'];
 
 /** 根据选择的表单组件类型，渲染成真实的表单元素 */
@@ -59,21 +56,13 @@ export default function renderFormItem({
     default:
       const inputItem = (
         <Form.Item label={label} name={name}>
-          <Input
-            placeholder={placeholder as string}
-            {...convertStringToBoolean(restProps)}
-          />
+          <Input placeholder={placeholder as string} {...restProps} />
         </Form.Item>
       );
 
       if (config) {
         return (
-          <div
-            className={classNames(
-              styles.formItemConfig,
-              position === 'top' ? styles.top : '',
-            )}
-          >
+          <div className={classNames(styles.formItemConfig, position === 'top' ? styles.top : '')}>
             <ConfigActions
               position={position}
               moveUp={moveUp}
@@ -91,20 +80,12 @@ export default function renderFormItem({
     case 'password':
       const passwordItem = (
         <Form.Item label={label} name={name}>
-          <Input.Password
-            placeholder={placeholder as string}
-            {...convertStringToBoolean(restProps)}
-          />
+          <Input.Password placeholder={placeholder as string} {...restProps} />
         </Form.Item>
       );
       if (config) {
         return (
-          <div
-            className={classNames(
-              styles.formItemConfig,
-              position === 'top' ? styles.top : '',
-            )}
-          >
+          <div className={classNames(styles.formItemConfig, position === 'top' ? styles.top : '')}>
             <ConfigActions
               position={position}
               moveUp={moveUp}
@@ -122,20 +103,12 @@ export default function renderFormItem({
     case 'textarea':
       const textareaItem = (
         <Form.Item label={label} name={name}>
-          <Input.TextArea
-            placeholder={placeholder as string}
-            {...convertStringToBoolean(restProps)}
-          />
+          <Input.TextArea placeholder={placeholder as string} {...restProps} />
         </Form.Item>
       );
       if (config) {
         return (
-          <div
-            className={classNames(
-              styles.formItemConfig,
-              position === 'top' ? styles.top : '',
-            )}
-          >
+          <div className={classNames(styles.formItemConfig, position === 'top' ? styles.top : '')}>
             <ConfigActions
               position={position}
               moveUp={moveUp}
@@ -153,21 +126,13 @@ export default function renderFormItem({
     case 'cascader':
       const cascaderItem = (
         <Form.Item label={label} name={name}>
-          <Cascader
-            placeholder={placeholder as string}
-            {...convertStringToBoolean(restProps)}
-          />
+          <Cascader placeholder={placeholder as string} {...restProps} />
         </Form.Item>
       );
 
       if (config) {
         return (
-          <div
-            className={classNames(
-              styles.formItemConfig,
-              position === 'top' ? styles.top : '',
-            )}
-          >
+          <div className={classNames(styles.formItemConfig, position === 'top' ? styles.top : '')}>
             <ConfigActions
               position={position}
               moveUp={moveUp}
@@ -188,18 +153,13 @@ export default function renderFormItem({
           <DatePicker
             placeholder={placeholder as string}
             style={{ width: '100%' }}
-            {...convertStringToBoolean(restProps)}
+            {...restProps}
           />
         </Form.Item>
       );
       if (config) {
         return (
-          <div
-            className={classNames(
-              styles.formItemConfig,
-              position === 'top' ? styles.top : '',
-            )}
-          >
+          <div className={classNames(styles.formItemConfig, position === 'top' ? styles.top : '')}>
             <ConfigActions
               position={position}
               moveUp={moveUp}
@@ -220,18 +180,13 @@ export default function renderFormItem({
           <RangePicker
             placeholder={placeholder as [string, string]}
             style={{ width: '100%' }}
-            {...convertStringToBoolean(restProps)}
+            {...restProps}
           />
         </Form.Item>
       );
       if (config) {
         return (
-          <div
-            className={classNames(
-              styles.formItemConfig,
-              position === 'top' ? styles.top : '',
-            )}
-          >
+          <div className={classNames(styles.formItemConfig, position === 'top' ? styles.top : '')}>
             <ConfigActions
               position={position}
               moveUp={moveUp}
@@ -252,18 +207,13 @@ export default function renderFormItem({
           <TimePicker
             placeholder={placeholder as string}
             style={{ width: '100%' }}
-            {...convertStringToBoolean(restProps)}
+            {...restProps}
           />
         </Form.Item>
       );
       if (config) {
         return (
-          <div
-            className={classNames(
-              styles.formItemConfig,
-              position === 'top' ? styles.top : '',
-            )}
-          >
+          <div className={classNames(styles.formItemConfig, position === 'top' ? styles.top : '')}>
             <ConfigActions
               position={position}
               moveUp={moveUp}
@@ -284,18 +234,13 @@ export default function renderFormItem({
           <InputNumber
             placeholder={placeholder as string}
             style={{ width: '100%' }}
-            {...convertStringToBoolean(restProps)}
+            {...restProps}
           />
         </Form.Item>
       );
       if (config) {
         return (
-          <div
-            className={classNames(
-              styles.formItemConfig,
-              position === 'top' ? styles.top : '',
-            )}
-          >
+          <div className={classNames(styles.formItemConfig, position === 'top' ? styles.top : '')}>
             <ConfigActions
               position={position}
               moveUp={moveUp}
@@ -316,18 +261,13 @@ export default function renderFormItem({
           <Checkbox.Group
             name={name}
             options={defaultCheckboxOptions || restProps.options}
-            {...convertStringToBoolean(restProps)}
+            {...restProps}
           />
         </Form.Item>
       );
       if (config) {
         return (
-          <div
-            className={classNames(
-              styles.formItemConfig,
-              position === 'top' ? styles.top : '',
-            )}
-          >
+          <div className={classNames(styles.formItemConfig, position === 'top' ? styles.top : '')}>
             <ConfigActions
               position={position}
               moveUp={moveUp}
@@ -348,18 +288,13 @@ export default function renderFormItem({
           <Radio.Group
             name={name}
             options={defaultRadioOptions || restProps.options}
-            {...convertStringToBoolean(restProps)}
+            {...restProps}
           />
         </Form.Item>
       );
       if (config) {
         return (
-          <div
-            className={classNames(
-              styles.formItemConfig,
-              position === 'top' ? styles.top : '',
-            )}
-          >
+          <div className={classNames(styles.formItemConfig, position === 'top' ? styles.top : '')}>
             <ConfigActions
               position={position}
               moveUp={moveUp}
@@ -377,17 +312,12 @@ export default function renderFormItem({
     case 'switch':
       const switchItem = (
         <Form.Item label={label} name={name} valuePropName="checked">
-          <Switch {...convertStringToBoolean(restProps)} />
+          <Switch {...restProps} />
         </Form.Item>
       );
       if (config) {
         return (
-          <div
-            className={classNames(
-              styles.formItemConfig,
-              position === 'top' ? styles.top : '',
-            )}
-          >
+          <div className={classNames(styles.formItemConfig, position === 'top' ? styles.top : '')}>
             <ConfigActions
               position={position}
               moveUp={moveUp}
@@ -405,17 +335,12 @@ export default function renderFormItem({
     case 'slider':
       const sliderItem = (
         <Form.Item label={label} name={name}>
-          <Slider {...convertStringToBoolean(restProps)} />
+          <Slider {...restProps} />
         </Form.Item>
       );
       if (config) {
         return (
-          <div
-            className={classNames(
-              styles.formItemConfig,
-              position === 'top' ? styles.top : '',
-            )}
-          >
+          <div className={classNames(styles.formItemConfig, position === 'top' ? styles.top : '')}>
             <ConfigActions
               position={position}
               moveUp={moveUp}
@@ -433,7 +358,7 @@ export default function renderFormItem({
     case 'select':
       const selectItem = (
         <Form.Item label={label} name={name}>
-          <Select {...convertStringToBoolean(restProps)}>
+          <Select {...restProps}>
             {((formItem.options as LabeledValue[]) || []).map(option => (
               <Option key={option.value} value={option.value}>
                 {option.label}
@@ -444,12 +369,7 @@ export default function renderFormItem({
       );
       if (config) {
         return (
-          <div
-            className={classNames(
-              styles.formItemConfig,
-              position === 'top' ? styles.top : '',
-            )}
-          >
+          <div className={classNames(styles.formItemConfig, position === 'top' ? styles.top : '')}>
             <ConfigActions
               position={position}
               moveUp={moveUp}
@@ -467,17 +387,12 @@ export default function renderFormItem({
     case 'treeselect':
       const treeselectItem = (
         <Form.Item label={label} name={name}>
-          <TreeSelect {...convertStringToBoolean(restProps)} />
+          <TreeSelect {...restProps} />
         </Form.Item>
       );
       if (config) {
         return (
-          <div
-            className={classNames(
-              styles.formItemConfig,
-              position === 'top' ? styles.top : '',
-            )}
-          >
+          <div className={classNames(styles.formItemConfig, position === 'top' ? styles.top : '')}>
             <ConfigActions
               position={position}
               moveUp={moveUp}
@@ -495,7 +410,7 @@ export default function renderFormItem({
     case 'upload':
       const uploadItem = (
         <Form.Item label={label} name={name}>
-          <Upload {...convertStringToBoolean(restProps)}>
+          <Upload {...restProps}>
             <Button>
               <UploadOutlined /> Click to Upload
             </Button>
@@ -504,12 +419,7 @@ export default function renderFormItem({
       );
       if (config) {
         return (
-          <div
-            className={classNames(
-              styles.formItemConfig,
-              position === 'top' ? styles.top : '',
-            )}
-          >
+          <div className={classNames(styles.formItemConfig, position === 'top' ? styles.top : '')}>
             <ConfigActions
               position={position}
               moveUp={moveUp}
@@ -532,12 +442,7 @@ export default function renderFormItem({
       );
       if (config) {
         return (
-          <div
-            className={classNames(
-              styles.formItemConfig,
-              position === 'top' ? styles.top : '',
-            )}
-          >
+          <div className={classNames(styles.formItemConfig, position === 'top' ? styles.top : '')}>
             <ConfigActions
               position={position}
               moveUp={moveUp}
@@ -552,18 +457,4 @@ export default function renderFormItem({
       }
       return rateItem;
   }
-}
-
-function convertStringToBoolean(props: { [key: string]: unknown }) {
-  const values = {};
-  Object.entries(props).forEach(([key, value]) => {
-    if (value === 'true') {
-      values[key] = true;
-    } else if (value === 'false') {
-      values[key] = false;
-    } else {
-      values[key] = value;
-    }
-  });
-  return values;
 }

@@ -1,4 +1,13 @@
+/*
+ * @文件描述:
+ * @公司: thundersdata
+ * @作者: 陈杰
+ * @Date: 2020-05-11 17:20:18
+ * @LastEditors: 陈杰
+ * @LastEditTime: 2020-05-14 11:17:27
+ */
 import { FormItemProps } from '@/interfaces/common';
+import { Store } from 'antd/lib/form/interface';
 
 /**
  * 将一个数组按照指定的列拆分成N个二维数组
@@ -16,4 +25,19 @@ export function transformFormItemLines(formItems: FormItemProps[], cols = 3) {
     res.push(temp);
   }
   return res;
+}
+
+/**
+ * 过滤掉空数据
+ * @param values
+ */
+export function filterEmpty(values: Store) {
+  const filteredValues = {};
+
+  Object.entries(values).forEach(([key, value]) => {
+    if (value !== '' && value !== undefined && value !== null) {
+      filteredValues[key] = value;
+    }
+  });
+  return filteredValues;
 }

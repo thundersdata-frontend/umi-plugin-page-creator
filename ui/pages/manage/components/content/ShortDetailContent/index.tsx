@@ -103,10 +103,7 @@ export default () => {
       <Card
         title={<Title text={cardConfig.title} />}
         extra={
-          <Button
-            type="primary"
-            onClick={() => setFormConfigDrawerVisible(true)}
-          >
+          <Button type="primary" onClick={() => setFormConfigDrawerVisible(true)}>
             配置
           </Button>
         }
@@ -129,11 +126,7 @@ export default () => {
               </Form.Item>
             </div>
           ))}
-          <Button
-            onClick={addDetailItem}
-            type="dashed"
-            style={{ width: '100%', marginBottom: 32 }}
-          >
+          <Button onClick={addDetailItem} type="dashed" style={{ width: '100%', marginBottom: 32 }}>
             添加展示项
           </Button>
         </Form>

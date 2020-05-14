@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-04-29 10:38:23
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-12 20:19:59
+ * @LastEditTime: 2020-05-14 11:47:31
  */
 // ref:
 // - https://umijs.org/plugin/develop.html
@@ -19,6 +19,7 @@ import {
   generateLongFormCode,
   generateShortDetailCode,
   generateLongDetailCode,
+  generateTableCode,
 } from './generate';
 
 export default function(api: IApi) {
@@ -43,6 +44,9 @@ export default function(api: IApi) {
       case 'org.umi-plugin-page-creator.longDetail':
         code = generateLongDetailCode(payload);
         break;
+      case 'org.umi-plugin-page-creator.table':
+        code = generateTableCode(payload);
+        break;
     }
     const formattedCode = prettier.format(code, {
       singleQuote: true,
@@ -50,7 +54,7 @@ export default function(api: IApi) {
       printWidth: 100,
       parser: 'typescript',
     });
-    generateFile(formattedCode, payload, failure, success);
+    formattedCode && generateFile(formattedCode, payload, failure, success);
   });
 
   /**
@@ -66,7 +70,7 @@ export default function(api: IApi) {
     failure: (data: AjaxResponse<null>) => void,
     success: (data: AjaxResponse<null>) => void,
   ) {
-    if (payload && payload.path) {
+    if (payload && payload.path && code) {
       const { path } = payload;
 
       const absPagesPath = api.paths.absPagesPath;

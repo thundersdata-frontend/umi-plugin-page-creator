@@ -45,9 +45,7 @@ export default function generateShortDetail(payload: Payload): string {
         return (
           <Spin spinning={loading}>
             <Form form={form}>
-              <Card title={<Title text="${
-                cardConfig.title
-              }" />} style={{ marginBottom: 16 }}>
+              <Card title={<Title text="${cardConfig.title}" />} style={{ marginBottom: 16 }}>
                 ${formItems
                   .map(item => {
                     const { label, name } = item;

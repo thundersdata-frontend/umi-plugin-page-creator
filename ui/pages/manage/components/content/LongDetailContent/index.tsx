@@ -148,28 +148,16 @@ export default () => {
                       <div className={styles.formItemConfig}>
                         <ConfigActions
                           position="top"
-                          moveUp={moveItemUp(
-                            index * cols + itemIndex,
-                            cardIndex,
-                          )}
-                          moveDown={moveItemDown(
-                            index * cols + itemIndex,
-                            cardIndex,
-                          )}
+                          moveUp={moveItemUp(index * cols + itemIndex, cardIndex)}
+                          moveDown={moveItemDown(index * cols + itemIndex, cardIndex)}
                           configItem={() => {
                             setCardIndex(cardIndex);
                             setCurrentItem(formItem);
                             setItemIndex(index * cols + itemIndex);
                             setFormItemConfigDrawerVisible(true);
                           }}
-                          deleteItem={deleteItem(
-                            index * cols + itemIndex,
-                            cardIndex,
-                          )}
-                          copyItem={copyItem(
-                            index * cols + itemIndex,
-                            cardIndex,
-                          )}
+                          deleteItem={deleteItem(index * cols + itemIndex, cardIndex)}
+                          copyItem={copyItem(index * cols + itemIndex, cardIndex)}
                         />
                         <Form.Item label={formItem.label} name={formItem.name}>
                           <Input disabled />
@@ -179,11 +167,7 @@ export default () => {
                   ))}
                 </Row>
               ))}
-              <Button
-                onClick={addDetailItem(cardIndex)}
-                type="dashed"
-                style={{ width: '100%' }}
-              >
+              <Button onClick={addDetailItem(cardIndex)} type="dashed" style={{ width: '100%' }}>
                 添加展示项
               </Button>
             </Card>
@@ -193,11 +177,7 @@ export default () => {
       <Button
         type="primary"
         onClick={() =>
-          setCards(cards =>
-            cards.concat([
-              { title: `自定义Card${cards.length}`, formItems: [] },
-            ]),
-          )
+          setCards(cards => cards.concat([{ title: `自定义Card${cards.length}`, formItems: [] }]))
         }
         style={{ margin: 24 }}
       >

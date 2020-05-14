@@ -100,10 +100,7 @@ export default () => {
       <Card
         title={<Title text={formConfig.title} />}
         extra={
-          <Button
-            type="primary"
-            onClick={() => setFormConfigDrawerVisible(true)}
-          >
+          <Button type="primary" onClick={() => setFormConfigDrawerVisible(true)}>
             配置
           </Button>
         }

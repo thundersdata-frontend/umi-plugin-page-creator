@@ -5,6 +5,7 @@ import { FormItemProps, FormItemType } from '../../interfaces/common';
 import { Store } from 'antd/lib/form/interface';
 import * as itemProps from './props';
 import renderFormItem from '../FormItemConfig';
+import { filterEmpty } from '@/utils';
 
 export default ({
   visible,
@@ -44,12 +45,7 @@ export default ({
       destroyOnClose
       width={400}
     >
-      <Form
-        form={form}
-        onFinish={handleFinish}
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-      >
+      <Form form={form} onFinish={handleFinish} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
         <Form.Item
           label="标签"
           name="label"
@@ -75,10 +71,7 @@ export default ({
               rules={[{ required: true, message: '请选择是否必填' }]}
             >
               <Radio.Group
-                options={[
-                  { label: '是', value: 1 },
-                  { label: '否', value: 0 },
-                ]}
+                options={[{ label: '是', value: true }, { label: '否', value: false }]}
               />
             </Form.Item>
             <Form.Item
@@ -130,19 +123,4 @@ export default ({
 function renderOtherProps(type: FormItemType) {
   let props: FormItemProps[] = itemProps[`${type}Props`];
   return props.map(item => renderFormItem({ formItem: item }));
-}
-
-/**
- * 过滤掉空数据
- * @param values
- */
-function filterEmpty(values: Store) {
-  const filteredValues = {};
-
-  Object.entries(values).forEach(([key, value]) => {
-    if (value !== '' && value !== undefined && value !== null) {
-      filteredValues[key] = value;
-    }
-  });
-  return filteredValues;
 }

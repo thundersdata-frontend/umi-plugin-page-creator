@@ -6,7 +6,7 @@ import { FormItemProps } from '@/interfaces/common';
  * @作者: 陈杰
  * @Date: 2020-04-30 15:27:34
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-13 11:07:45
+ * @LastEditTime: 2020-05-14 12:01:17
  */
 export const inputProps: FormItemProps[] = [
   {
@@ -18,19 +18,13 @@ export const inputProps: FormItemProps[] = [
     name: 'disabled',
     label: '是否禁用',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'allowClear',
     label: '显示清除图标',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
 ];
 
@@ -39,19 +33,13 @@ export const passwordProps: FormItemProps[] = [
     name: 'visibilityToggle',
     label: '显示切换按钮',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'disabled',
     label: '是否禁用',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
 ];
 
@@ -60,28 +48,19 @@ export const textareaProps: FormItemProps[] = [
     name: 'autoSize',
     label: '自适应内容高度',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'disabled',
     label: '是否禁用',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'allowClear',
     label: '显示清除图标',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
 ];
 
@@ -90,37 +69,25 @@ export const cascaderProps: FormItemProps[] = [
     name: 'allowClear',
     label: '显示清除图标',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'disabled',
     label: '是否禁用',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'changeOnSelect',
     label: '选择即改变',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'showSearch',
     label: '显示搜索框',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
 ];
 
@@ -129,37 +96,25 @@ export const dateProps: FormItemProps[] = [
     name: 'allowClear',
     label: '显示清除图标',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'disabled',
     label: '是否禁用',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'showTime',
     label: '时间选择',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'showToday',
     label: '展示"今天"按钮',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'format',
@@ -174,28 +129,19 @@ export const rangeProps: FormItemProps[] = [
     name: 'allowClear',
     label: '显示清除图标',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'disabled',
     label: '是否禁用',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'showTime',
     label: '时间选择',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'format',
@@ -210,19 +156,13 @@ export const timeProps: FormItemProps[] = [
     name: 'allowClear',
     label: '显示清除图标',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'disabled',
     label: '是否禁用',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'format',
@@ -252,10 +192,7 @@ export const numberProps: FormItemProps[] = [
     name: 'disabled',
     label: '是否禁用',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'min',
@@ -284,10 +221,7 @@ export const radioProps: FormItemProps[] = [
     name: 'disabled',
     label: '是否禁用',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'options',
@@ -302,10 +236,7 @@ export const checkboxProps: FormItemProps[] = [
     name: 'disabled',
     label: '是否禁用',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'options',
@@ -320,28 +251,19 @@ export const switchProps: FormItemProps[] = [
     name: 'disabled',
     label: '是否禁用',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'defaultChecked',
     label: '是否默认选中',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'loading',
     label: '加载中的开关',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
 ];
 
@@ -350,19 +272,13 @@ export const sliderProps: FormItemProps[] = [
     name: 'allowClear',
     label: '显示清除图标',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'disabled',
     label: '是否禁用',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'min',
@@ -378,28 +294,19 @@ export const sliderProps: FormItemProps[] = [
     name: 'range',
     label: '双滑块模式',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'reverse',
     label: '反向坐标轴',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'vertical',
     label: '是否垂直',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'step',
@@ -414,19 +321,13 @@ export const selectProps: FormItemProps[] = [
     name: 'allowClear',
     label: '显示清除图标',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'disabled',
     label: '是否禁用',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'mode',
@@ -442,10 +343,7 @@ export const selectProps: FormItemProps[] = [
     name: 'showSearch',
     label: '单选模式可搜索',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'options',
@@ -460,37 +358,25 @@ export const treeselectProps: FormItemProps[] = [
     name: 'allowClear',
     label: '显示清除图标',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'disabled',
     label: '是否禁用',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'multiple',
     label: '多选',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'showSearch',
     label: '显示搜索框',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
 ];
 
@@ -499,19 +385,13 @@ export const uploadProps: FormItemProps[] = [
     name: 'disabled',
     label: '是否禁用',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'multiple',
     label: '多选',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
 ];
 
@@ -520,28 +400,19 @@ export const rateProps: FormItemProps[] = [
     name: 'allowClear',
     label: '显示清除图标',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'disabled',
     label: '是否禁用',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'allowHalf',
     label: '允许半选',
     type: 'radio',
-    options: [
-      { label: '是', value: 'true' },
-      { label: '否', value: 'false' },
-    ],
+    options: [{ label: '是', value: true }, { label: '否', value: false }],
   },
   {
     name: 'count',

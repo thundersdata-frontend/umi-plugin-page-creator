@@ -10,10 +10,12 @@ import generateShortFormCode from './shortForm';
 import generateLongFormCode from './longForm';
 import generateShortDetailCode from './shortDetail';
 import generateLongDetailCode from './longDetail';
+import generateTableCode from './table';
 
 export {
   generateShortFormCode,
   generateLongFormCode,
   generateShortDetailCode,
   generateLongDetailCode,
+  generateTableCode,
 };

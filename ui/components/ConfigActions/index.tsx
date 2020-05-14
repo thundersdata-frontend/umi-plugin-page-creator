@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { Button, Tooltip } from 'antd';
 import {
   ArrowUpOutlined,
@@ -17,6 +17,7 @@ export default ({
   deleteItem,
   copyItem,
   position = 'left',
+  style,
 }: {
   position?: 'left' | 'top';
   moveUp?: () => void;
@@ -24,23 +25,23 @@ export default ({
   configItem?: () => void;
   deleteItem?: () => void;
   copyItem?: () => void;
+  style?: CSSProperties;
 }) => {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', marginBottom: 5 }}>
-      <Tooltip
-        overlay={position === 'left' ? '上移' : '左移'}
-        trigger={['hover']}
-        placement="top"
-      >
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: 5,
+        ...style,
+      }}
+    >
+      <Tooltip overlay={position === 'left' ? '上移' : '左移'} trigger={['hover']} placement="top">
         <Button style={{ marginRight: 10 }} onClick={moveUp}>
           {position === 'left' ? <ArrowUpOutlined /> : <ArrowLeftOutlined />}
         </Button>
       </Tooltip>
-      <Tooltip
-        overlay={position === 'left' ? '下移' : '右移'}
-        trigger={['hover']}
-        placement="top"
-      >
+      <Tooltip overlay={position === 'left' ? '下移' : '右移'} trigger={['hover']} placement="top">
         <Button style={{ marginRight: 10 }} onClick={moveDown}>
           {position === 'left' ? <ArrowDownOutlined /> : <ArrowRightOutlined />}
         </Button>

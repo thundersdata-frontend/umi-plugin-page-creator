@@ -128,20 +128,14 @@ export default () => {
                         config: true,
                         position: 'top',
                         moveUp: moveItemUp(index * cols + itemIndex, cardIndex),
-                        moveDown: moveItemDown(
-                          index * cols + itemIndex,
-                          cardIndex,
-                        ),
+                        moveDown: moveItemDown(index * cols + itemIndex, cardIndex),
                         configItem: () => {
                           setCardIndex(cardIndex);
                           setCurrentItem(formItem);
                           setItemIndex(index * cols + itemIndex);
                           setFormItemConfigDrawerVisible(true);
                         },
-                        deleteItem: deleteItem(
-                          index * cols + itemIndex,
-                          cardIndex,
-                        ),
+                        deleteItem: deleteItem(index * cols + itemIndex, cardIndex),
                         copyItem: copyItem(index * cols + itemIndex, cardIndex),
                       })}
                     </Col>
@@ -165,11 +159,7 @@ export default () => {
       <Button
         type="primary"
         onClick={() =>
-          setCards(cards =>
-            cards.concat([
-              { title: `自定义Card${cards.length}`, formItems: [] },
-            ]),
-          )
+          setCards(cards => cards.concat([{ title: `自定义Card${cards.length}`, formItems: [] }]))
         }
         style={{ margin: 24 }}
       >

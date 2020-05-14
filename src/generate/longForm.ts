@@ -69,12 +69,7 @@ export default function generateLongFormCode(payload: Payload): string {
                       <Row gutter={16}>
                         ${line
                           .map(formItem => {
-                            const {
-                              label,
-                              name,
-                              type,
-                              ...restProps
-                            } = formItem;
+                            const { label, name, type, ...restProps } = formItem;
 
                             return `
                             <Col {...colLayout}>

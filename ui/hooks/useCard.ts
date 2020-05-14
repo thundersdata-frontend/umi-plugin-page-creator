@@ -7,19 +7,13 @@
  * @LastEditTime: 2020-05-11 20:22:18
  */
 import { useState } from 'react';
-import {
-  CardItemProps,
-  FormItemProps,
-  FormItemType,
-} from '@/interfaces/common';
+import { CardItemProps, FormItemProps, FormItemType } from '@/interfaces/common';
 import { Store } from 'antd/lib/form/interface';
 import produce from 'immer';
 import faker from 'faker';
 
 export default function useCard() {
-  const [cards, setCards] = useState<CardItemProps[]>([
-    { title: '自定义Card0', formItems: [] },
-  ]);
+  const [cards, setCards] = useState<CardItemProps[]>([{ title: '自定义Card0', formItems: [] }]);
   const [cardIndex, setCardIndex] = useState<number>(0);
   const [currentCard, setCurrentCard] = useState<CardItemProps>();
   const [itemIndex, setItemIndex] = useState<number>();

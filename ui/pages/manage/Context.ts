@@ -10,14 +10,12 @@ import { createContext } from 'react';
 import { IUiApi } from '@umijs/ui-types';
 import { TemplateType } from '../../interfaces/common';
 
-const MainContext = createContext(
-  {} as {
-    /** 主体 */
-    api: IUiApi;
+const MainContext = createContext({} as {
+  /** 主体 */
+  api: IUiApi;
 
-    templateType?: TemplateType;
-    addTemplate: (templateType: TemplateType) => void;
-  },
-);
+  templateType?: TemplateType;
+  addTemplate: (templateType: TemplateType) => void;
+});
 
 export default MainContext;

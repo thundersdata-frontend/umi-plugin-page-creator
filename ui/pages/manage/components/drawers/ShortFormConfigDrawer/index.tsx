@@ -28,12 +28,7 @@ export default ({
   };
 
   return (
-    <Drawer
-      title="短表单配置"
-      width={360}
-      visible={visible}
-      onClose={() => setVisible(false)}
-    >
+    <Drawer title="短表单配置" width={360} visible={visible} onClose={() => setVisible(false)}>
       <Form form={form} onFinish={handleFinish} layout="vertical">
         <Form.Item
           label="title"
