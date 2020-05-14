@@ -6,12 +6,12 @@ import FormItemsDrawer from '../../../../../components/FormItemsDrawer';
 import { AjaxResponse } from '../../../../../interfaces/common';
 import Context from '../../../Context';
 import DropdownActions from '../../../../../components/DropdownActions';
-import ConfigActions from '@/components/ConfigActions';
-import useCard from '@/hooks/useCard';
 import CardConfigDrawer from '../../drawers/CardConfigDrawer';
-import useConfigVisible from '@/hooks/useConfigVisible';
-import { transformFormItemLines } from '@/utils';
-import FormItemConfigDrawer from '@/components/FormItemConfigDrawer';
+import { transformFormItemLines } from '../../../../../utils';
+import useConfigVisible from '../../../../../hooks/useConfigVisible';
+import useCard from '../../../../../hooks/useCard';
+import ConfigActions from '../../../../../components/ConfigActions';
+import FormItemConfigDrawer from '../../../../../components/FormItemConfigDrawer';
 
 const formItemLayout = {
   labelCol: {

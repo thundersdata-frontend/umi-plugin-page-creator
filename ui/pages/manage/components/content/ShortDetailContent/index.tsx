@@ -9,12 +9,12 @@ import Context from '../../../Context';
 import DropdownActions from '../../../../../components/DropdownActions';
 import { Store } from 'antd/lib/form/interface';
 import ShortFormConfigDrawer from '../../drawers/ShortFormConfigDrawer';
-import useConfigVisible from '@/hooks/useConfigVisible';
 import useFormItem from '../../../../../hooks/useFormItem';
 import produce from 'immer';
 import faker from 'faker';
-import ConfigActions from '@/components/ConfigActions';
 import styles from './index.module.less';
+import useConfigVisible from '../../../../../hooks/useConfigVisible';
+import ConfigActions from '../../../../../components/ConfigActions';
 
 const formItemLayout = {
   labelCol: {

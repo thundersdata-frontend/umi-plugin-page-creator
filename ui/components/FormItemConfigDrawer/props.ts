@@ -1,4 +1,4 @@
-import { FormItemProps } from '@/interfaces/common';
+import { FormItemProps } from '../../interfaces/common';
 
 /*
  * @文件描述:
@@ -6,7 +6,7 @@ import { FormItemProps } from '@/interfaces/common';
  * @作者: 陈杰
  * @Date: 2020-04-30 15:27:34
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-14 12:01:17
+ * @LastEditTime: 2020-05-14 18:28:28
  */
 export const inputProps: FormItemProps[] = [
   {

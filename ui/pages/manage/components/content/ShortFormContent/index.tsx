@@ -9,7 +9,7 @@ import Context from '../../../Context';
 import DropdownActions from '../../../../../components/DropdownActions';
 import { Store } from 'antd/lib/form/interface';
 import ShortFormConfigDrawer from '../../drawers/ShortFormConfigDrawer';
-import useConfigVisible from '@/hooks/useConfigVisible';
+import useConfigVisible from '../../../../../hooks/useConfigVisible';
 import useFormItem from '../../../../../hooks/useFormItem';
 import faker from 'faker';
 

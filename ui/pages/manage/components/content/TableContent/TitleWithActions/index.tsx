@@ -1,5 +1,5 @@
 import React from 'react';
-import ConfigActions from '@/components/ConfigActions';
+import ConfigActions from '../../../../../../components/ConfigActions';
 import { ColumnTitle } from 'antd/lib/table/interface';
 import { Tooltip } from 'antd';
 

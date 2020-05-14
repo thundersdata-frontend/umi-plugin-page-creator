@@ -1,6 +1,6 @@
 import React from 'react';
 import { Drawer, Form, Input, Button, Radio } from 'antd';
-import { filterEmpty } from '@/utils';
+import { filterEmpty } from '../../../../../utils';
 import { Store } from 'antd/lib/form/interface';
 
 export default ({

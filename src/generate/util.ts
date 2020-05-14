@@ -4,10 +4,10 @@
  * @作者: 陈杰
  * @Date: 2020-05-08 13:56:59
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-14 11:54:38
+ * @LastEditTime: 2020-05-14 18:27:48
  */
-import { FormItemType, FormItemProps } from '@/interfaces/common';
 import { LabeledValue } from 'antd/lib/select';
+import { FormItemType, FormItemProps } from '../../ui/interfaces/common';
 
 export function createFormComponentsByType(
   type: FormItemType,

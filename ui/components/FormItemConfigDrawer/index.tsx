@@ -5,7 +5,7 @@ import { FormItemProps, FormItemType } from '../../interfaces/common';
 import { Store } from 'antd/lib/form/interface';
 import * as itemProps from './props';
 import renderFormItem from '../FormItemConfig';
-import { filterEmpty } from '@/utils';
+import { filterEmpty } from '../../utils';
 
 export default ({
   visible,

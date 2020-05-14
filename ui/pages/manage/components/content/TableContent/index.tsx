@@ -5,11 +5,11 @@ import { AjaxResponse } from '../../../../../interfaces/common';
 import Context from '../../../Context';
 import DropdownActions from '../../../../../components/DropdownActions';
 import { Store } from 'antd/lib/form/interface';
-import useConfigVisible from '@/hooks/useConfigVisible';
 import TableConfigDrawer from '../../drawers/TableConfigDrawer';
-import useTable from '@/hooks/useTable';
 import TableColumnConfigDrawer from '../../drawers/TableColumnConfigDrawer';
 import TitleWithActions from './TitleWithActions';
+import useConfigVisible from '../../../../../hooks/useConfigVisible';
+import useTable from '../../../../../hooks/useTable';
 
 export default () => {
   const { api } = useContext(Context);

@@ -1,20 +1,18 @@
 import React, { useContext } from 'react';
 import { Form, Button, Card, message, Row, Col, Input } from 'antd';
 import Title from '../../../../../components/Title';
-import renderFormItem from '../../../../../components/FormItemConfig';
-import FormItemsDrawer from '../../../../../components/FormItemsDrawer';
 import { AjaxResponse } from '../../../../../interfaces/common';
 import Context from '../../../Context';
 import DropdownActions from '../../../../../components/DropdownActions';
-import ConfigActions from '@/components/ConfigActions';
-import useCard from '@/hooks/useCard';
 import CardConfigDrawer from '../../drawers/CardConfigDrawer';
-import useConfigVisible from '@/hooks/useConfigVisible';
-import { transformFormItemLines } from '@/utils';
-import FormItemConfigDrawer from '@/components/FormItemConfigDrawer';
+import { transformFormItemLines } from '../../../../../utils';
 import produce from 'immer';
 import faker from 'faker';
 import styles from './index.module.less';
+import useConfigVisible from '../../../../../hooks/useConfigVisible';
+import useCard from '../../../../../hooks/useCard';
+import ConfigActions from '../../../../../components/ConfigActions';
+import FormItemConfigDrawer from '../../../../../components/FormItemConfigDrawer';
 
 const formItemLayout = {
   labelCol: {

@@ -4,10 +4,10 @@
  * @作者: 陈杰
  * @Date: 2020-05-08 16:05:30
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-12 19:43:31
+ * @LastEditTime: 2020-05-14 18:27:12
  */
-import { CardItemProps } from '@/interfaces/common';
 import { createFormComponentsByType, transformFormItemLines } from './util';
+import { CardItemProps } from '../../ui/interfaces/common';
 
 export interface Payload {
   cards: CardItemProps[];
