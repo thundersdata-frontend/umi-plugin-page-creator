@@ -1,6 +1,6 @@
 {
   "name": "umi-plugin-page-creator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "authors": {
     "name": "chenjie",
@@ -10,20 +10,17 @@
   "main": "lib/index.js",
   "scripts": {
     "start": "cross-env UMI_UI=1 APP_ROOT=example umi dev",
-    "build": "father-build --watch",
+    "watch": "father-build --watch",
+    "build": "father-build",
     "ui:build": "ui-build",
-    "prettier": "prettier --parser=typescript --write '{src,ui}/**/*.{ts,tsx}'",
+    "prettier": "prettier --parser=typescript --write '{src,ui}/**/*.ts?(x)'",
     "test": "umi-test",
     "test:coverage": "umi-test --coverage",
     "test:update": "umi-test --updateSnapshot"
   },
   "lint-staged": {
     "*.ts?(x)": [
-      "prettier --parser=typescript --check {src,ui}/**/*.{ts,tsx} --write",
-      "git add"
-    ],
-    "*.{js,jsx,less,md,json}": [
-      "prettier --write",
+      "prettier --parser=typescript --check {src,ui}/**/*.ts?(x) --write",
       "git add"
     ]
   },
