@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-04-29 10:38:23
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-15 10:16:13
+ * @LastEditTime: 2020-05-15 10:32:02
  */
 // ref:
 // - https://umijs.org/plugin/develop.html
@@ -87,7 +87,7 @@ export default function(api: IApi) {
             exact: true,
           },
           api.paths.cwd + '/config/config.ts',
-          api.paths.absSrcPath,
+          api.paths.absSrcPath!,
         );
 
         success({ success: true, message: '恭喜你，文件创建成功' });

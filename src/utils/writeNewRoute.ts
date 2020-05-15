@@ -9,13 +9,19 @@ import prettier from 'prettier';
 
 const debug = createDebug('umi-build-dev:writeNewRoute');
 
+type Route = {
+  path: string;
+  component: string;
+  exact?: boolean;
+};
+
 /**
  * 将路由写入路由文件
  * @param {*} newRoute 新的路由配置: { path, component, ... }
  * @param {*} configPath 配置路径
  * @param {*} absSrcPath 代码路径
  */
-export function writeNewRoute(newRoute, configPath, absSrcPath) {
+export function writeNewRoute(newRoute: Route, configPath: string, absSrcPath: string) {
   const { code, routesPath } = getNewRouteCode(configPath, newRoute, absSrcPath);
   writeFileSync(routesPath, code, 'utf-8');
 }
@@ -25,7 +31,7 @@ export function writeNewRoute(newRoute, configPath, absSrcPath) {
  * @param {*} configPath
  * @param {*} newRoute
  */
-export function getNewRouteCode(configPath, newRoute, absSrcPath) {
+export function getNewRouteCode(configPath: string, newRoute: Route, absSrcPath: string) {
   debug(`find routes in configPath: ${configPath}`);
   const ast: any = parser.parse(readFileSync(configPath, 'utf-8'), {
     sourceType: 'module',
@@ -89,7 +95,6 @@ export function getNewRouteCode(configPath, newRoute, absSrcPath) {
       });
     },
   });
-
   if (routesNode) {
     // routes 配置不在当前文件, 需要 load 对应的文件  export default { routes: pageRoutes } case 1
     if (!t.isArrayExpression(routesNode)) {
@@ -120,10 +125,10 @@ function getNewRouteNode(newRoute: any) {
  * @param {*} node 找到的节点
  * @param {*} newRoute 新的路由配置
  */
-export function writeRouteNode(targetNode, newRoute, currentPath = '/') {
+export function writeRouteNode(targetNode, newRoute: Route, currentPath = '/') {
   debug(`writeRouteNode currentPath newRoute.path: ${newRoute.path} currentPath: ${currentPath}`);
   const { elements } = targetNode;
-  const paths = elements.map(ele => {
+  const paths: string[] = elements.map(ele => {
     if (!t.isObjectExpression(ele)) {
       return false;
     }
@@ -136,27 +141,23 @@ export function writeRouteNode(targetNode, newRoute, currentPath = '/') {
     if (!pathProp) {
       return currentPath;
     }
-    let fullPath = pathProp.value.value;
+    let fullPath: string = pathProp.value.value;
     if (fullPath.indexOf('/') !== 0) {
       fullPath = join(currentPath, fullPath);
     }
     return fullPath;
   });
   debug('paths', paths);
-
   const matchedIndex = paths.findIndex(p => p && newRoute.path.indexOf(winPath(p)) === 0);
-
   const newNode = getNewRouteNode(newRoute);
   if (matchedIndex === -1) {
-    elements.push(newNode);
+    elements.unshift(newNode);
     // return container for test
     return targetNode;
   }
   // matched, insert to children routes
   const matchedEle = elements[matchedIndex];
-  const routesProp = matchedEle.properties.find(
-    p => p.key.name === 'routes' || (process.env.BIGFISH_COMPAT && p.key.name === 'childRoutes'),
-  );
+  const routesProp = matchedEle.properties.find(p => p.key.name === 'routes');
   if (!routesProp) {
     // not find children routes, insert before the matched element
     elements.splice(matchedIndex, 0, newNode);
@@ -184,7 +185,7 @@ function generateCode(ast) {
  * 获取路由配置的真实路径
  * @param {*} modulePath
  */
-function getModulePath(configPath, modulePath, absSrcPath) {
+function getModulePath(configPath: string, modulePath: string, absSrcPath: string) {
   // like @/route.config
   if (/^@\//.test(modulePath)) {
     modulePath = join(absSrcPath, modulePath.replace(/^@\//, ''));
