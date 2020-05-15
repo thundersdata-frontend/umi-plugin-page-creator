@@ -1,6 +1,5 @@
 import React from 'react';
 import { Drawer, Form, Input, Button, Radio, Select, InputNumber } from 'antd';
-import { FormItemType } from 'ui/interfaces/common';
 import { Store } from 'antd/lib/form/interface';
 import { ColumnType } from 'antd/lib/table';
 
@@ -15,6 +14,13 @@ export default function<T>({
   onSubmit: (values: Store) => void;
   current?: ColumnType<T>;
 }) {
+  const initialValues = current || {
+    align: 'left',
+    ellipsis: true,
+    copyable: true,
+    valueType: 'text',
+    hideInSearch: false,
+  };
   return (
     <Drawer
       title="表格列配置"
@@ -28,11 +34,7 @@ export default function<T>({
         wrapperCol={{ span: 14 }}
         labelAlign="right"
         onFinish={onSubmit}
-        initialValues={{
-          title: current ? current.title : '',
-          dataIndex: current ? current.dataIndex : '',
-          align: current ? current.align : 'left',
-        }}
+        initialValues={initialValues}
       >
         <Form.Item
           label="列头显示文字"

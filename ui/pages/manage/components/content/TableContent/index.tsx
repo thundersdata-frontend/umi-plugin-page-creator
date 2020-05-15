@@ -10,6 +10,7 @@ import TableColumnConfigDrawer from '../../drawers/TableColumnConfigDrawer';
 import TitleWithActions from './TitleWithActions';
 import useConfigVisible from '../../../../../hooks/useConfigVisible';
 import useTable from '../../../../../hooks/useTable';
+import { filterEmpty } from '../../../../../utils';
 
 export default () => {
   const { api } = useContext(Context);
@@ -122,7 +123,7 @@ export default () => {
         visible={columnConfigDrawerVisible}
         setVisible={setColumnConfigDrawerVisible}
         onSubmit={values => {
-          onConfirm(values);
+          onConfirm(filterEmpty(values));
           setColumnConfigDrawerVisible(false);
         }}
         current={currentColumn}
