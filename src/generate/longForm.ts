@@ -21,11 +21,23 @@ export default function generateLongFormCode(payload: Payload): string {
       import React from 'react';
       import {
         Form,
-        Input,
         Button,
         Card,
         Row,
         Col,
+        Input,
+        DatePicker,
+        TimePicker,
+        Cascader,
+        InputNumber,
+        Radio,
+        Checkbox,
+        Switch,
+        Slider,
+        Select,
+        TreeSelect,
+        Upload,
+        Rate,
       } from 'antd';
       import { useToggle } from '@umijs/hooks';
       import { Store } from 'antd/es/form/interface';

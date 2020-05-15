@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-05-07 14:04:41
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-14 18:27:26
+ * @LastEditTime: 2020-05-15 11:37:28
  */
 import { Store } from 'antd/lib/form/interface';
 import { FormItemProps } from '../../ui/interfaces/common';
@@ -20,21 +20,20 @@ export default function generateShortDetail(payload: Payload): string {
 
     const code = `
       import React from 'react';
-      import { Card, Row, Col, Form, Spin } from 'antd';
+      import { Card, Form, Spin } from 'antd';
       import Title from '@/components/Title';
-      import styles from './index.less';
       import DetailValue from '@/components/DetailValue';
       import { useRequest } from 'umi';
 
-      const colLayout = {
-        lg: {
-          span: 8,
+      const formItemLayout = {
+        labelCol: {
+          xs: { span: 24 },
+          sm: { span: 7 },
         },
-        md: {
-          span: 12,
-        },
-        sm: {
-          span: 24,
+        wrapperCol: {
+          xs: { span: 24 },
+          sm: { span: 12 },
+          md: { span: 10 },
         },
       };
 

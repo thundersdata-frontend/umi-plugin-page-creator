@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-05-07 14:04:41
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-14 18:27:36
+ * @LastEditTime: 2020-05-15 11:43:10
  */
 import { Store } from 'antd/lib/form/interface';
 import { createFormComponentsByType } from './util';
@@ -26,12 +26,19 @@ export default function generateShortFormCode(payload: Payload): string {
         Input,
         Button,
         DatePicker,
-        Tooltip,
+        TimePicker,
+        Cascader,
         InputNumber,
         Radio,
+        Checkbox,
+        Switch,
+        Slider,
+        Select,
+        TreeSelect,
+        Upload,
+        Rate,
         Card,
       } from 'antd';
-      import { InfoCircleOutlined } from '@ant-design/icons';
       import { useToggle } from '@umijs/hooks';
       import { Store } from 'antd/es/form/interface';
       import Title from '@/components/Title';
@@ -69,7 +76,7 @@ export default function generateShortFormCode(payload: Payload): string {
 
         return (
           <Card title={<Title text="${formConfig.title}" />}>
-            <Form form={form} onFinish={handleFinish} validateMessages={validateMessages}>
+            <Form form={form} onFinish={handleFinish}>
               ${formItems
                 .map(item => {
                   const {

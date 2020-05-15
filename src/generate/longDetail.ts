@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-05-08 16:05:30
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-14 18:27:00
+ * @LastEditTime: 2020-05-15 11:44:47
  */
 import { transformFormItemLines } from './util';
 import { CardItemProps } from '../../ui/interfaces/common';
@@ -21,14 +21,11 @@ export default function generateLongFormCode(payload: Payload): string {
       import React from 'react';
       import {
         Form,
-        Button,
         Card,
         Row,
         Col,
       } from 'antd';
-      import { Store } from 'antd/es/form/interface';
       import Title from '@/components/Title';
-      import FooterToolbar from '@/components/FooterToolbar';
       import DetailValue from '@/components/DetailValue';
 
       const colLayout = {
