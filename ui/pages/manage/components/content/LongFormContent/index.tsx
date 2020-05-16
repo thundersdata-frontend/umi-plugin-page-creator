@@ -16,12 +16,13 @@ import FormItemConfigDrawer from '../../../../../components/FormItemConfigDrawer
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
-    sm: { span: 7 },
+    sm: { span: 12 },
+    md: { span: 10 },
   },
   wrapperCol: {
     xs: { span: 24 },
     sm: { span: 12 },
-    md: { span: 10 },
+    md: { span: 14 },
   },
 };
 const colLayout = {
@@ -74,7 +75,7 @@ export default () => {
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async (path: string) => {
+  const remoteCall = async ({ path }: { path: string }) => {
     try {
       if (cards.length === 0) {
         message.error('你还没有添加Card');

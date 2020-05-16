@@ -1,9 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { Form, Button, Card, message, Input } from 'antd';
 import Title from '../../../../../components/Title';
-import renderFormItem from '../../../../../components/FormItemConfig';
-import FormItemsDrawer from '../../../../../components/FormItemsDrawer';
-import { FormItemType, AjaxResponse } from '../../../../../interfaces/common';
+import { AjaxResponse } from '../../../../../interfaces/common';
 import FormItemConfigDrawer from '../../../../../components/FormItemConfigDrawer';
 import Context from '../../../Context';
 import DropdownActions from '../../../../../components/DropdownActions';
@@ -20,11 +18,12 @@ const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
     sm: { span: 7 },
+    md: { span: 10 },
   },
   wrapperCol: {
     xs: { span: 24 },
     sm: { span: 12 },
-    md: { span: 10 },
+    md: { span: 14 },
   },
 };
 
@@ -35,11 +34,9 @@ export default () => {
   });
 
   const {
-    formItemsDrawerVisible,
     pathModalVisible,
     formConfigDrawerVisible,
     formItemConfigDrawerVisible,
-    setFormItemsDrawerVisible,
     setPathModalVisible,
     setFormConfigDrawerVisible,
     setFormItemConfigDrawerVisible,
@@ -76,7 +73,7 @@ export default () => {
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async (path: string) => {
+  const remoteCall = async ({ path }: { path: string }) => {
     // 对formItems进行遍历，如果其中有任一项没有配置label/name，则不允许提交
     if (formItems.length === 0) {
       message.error('您还没有添加详情展示项，不能提交！');

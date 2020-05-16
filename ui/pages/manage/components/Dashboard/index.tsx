@@ -7,6 +7,10 @@ import LongFormContent from '../content/LongFormContent';
 import ShortDetailContent from '../content/ShortDetailContent';
 import LongDetailContent from '../content/LongDetailContent';
 import TableContent from '../content/TableContent';
+import ShortFormModalContent from '../content/ShortFormModalContent';
+import LongFormModalContent from '../content/LongFormModalContent';
+import ShortDetailModalContent from '../content/ShortDetailModalContent';
+import LongDetailModalContent from '../content/LongDetailModalContent';
 
 export default () => {
   const { templateType } = useContext(Context);
@@ -19,17 +23,17 @@ export default () => {
       case 'long-form':
         return <LongFormContent />;
       case 'one-column-form-modal':
-        return null;
+        return <ShortFormModalContent />;
       case 'two-columns-form-modal':
-        return null;
+        return <LongFormModalContent />;
       case 'short-detail':
         return <ShortDetailContent />;
       case 'long-detail':
         return <LongDetailContent />;
       case 'one-column-detail-modal':
-        return null;
+        return <ShortDetailModalContent />;
       case 'two-columns-detail-modal':
-        return null;
+        return <LongDetailModalContent />;
       case 'table':
         return <TableContent />;
       default:

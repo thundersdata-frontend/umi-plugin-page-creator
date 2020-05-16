@@ -1,17 +1,19 @@
 import React, { useContext, useState } from 'react';
-import { Form, Button, Card, message } from 'antd';
+import { Form, Button, Card, message, Input, Row, Col } from 'antd';
 import Title from '../../../../../components/Title';
-import renderFormItem from '../../../../../components/FormItemConfig';
-import FormItemsDrawer from '../../../../../components/FormItemsDrawer';
-import { FormItemType, AjaxResponse } from '../../../../../interfaces/common';
+import { AjaxResponse } from '../../../../../interfaces/common';
 import FormItemConfigDrawer from '../../../../../components/FormItemConfigDrawer';
 import Context from '../../../Context';
 import DropdownActions from '../../../../../components/DropdownActions';
 import { Store } from 'antd/lib/form/interface';
 import ShortFormConfigDrawer from '../../drawers/ShortFormConfigDrawer';
-import useConfigVisible from '../../../../../hooks/useConfigVisible';
 import useFormItem from '../../../../../hooks/useFormItem';
+import produce from 'immer';
 import faker from 'faker';
+import styles from './index.module.less';
+import useConfigVisible from '../../../../../hooks/useConfigVisible';
+import ConfigActions from '../../../../../components/ConfigActions';
+import { transformFormItemLines } from '../../../../../utils';
 
 const formItemLayout = {
   labelCol: {
@@ -29,15 +31,13 @@ const formItemLayout = {
 export default () => {
   const { api } = useContext(Context);
   const [formConfig, setFormConfig] = useState<Store>({
-    title: '单列表单',
+    title: '两列详情',
   });
 
   const {
-    formItemsDrawerVisible,
     pathModalVisible,
     formConfigDrawerVisible,
     formItemConfigDrawerVisible,
-    setFormItemsDrawerVisible,
     setPathModalVisible,
     setFormConfigDrawerVisible,
     setFormItemConfigDrawerVisible,
@@ -51,42 +51,43 @@ export default () => {
     configItem,
     deleteItem,
     copyItem,
-    index,
     currentItem,
+    index,
     onConfirm,
   } = useFormItem();
 
   /**
-   * 添加表单元素
-   * @param checkedComponents
+   * 添加详情展示项
    */
-  const handleSubmit = (checkedComponents: FormItemType[]) => {
-    const newFormItems = checkedComponents.map(type => ({
-      type,
-      label: faker.name.title(),
-      name: faker.name.lastName(),
-    }));
-    setFormItems(formItems => [...formItems, ...newFormItems]);
-    setFormItemsDrawerVisible(false);
-    message.success('添加成功');
+  const addDetailItem = () => {
+    setFormItems(
+      produce(formItems, draft => {
+        draft.push({
+          label: faker.name.title(),
+          name: faker.name.lastName(),
+          type: 'input',
+        });
+      }),
+    );
   };
 
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async ({ path }: { path: string }) => {
+  const remoteCall = async ({ path, dirName }: { path: string; dirName?: string }) => {
     // 对formItems进行遍历，如果其中有任一项没有配置label/name，则不允许提交
     if (formItems.length === 0) {
-      message.error('您还没有添加表单项，不能提交！');
+      message.error('您还没有添加详情展示项，不能提交！');
       return;
     }
     try {
       const result = await api.callRemote({
-        type: 'org.umi-plugin-page-creator.shortForm',
+        type: 'org.umi-plugin-page-creator.longDetailModal',
         payload: {
-          formConfig: formConfig,
+          formConfig,
           formItems,
           path,
+          dirName,
         },
       });
       message.success((result as AjaxResponse<string>).message);
@@ -95,6 +96,10 @@ export default () => {
       message.error(error.message);
     }
   };
+
+  const cols = 2;
+  // 把formItems分成2列
+  const formItemLines = transformFormItemLines(formItems, cols);
 
   return (
     <>
@@ -107,26 +112,31 @@ export default () => {
         }
       >
         <Form {...formItemLayout}>
-          {formItems.map((formItem, index) =>
-            renderFormItem({
-              formItem,
-              config: true,
-              moveUp: moveUp(index),
-              moveDown: moveDown(index),
-              configItem: () => {
-                configItem(formItem, index);
-                setFormItemConfigDrawerVisible(true);
-              },
-              deleteItem: deleteItem(index),
-              copyItem: copyItem(index),
-            }),
-          )}
-          <Button
-            onClick={() => setFormItemsDrawerVisible(true)}
-            type="dashed"
-            style={{ width: '100%', marginBottom: 32 }}
-          >
-            添加表单元素
+          {formItemLines.map((line, index) => (
+            <Row>
+              {line.map(formItem => (
+                <Col span={12}>
+                  <div className={styles.formItemConfig}>
+                    <ConfigActions
+                      moveUp={moveUp(index)}
+                      moveDown={moveDown(index)}
+                      configItem={() => {
+                        configItem(formItem, index);
+                        setFormItemConfigDrawerVisible(true);
+                      }}
+                      deleteItem={deleteItem(index)}
+                      copyItem={copyItem(index)}
+                    />
+                    <Form.Item label={formItem.label} name={formItem.name}>
+                      <Input disabled />
+                    </Form.Item>
+                  </div>
+                </Col>
+              ))}
+            </Row>
+          ))}
+          <Button onClick={addDetailItem} type="dashed" style={{ width: '100%', marginBottom: 32 }}>
+            添加展示项
           </Button>
         </Form>
       </Card>
@@ -138,13 +148,6 @@ export default () => {
         onFinish={setFormConfig}
       />
 
-      {/**表单项集合 */}
-      <FormItemsDrawer
-        visible={formItemsDrawerVisible}
-        setVisible={setFormItemsDrawerVisible}
-        onSubmit={handleSubmit}
-      />
-
       {/**配置单个表单项 */}
       {currentItem && (
         <FormItemConfigDrawer
@@ -153,6 +156,7 @@ export default () => {
           index={index}
           formItem={currentItem}
           onConfirm={onConfirm}
+          from="detail"
         />
       )}
 
@@ -161,6 +165,7 @@ export default () => {
         onRemoteCall={remoteCall}
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}
+        modal
       />
     </>
   );

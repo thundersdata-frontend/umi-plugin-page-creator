@@ -74,7 +74,7 @@ export default () => {
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async ({ path }: { path: string }) => {
+  const remoteCall = async ({ path, dirName }: { path: string; dirName?: string }) => {
     // 对formItems进行遍历，如果其中有任一项没有配置label/name，则不允许提交
     if (formItems.length === 0) {
       message.error('您还没有添加表单项，不能提交！');
@@ -82,11 +82,12 @@ export default () => {
     }
     try {
       const result = await api.callRemote({
-        type: 'org.umi-plugin-page-creator.shortForm',
+        type: 'org.umi-plugin-page-creator.shortFormModal',
         payload: {
           formConfig: formConfig,
           formItems,
           path,
+          dirName,
         },
       });
       message.success((result as AjaxResponse<string>).message);
@@ -161,6 +162,7 @@ export default () => {
         onRemoteCall={remoteCall}
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}
+        modal
       />
     </>
   );

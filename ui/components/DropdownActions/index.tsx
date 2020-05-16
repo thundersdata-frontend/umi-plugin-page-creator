@@ -9,16 +9,28 @@ export default ({
   onRemoteCall,
   modalVisible,
   setModalVisible,
+  modal = false,
 }: {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
-  onRemoteCall: (path: string) => void;
+  onRemoteCall: (values: { path: string; dirName?: string }) => void;
+  modal?: boolean;
 }) => {
   const [form] = Form.useForm();
 
   const handleSubmit = (values: Store) => {
-    const path: string = values.path;
-    onRemoteCall(path.startsWith('/') ? path : `/${path}`);
+    if (!modal) {
+      const path: string = values.path;
+      onRemoteCall({ path: path.startsWith('/') ? path : `/${path}` });
+    } else {
+      const { path, dirName } = values;
+      onRemoteCall({ path: path.startsWith('/') ? path : `/${path}`, dirName });
+    }
+  };
+
+  const formLayout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
   };
 
   return (
@@ -33,19 +45,48 @@ export default ({
       <Modal
         title="添加页面"
         destroyOnClose
+        forceRender
+        getContainer={false}
         visible={modalVisible}
         onOk={() => form.submit()}
         onCancel={() => setModalVisible(false)}
       >
-        <Form form={form} onFinish={handleSubmit}>
-          <Form.Item
-            label="添加到路径"
-            name="path"
-            required
-            rules={[{ required: true, message: '请输入你要添加的路径' }]}
-          >
-            <Input />
-          </Form.Item>
+        <Form form={form} onFinish={handleSubmit} {...formLayout}>
+          {!modal ? (
+            <Form.Item
+              label="添加到路径"
+              name="path"
+              required
+              rules={[{ required: true, message: '请输入你要添加的路径' }]}
+            >
+              <Input />
+            </Form.Item>
+          ) : (
+            <>
+              <Form.Item
+                label="添加到目录"
+                name="path"
+                required
+                rules={[{ required: true, message: '请输入你要添加的目录' }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label="文件名"
+                name="dirName"
+                required
+                rules={[
+                  { required: true, message: '请输入文件名' },
+                  {
+                    pattern: /^[A-Z][a-zA-Z]+$/,
+                    message: '文件名应采用大驼峰命名法',
+                  },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+            </>
+          )}
         </Form>
       </Modal>
     </>

@@ -81,13 +81,22 @@ export default function generateLongFormCode(payload: Payload): string {
                       <Row gutter={16}>
                         ${line
                           .map(formItem => {
-                            const { label, name, type, ...restProps } = formItem;
+                            const {
+                              label,
+                              name,
+                              type,
+                              required = false,
+                              customRules = [],
+                              ...restProps
+                            } = formItem;
 
                             return `
                             <Col {...colLayout}>
                               <Form.Item
-                                label="${formItem.label}"
-                                name="${formItem.name}"
+                                label="${label}"
+                                name="${name}"
+                                required={${required}}
+                                rules={${JSON.stringify(customRules)}}
                               >
                                 ${createFormComponentsByType(type, restProps)}
                               </Form.Item>

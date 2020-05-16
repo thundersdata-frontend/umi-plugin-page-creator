@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-05-07 14:04:41
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-15 11:43:10
+ * @LastEditTime: 2020-05-15 18:08:51
  */
 import { Store } from 'antd/lib/form/interface';
 import { createFormComponentsByType } from './util';
@@ -23,8 +23,9 @@ export default function generateShortFormCode(payload: Payload): string {
       import React from 'react';
       import {
         Form,
-        Input,
         Button,
+        Card,
+        Input,
         DatePicker,
         TimePicker,
         Cascader,
@@ -37,7 +38,6 @@ export default function generateShortFormCode(payload: Payload): string {
         TreeSelect,
         Upload,
         Rate,
-        Card,
       } from 'antd';
       import { useToggle } from '@umijs/hooks';
       import { Store } from 'antd/es/form/interface';
@@ -92,6 +92,7 @@ export default function generateShortFormCode(payload: Payload): string {
                     label="${label}"
                     name="${name}"
                     required={${required}}
+                    rules={${JSON.stringify(customRules)}}
                   >
                     ${createFormComponentsByType(type, restProps)}
                   </Form.Item>`;

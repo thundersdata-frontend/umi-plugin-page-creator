@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Form, Button, Card, message } from 'antd';
+import { Form, Button, Card, message, Row, Col } from 'antd';
 import Title from '../../../../../components/Title';
 import renderFormItem from '../../../../../components/FormItemConfig';
 import FormItemsDrawer from '../../../../../components/FormItemsDrawer';
@@ -12,6 +12,7 @@ import ShortFormConfigDrawer from '../../drawers/ShortFormConfigDrawer';
 import useConfigVisible from '../../../../../hooks/useConfigVisible';
 import useFormItem from '../../../../../hooks/useFormItem';
 import faker from 'faker';
+import { transformFormItemLines } from '../../../../../utils';
 
 const formItemLayout = {
   labelCol: {
@@ -29,7 +30,7 @@ const formItemLayout = {
 export default () => {
   const { api } = useContext(Context);
   const [formConfig, setFormConfig] = useState<Store>({
-    title: '单列表单',
+    title: '两列表单',
   });
 
   const {
@@ -74,7 +75,7 @@ export default () => {
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async ({ path }: { path: string }) => {
+  const remoteCall = async ({ path, dirName }: { path: string; dirName?: string }) => {
     // 对formItems进行遍历，如果其中有任一项没有配置label/name，则不允许提交
     if (formItems.length === 0) {
       message.error('您还没有添加表单项，不能提交！');
@@ -82,11 +83,12 @@ export default () => {
     }
     try {
       const result = await api.callRemote({
-        type: 'org.umi-plugin-page-creator.shortForm',
+        type: 'org.umi-plugin-page-creator.longFormModal',
         payload: {
           formConfig: formConfig,
           formItems,
           path,
+          dirName,
         },
       });
       message.success((result as AjaxResponse<string>).message);
@@ -95,6 +97,10 @@ export default () => {
       message.error(error.message);
     }
   };
+
+  const cols = 2;
+  // 把formItems分成2列
+  const formItemLines = transformFormItemLines(formItems, cols);
 
   return (
     <>
@@ -107,20 +113,26 @@ export default () => {
         }
       >
         <Form {...formItemLayout}>
-          {formItems.map((formItem, index) =>
-            renderFormItem({
-              formItem,
-              config: true,
-              moveUp: moveUp(index),
-              moveDown: moveDown(index),
-              configItem: () => {
-                configItem(formItem, index);
-                setFormItemConfigDrawerVisible(true);
-              },
-              deleteItem: deleteItem(index),
-              copyItem: copyItem(index),
-            }),
-          )}
+          {formItemLines.map((line, index) => (
+            <Row>
+              {line.map(formItem => (
+                <Col span={12}>
+                  {renderFormItem({
+                    formItem,
+                    config: true,
+                    moveUp: moveUp(index),
+                    moveDown: moveDown(index),
+                    configItem: () => {
+                      configItem(formItem, index);
+                      setFormItemConfigDrawerVisible(true);
+                    },
+                    deleteItem: deleteItem(index),
+                    copyItem: copyItem(index),
+                  })}
+                </Col>
+              ))}
+            </Row>
+          ))}
           <Button
             onClick={() => setFormItemsDrawerVisible(true)}
             type="dashed"
@@ -161,6 +173,7 @@ export default () => {
         onRemoteCall={remoteCall}
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}
+        modal
       />
     </>
   );
