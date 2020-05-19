@@ -4,10 +4,10 @@
  * @作者: 陈杰
  * @Date: 2020-05-07 14:04:41
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-16 11:57:58
+ * @LastEditTime: 2020-05-19 11:39:50
  */
 import { Store } from 'antd/lib/form/interface';
-import { FormItemProps } from '../../ui/interfaces/common';
+import { FormItemProps } from '../../interfaces/common';
 
 export interface Payload {
   formConfig: Store;

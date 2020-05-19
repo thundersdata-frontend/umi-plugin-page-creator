@@ -4,20 +4,21 @@
  * @作者: 陈杰
  * @Date: 2020-05-07 14:04:41
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-16 10:55:39
+ * @LastEditTime: 2020-05-19 11:36:46
  */
 import { Store } from 'antd/lib/form/interface';
 import { createFormComponentsByType } from './util';
-import { FormItemProps } from '../../ui/interfaces/common';
+import { FormItemProps } from '../../interfaces/common';
 
 export interface Payload {
   formConfig: Store;
   formItems: FormItemProps[];
+  submitFetch?: string[];
 }
 
 export default function generateShortFormModalCode(payload: Payload): string {
   if (payload && payload.formConfig && payload.formItems) {
-    const { formConfig, formItems } = payload;
+    const { formConfig, formItems, submitFetch } = payload;
 
     const code = `
       import React, { useEffect } from 'react';
@@ -43,6 +44,7 @@ export default function generateShortFormModalCode(payload: Payload): string {
       import isEmpty from 'lodash/isEmpty';
       import { FormInstance } from 'antd/lib/form';
       import { Store } from 'antd/es/form/interface';
+      ${submitFetch ? `import { useRequest } from 'umi';` : ''}
 
       export default ({
         visible,
@@ -67,10 +69,33 @@ export default function generateShortFormModalCode(payload: Payload): string {
           toggleVisible();
         }
 
-        const handleFinish = (values: Store) => {
-          console.log(values);
-          toggleVisible();
-        };
+        ${
+          submitFetch
+            ? `
+          const submit = (values: Store) => {
+            console.log(values);
+            return API.${submitFetch[0]}.${submitFetch[1]}.${submitFetch[2]}.fetch({ ... values });
+          };
+
+          const { run: handleFinish } = useRequest(submit, {
+            manual: true,
+            onSuccess: () => {
+              message.success('保存成功');
+              toggleVisible();
+            },
+            onError: error => {
+              console.error(error.message);
+              message.error('保存失败');
+            }
+          });
+        `
+            : `
+          const handleFinish = (values: Store) => {
+            console.log(values);
+            toggleVisible();
+          }
+        `
+        }
 
         return (
           <Modal

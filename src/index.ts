@@ -4,14 +4,14 @@
  * @作者: 陈杰
  * @Date: 2020-04-29 10:38:23
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-16 11:57:50
+ * @LastEditTime: 2020-05-19 09:50:10
  */
 // ref:
 // - https://umijs.org/plugin/develop.html
 import { IApi } from '@umijs/types';
 import { join } from 'path';
-import { writeFileSync, mkdirSync, existsSync, mkdir } from 'fs';
-import { AjaxResponse } from '../ui/interfaces/common';
+import { writeFileSync, mkdirSync, existsSync } from 'fs';
+import { AjaxResponse } from '../interfaces/common';
 import prettier from 'prettier';
 import { writeNewRoute } from './utils/writeNewRoute';
 import {
@@ -25,52 +25,76 @@ import {
   generateShortDetailModalCode,
   generateLongDetailModalCode,
 } from './generate';
+import { ApiJSON } from '../interfaces/api';
 
 export default function(api: IApi) {
+  let mods = [];
+
   // @ts-ignore
   api.addUIPlugin(() => join(__dirname, '../dist/index.umd.js'));
 
   // @ts-ignore
   api.onUISocket(({ action, failure, success }) => {
-    const { type, payload } = action;
-    let code = '';
-    switch (type) {
-      case 'org.umi-plugin-page-creator.shortForm':
-      default:
-        code = generateShortFormCode(payload);
-        break;
-      case 'org.umi-plugin-page-creator.shortFormModal':
-        code = generateShortFormModalCode(payload);
-        break;
-      case 'org.umi-plugin-page-creator.longForm':
-        code = generateLongFormCode(payload);
-        break;
-      case 'org.umi-plugin-page-creator.longFormModal':
-        code = generateLongFormModalCode(payload);
-        break;
-      case 'org.umi-plugin-page-creator.shortDetail':
-        code = generateShortDetailCode(payload);
-        break;
-      case 'org.umi-plugin-page-creator.shortDetailModal':
-        code = generateShortDetailModalCode(payload);
-        break;
-      case 'org.umi-plugin-page-creator.longDetail':
-        code = generateLongDetailCode(payload);
-        break;
-      case 'org.umi-plugin-page-creator.longDetailModal':
-        code = generateLongDetailModalCode(payload);
-        break;
-      case 'org.umi-plugin-page-creator.table':
-        code = generateTableCode(payload);
-        break;
+    const { type, payload = {} } = action;
+    const { fetchApiJson = false } = payload;
+    if (!fetchApiJson) {
+      let code = '';
+      switch (type) {
+        case 'org.umi-plugin-page-creator.shortForm':
+        default:
+          code = generateShortFormCode(payload);
+          break;
+        case 'org.umi-plugin-page-creator.shortFormModal':
+          code = generateShortFormModalCode(payload);
+          break;
+        case 'org.umi-plugin-page-creator.longForm':
+          code = generateLongFormCode(payload);
+          break;
+        case 'org.umi-plugin-page-creator.longFormModal':
+          code = generateLongFormModalCode(payload);
+          break;
+        case 'org.umi-plugin-page-creator.shortDetail':
+          code = generateShortDetailCode(payload);
+          break;
+        case 'org.umi-plugin-page-creator.shortDetailModal':
+          code = generateShortDetailModalCode(payload);
+          break;
+        case 'org.umi-plugin-page-creator.longDetail':
+          code = generateLongDetailCode(payload);
+          break;
+        case 'org.umi-plugin-page-creator.longDetailModal':
+          code = generateLongDetailModalCode(payload);
+          break;
+        case 'org.umi-plugin-page-creator.table':
+          code = generateTableCode(payload);
+          break;
+      }
+      const formattedCode = prettier.format(code, {
+        singleQuote: true,
+        trailingComma: 'es5',
+        printWidth: 100,
+        parser: 'typescript',
+      });
+      formattedCode && generateFile(formattedCode, payload, failure, success);
+    } else {
+      switch (type) {
+        case 'org.umi-plugin-page-creator.apiGenerator':
+        default:
+          const { databases, mods: apiMods } = generateApiBaseOnApiLockJson();
+          if (databases === null || apiMods === null) {
+            failure({
+              success: false,
+              databases: null,
+            });
+          } else {
+            mods = apiMods;
+            success({
+              success: true,
+              databases,
+            });
+          }
+      }
     }
-    const formattedCode = prettier.format(code, {
-      singleQuote: true,
-      trailingComma: 'es5',
-      printWidth: 100,
-      parser: 'typescript',
-    });
-    formattedCode && generateFile(formattedCode, payload, failure, success);
   });
 
   /**
@@ -162,5 +186,59 @@ export default function(api: IApi) {
     } else {
       failure({ success: false, message: '对不起，目录已存在' });
     }
+  }
+
+  /**
+   * 根据项目根目录下的services/api-lock.json，生成一个接口和声明的关联文件。
+   * 在UI侧选择某个接口，
+   */
+  function generateApiBaseOnApiLockJson() {
+    const jsonPath = api.paths.absSrcPath + '/services/api-lock.json';
+    if (!existsSync(jsonPath)) {
+      return {
+        databases: null,
+        mods: null,
+        baseClasses: null,
+      };
+    }
+    const apiJson: ApiJSON[] = require(jsonPath);
+
+    const databases = apiJson.map(db => ({
+      label: db.name,
+      value: db.name,
+      children: db.mods.map(mod => ({
+        label: mod.description,
+        value: mod.name,
+        children: mod.interfaces.map(inter => ({
+          label: `${inter.description}(${inter.method})`,
+          value: inter.name,
+        })),
+      })),
+    }));
+
+    const mods = apiJson.reduce(
+      (accu, curr) =>
+        accu.concat(curr.mods.map(mod => ({
+          name: mod.name,
+          description: mod.description,
+          dbId: curr.name,
+        })) as []),
+      [],
+    );
+
+    const baseClasses = apiJson.reduce(
+      (accu, curr) =>
+        accu.concat(curr.baseClasses.map(mod => ({
+          name: mod.name,
+          dbId: curr.name,
+        })) as []),
+      [],
+    );
+
+    return {
+      databases,
+      mods,
+      baseClasses,
+    };
   }
 }

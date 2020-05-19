@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { Form, Button, Card, message, Row, Col, Input } from 'antd';
 import Title from '../../../../../components/Title';
-import { AjaxResponse } from '../../../../../interfaces/common';
+import { AjaxResponse } from '../../../../../../interfaces/common';
 import Context from '../../../Context';
-import DropdownActions from '../../../../../components/DropdownActions';
+import DropdownActions from '../../DropdownActions';
 import CardConfigDrawer from '../../drawers/CardConfigDrawer';
 import { transformFormItemLines } from '../../../../../utils';
 import produce from 'immer';
@@ -91,7 +91,15 @@ export default () => {
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async ({ path }: { path: string }) => {
+  const remoteCall = async ({
+    path,
+    initialFetch,
+    submitFetch,
+  }: {
+    path: string;
+    initialFetch?: string[];
+    submitFetch?: string[];
+  }) => {
     try {
       if (cards.length === 0) {
         message.error('你还没有添加Card');
@@ -106,6 +114,8 @@ export default () => {
         payload: {
           cards,
           path,
+          initialFetch,
+          submitFetch,
         },
       });
       message.success((result as AjaxResponse<string>).message);

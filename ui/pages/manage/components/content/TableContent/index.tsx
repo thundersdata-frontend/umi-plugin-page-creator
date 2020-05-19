@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react';
 import { Button, Card, message, Table } from 'antd';
 import Title from '../../../../../components/Title';
-import { AjaxResponse } from '../../../../../interfaces/common';
+import { AjaxResponse } from '../../../../../../interfaces/common';
 import Context from '../../../Context';
-import DropdownActions from '../../../../../components/DropdownActions';
+import DropdownActions from '../../DropdownActions';
 import { Store } from 'antd/lib/form/interface';
 import TableConfigDrawer from '../../drawers/TableConfigDrawer';
 import TableColumnConfigDrawer from '../../drawers/TableColumnConfigDrawer';
@@ -45,7 +45,15 @@ export default () => {
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async ({ path }: { path: string }) => {
+  const remoteCall = async ({
+    path,
+    initialFetch,
+    submitFetch,
+  }: {
+    path: string;
+    initialFetch?: string[];
+    submitFetch?: string[];
+  }) => {
     try {
       const result = await api.callRemote({
         type: 'org.umi-plugin-page-creator.table',
@@ -53,6 +61,8 @@ export default () => {
           tableConfig,
           columns,
           path,
+          initialFetch,
+          submitFetch,
         },
       });
       message.success((result as AjaxResponse<string>).message);

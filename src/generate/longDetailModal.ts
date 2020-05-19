@@ -6,8 +6,8 @@
  * @LastEditors: 陈杰
  * @LastEditTime: 2020-05-15 19:33:41
  */
-import { createFormComponentsByType, transformFormItemLines } from './util';
-import { FormItemProps } from '../../ui/interfaces/common';
+import { transformFormItemLines } from './util';
+import { FormItemProps } from '../../interfaces/common';
 import { Store } from 'antd/lib/form/interface';
 
 export interface Payload {

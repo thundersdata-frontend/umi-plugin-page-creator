@@ -1,4 +1,4 @@
-import { FormItemProps } from '../../interfaces/common';
+import { FormItemProps } from '../../../interfaces/common';
 
 /*
  * @文件描述:

@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-05-14 11:17:27
  */
 import { Store } from 'antd/lib/form/interface';
-import { FormItemProps } from '../interfaces/common';
+import { FormItemProps } from '../../interfaces/common';
 
 /**
  * 将一个数组按照指定的列拆分成N个二维数组

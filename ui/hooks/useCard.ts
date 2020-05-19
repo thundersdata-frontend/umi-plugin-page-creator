@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-05-14 18:28:44
  */
 import { useState } from 'react';
-import { CardItemProps, FormItemProps, FormItemType } from '../interfaces/common';
+import { CardItemProps, FormItemProps, FormItemType } from '../../interfaces/common';
 import { Store } from 'antd/lib/form/interface';
 import produce from 'immer';
 import faker from 'faker';

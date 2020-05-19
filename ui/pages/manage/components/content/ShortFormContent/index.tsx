@@ -3,10 +3,10 @@ import { Form, Button, Card, message } from 'antd';
 import Title from '../../../../../components/Title';
 import renderFormItem from '../../../../../components/FormItemConfig';
 import FormItemsDrawer from '../../../../../components/FormItemsDrawer';
-import { FormItemType, AjaxResponse } from '../../../../../interfaces/common';
+import { FormItemType, AjaxResponse } from '../../../../../../interfaces/common';
 import FormItemConfigDrawer from '../../../../../components/FormItemConfigDrawer';
 import Context from '../../../Context';
-import DropdownActions from '../../../../../components/DropdownActions';
+import DropdownActions from '../../DropdownActions';
 import { Store } from 'antd/lib/form/interface';
 import ShortFormConfigDrawer from '../../drawers/ShortFormConfigDrawer';
 import useConfigVisible from '../../../../../hooks/useConfigVisible';
@@ -74,7 +74,15 @@ export default () => {
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async ({ path }: { path: string }) => {
+  const remoteCall = async ({
+    path,
+    initialFetch,
+    submitFetch,
+  }: {
+    path: string;
+    initialFetch?: string[];
+    submitFetch?: string[];
+  }) => {
     // 对formItems进行遍历，如果其中有任一项没有配置label/name，则不允许提交
     if (formItems.length === 0) {
       message.error('您还没有添加表单项，不能提交！');
@@ -87,6 +95,8 @@ export default () => {
           formConfig: formConfig,
           formItems,
           path,
+          initialFetch,
+          submitFetch,
         },
       });
       message.success((result as AjaxResponse<string>).message);

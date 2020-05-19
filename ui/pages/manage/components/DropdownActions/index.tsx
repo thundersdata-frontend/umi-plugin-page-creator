@@ -1,7 +1,7 @@
-import React from 'react';
-import { Button, Modal, Form, Input } from 'antd';
+import React, { useContext } from 'react';
+import { Button, Modal, Form, Input, Cascader } from 'antd';
 import classNames from 'classnames';
-
+import Context from '../../Context';
 import styles from './index.module.less';
 import { Store } from 'antd/lib/form/interface';
 
@@ -13,24 +13,38 @@ export default ({
 }: {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
-  onRemoteCall: (values: { path: string; dirName?: string }) => void;
+  onRemoteCall: (values: {
+    path: string;
+    dirName?: string;
+    initialFetch?: string[];
+    submitFetch?: string[];
+  }) => void;
   modal?: boolean;
 }) => {
+  const { databases = [] } = useContext(Context);
   const [form] = Form.useForm();
 
+  console.log('databases: ', databases);
+
   const handleSubmit = (values: Store) => {
+    const { initialFetch, submitFetch } = values;
     if (!modal) {
       const path: string = values.path;
-      onRemoteCall({ path: path.startsWith('/') ? path : `/${path}` });
+      onRemoteCall({ path: path.startsWith('/') ? path : `/${path}`, initialFetch, submitFetch });
     } else {
       const { path, dirName } = values;
-      onRemoteCall({ path: path.startsWith('/') ? path : `/${path}`, dirName });
+      onRemoteCall({
+        path: path.startsWith('/') ? path : `/${path}`,
+        dirName,
+        initialFetch,
+        submitFetch,
+      });
     }
   };
 
   const formLayout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
   };
 
   return (
@@ -46,6 +60,7 @@ export default ({
         title="添加页面"
         destroyOnClose
         forceRender
+        width={650}
         getContainer={false}
         visible={modalVisible}
         onOk={() => form.submit()}
@@ -87,6 +102,12 @@ export default ({
               </Form.Item>
             </>
           )}
+          <Form.Item label="页面加载时调用" name="initialFetch">
+            <Cascader options={databases} />
+          </Form.Item>
+          <Form.Item label="提交时调用" name="submitFetch">
+            <Cascader options={databases} />
+          </Form.Item>
         </Form>
       </Modal>
     </>

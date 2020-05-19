@@ -4,18 +4,20 @@
  * @作者: 陈杰
  * @Date: 2020-05-08 16:05:30
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-14 18:27:12
+ * @LastEditTime: 2020-05-19 11:34:22
  */
 import { createFormComponentsByType, transformFormItemLines } from './util';
-import { CardItemProps } from '../../ui/interfaces/common';
+import { CardItemProps } from '../../interfaces/common';
 
 export interface Payload {
   cards: CardItemProps[];
+  initialFetch?: string[];
+  submitFetch?: string[];
 }
 
 export default function generateLongFormCode(payload: Payload): string {
   if (payload && payload.cards) {
-    const { cards = [] } = payload;
+    const { cards = [], initialFetch, submitFetch } = payload;
 
     const code = `
       import React from 'react';
@@ -39,7 +41,9 @@ export default function generateLongFormCode(payload: Payload): string {
         Upload,
         Rate,
       } from 'antd';
-      import { useToggle } from '@umijs/hooks';
+
+      ${initialFetch || submitFetch ? `import { useRequest } from 'umi';` : ''}
+      ${!submitFetch ? `import { useToggle } from '@umijs/hooks';` : ''}
       import { Store } from 'antd/es/form/interface';
       import Title from '@/components/Title';
       import FooterToolbar from '@/components/FooterToolbar';
@@ -58,12 +62,49 @@ export default function generateLongFormCode(payload: Payload): string {
 
       export default () => {
         const [form] = Form.useForm();
-        const btnToggle = useToggle(false);
+        ${!submitFetch ? `const submitBtn = useToggle(false);` : ''}
 
-        const handleFinish = (values: Store) => {
-          console.log(values);
-          btnToggle.toggle();
-        };
+        ${
+          initialFetch
+            ? `
+          useRequest(() => API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2]}.fetch({}), {
+            onSuccess: data => {
+              form.setFieldsValue(data);
+            },
+            onError: error => {
+              message.error(error.message);
+            }
+          })
+        `
+            : ''
+        }
+
+        ${
+          submitFetch
+            ? `
+          const submit = (values: Store) => {
+            console.log(values);
+            return API.${submitFetch[0]}.${submitFetch[1]}.${submitFetch[2]}.fetch({ ... values });
+          };
+
+          const { loading, run: handleFinish } = useRequest(submit, {
+            manual: true,
+            onSuccess: () => {
+              message.success('保存成功');
+            },
+            onError: error => {
+              console.error(error.message);
+              message.error('保存失败');
+            }
+          });
+        `
+            : `
+          const handleFinish = (values: Store) => {
+            console.log(values);
+            submitBtn.toggle();
+          }
+        `
+        }
 
         return (
           <Form form={form} onFinish={handleFinish} layout="vertical">
@@ -115,7 +156,7 @@ export default function generateLongFormCode(payload: Payload): string {
               <Button
                 type="primary"
                 onClick={() => form.submit()}
-                loading={btnToggle.state}
+                loading={${submitFetch ? 'loading' : 'submitBtn.state'}}
               >
                 提交
               </Button>

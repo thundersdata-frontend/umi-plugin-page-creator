@@ -13,7 +13,7 @@ import classnames from 'classnames';
 import Context from '../../Context';
 import templateList from './template.json';
 import styles from './index.module.less';
-import { Template } from '../../../../interfaces/common';
+import { Template } from '../../../../../interfaces/common';
 
 export default () => {
   const [visible, setVisible] = useState(false);

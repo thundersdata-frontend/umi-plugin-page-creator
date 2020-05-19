@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-05-14 18:27:48
  */
 import { LabeledValue } from 'antd/lib/select';
-import { FormItemType, FormItemProps } from '../../ui/interfaces/common';
+import { FormItemType, FormItemProps } from '../../interfaces/common';
 
 export function createFormComponentsByType(
   type: FormItemType,

@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-05-13 10:32:59
  */
 import { useState } from 'react';
-import { FormItemProps } from '../interfaces/common';
+import { FormItemProps } from '../../interfaces/common';
 
 export default function useFormItem() {
   const [formItems, setFormItems] = useState<FormItemProps[]>([]);

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Drawer, Form, Input, Button, Radio, Tooltip } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { FormItemProps, FormItemType } from '../../interfaces/common';
+import { FormItemProps, FormItemType } from '../../../interfaces/common';
 import { Store } from 'antd/lib/form/interface';
 import * as itemProps from './props';
 import renderFormItem from '../FormItemConfig';

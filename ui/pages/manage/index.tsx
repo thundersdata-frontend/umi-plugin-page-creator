@@ -4,22 +4,41 @@
  * @作者: 陈杰
  * @Date: 2020-04-29 11:06:58
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-11 15:09:46
+ * @LastEditTime: 2020-05-19 10:21:03
  */
-import React, { useState } from 'react'; // -> 暂时先解决报错，后期全部删掉
+import React, { useState, useEffect } from 'react'; // -> 暂时先解决报错，后期全部删掉
 import { Layout, message } from 'antd';
 import { IUiApi } from '@umijs/ui-types';
 import Context from './Context';
 import TemplateList from './components/TemplateList';
 import Dashboard from './components/Dashboard';
 import './index.module.less';
-import { TemplateType } from '../../interfaces/common';
+import { TemplateType } from '../../../interfaces/common';
+import { ApiJSON } from '../../../interfaces/api';
 
 const { Header, Content } = Layout;
 
 export default ({ api }: { api: IUiApi }) => {
-  const [visible, setVisible] = useState(false);
+  const [databases, setDatabases] = useState<ApiJSON[]>([]);
   const [templateType, setTemplate] = useState<TemplateType>();
+
+  /** 页面加载时调用后端接口，后端从services/api-lock.json读取数据，生成对应的接口以及类型 */
+  useEffect(() => {
+    (async () => {
+      const result = (await api.callRemote({
+        type: 'org.umi-plugin-page-creator.apiGenerator',
+        payload: {
+          fetchApiJson: true,
+        },
+      })) as { databases: ApiJSON[]; success: boolean };
+
+      if (!result.success) {
+        message.warning('你的项目没有集成pont');
+      } else {
+        setDatabases(result.databases);
+      }
+    })();
+  }, []);
 
   const addTemplate = (templateType: TemplateType) => {
     setTemplate(templateType);
@@ -31,9 +50,8 @@ export default ({ api }: { api: IUiApi }) => {
       value={{
         api,
         templateType,
-        visible,
-        setVisible,
         addTemplate,
+        databases,
       }}
     >
       <Layout style={{ overflowY: 'auto' }}>

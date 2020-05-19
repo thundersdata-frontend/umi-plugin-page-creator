@@ -4,26 +4,31 @@
  * @作者: 陈杰
  * @Date: 2020-05-07 14:04:41
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-15 11:37:28
+ * @LastEditTime: 2020-05-19 11:31:22
  */
 import { Store } from 'antd/lib/form/interface';
-import { FormItemProps } from '../../ui/interfaces/common';
+import { FormItemProps } from '../../interfaces/common';
 
 export interface Payload {
   cardConfig: Store;
   formItems: FormItemProps[];
+  initialFetch?: string[];
 }
 
 export default function generateShortDetail(payload: Payload): string {
   if (payload && payload.cardConfig && payload.formItems) {
-    const { cardConfig, formItems } = payload;
+    const { cardConfig, formItems, initialFetch } = payload;
 
     const code = `
       import React from 'react';
       import { Card, Form, Spin } from 'antd';
       import Title from '@/components/Title';
       import DetailValue from '@/components/DetailValue';
-      import { useRequest } from 'umi';
+      ${
+        !initialFetch
+          ? `import { useToggle } from '@umijs/hooks';`
+          : `import { useRequest } from 'umi';`
+      }
 
       const formItemLayout = {
         labelCol: {
@@ -39,10 +44,25 @@ export default function generateShortDetail(payload: Payload): string {
 
       export default () => {
         const [form] = Form.useForm();
-        const { data, loading } = useRequest('/api/detail');
+        ${
+          initialFetch
+            ? `
+          const { loading } = useRequest(() => API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2]}.fetch({}), {
+            onSuccess: data => {
+              form.setFieldsValue(data);
+            },
+            onError: error => {
+              message.error(error.message);
+            }
+          })
+        `
+            : `
+          const toggle = useToggle(false);
+        `
+        }
 
         return (
-          <Spin spinning={loading}>
+          <Spin spinning={${initialFetch ? 'loading' : 'toggle.state'}}>
             <Form form={form}>
               <Card title={<Title text="${cardConfig.title}" />} style={{ marginBottom: 16 }}>
                 ${formItems

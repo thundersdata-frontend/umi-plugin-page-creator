@@ -17,7 +17,7 @@ import {
   Rate,
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { FormItemProps } from '../../interfaces/common';
+import { FormItemProps } from '../../../interfaces/common';
 import ConfigActions from '../ConfigActions';
 import styles from './index.module.less';
 import { LabeledValue } from 'antd/lib/select';

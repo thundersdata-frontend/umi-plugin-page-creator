@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-04-29 21:58:39
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-11 11:25:52
+ * @LastEditTime: 2020-05-18 21:59:39
  */
 export type FormItemType =
   | 'input'
@@ -46,7 +46,6 @@ export type TemplateType =
 
 export type ShortFormConfig = {
   title: string;
-  pont?: string;
 };
 
 export type Template = {

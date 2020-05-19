@@ -4,11 +4,10 @@
  * @作者: 陈杰
  * @Date: 2020-04-29 17:56:31
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-12 19:49:44
+ * @LastEditTime: 2020-05-18 22:15:47
  */
-import React from 'react';
+import React, { useContext } from 'react';
 import { Form, Button, Input, Drawer } from 'antd';
-
 import { Store } from 'antd/lib/form/interface';
 
 export default ({
@@ -37,9 +36,6 @@ export default ({
           rules={[{ required: true, message: '请填写title' }]}
         >
           <Input placeholder="请填写title" />
-        </Form.Item>
-        <Form.Item label="Pont接口" name="pont">
-          <Input />
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit">

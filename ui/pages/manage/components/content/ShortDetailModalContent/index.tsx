@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react';
 import { Form, Button, Card, message, Input } from 'antd';
 import Title from '../../../../../components/Title';
-import { AjaxResponse } from '../../../../../interfaces/common';
+import { AjaxResponse } from '../../../../../../interfaces/common';
 import FormItemConfigDrawer from '../../../../../components/FormItemConfigDrawer';
 import Context from '../../../Context';
-import DropdownActions from '../../../../../components/DropdownActions';
+import DropdownActions from '../../DropdownActions';
 import { Store } from 'antd/lib/form/interface';
 import ShortFormConfigDrawer from '../../drawers/ShortFormConfigDrawer';
 import useFormItem from '../../../../../hooks/useFormItem';
@@ -73,7 +73,17 @@ export default () => {
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async ({ path, dirName }: { path: string; dirName?: string }) => {
+  const remoteCall = async ({
+    path,
+    dirName,
+    initialFetch,
+    submitFetch,
+  }: {
+    path: string;
+    dirName?: string;
+    initialFetch?: string[];
+    submitFetch?: string[];
+  }) => {
     // 对formItems进行遍历，如果其中有任一项没有配置label/name，则不允许提交
     if (formItems.length === 0) {
       message.error('您还没有添加详情展示项，不能提交！');
@@ -87,6 +97,8 @@ export default () => {
           formItems,
           path,
           dirName,
+          initialFetch,
+          submitFetch,
         },
       });
       message.success((result as AjaxResponse<string>).message);
