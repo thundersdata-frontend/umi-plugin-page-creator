@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Form, Button, Card, message, Row, Col } from 'antd';
 import Title from '../../../../../components/Title';
 import renderFormItem from '../../../../../components/FormItemConfig';
@@ -12,6 +12,7 @@ import useConfigVisible from '../../../../../hooks/useConfigVisible';
 import useCard from '../../../../../hooks/useCard';
 import ConfigActions from '../../../../../components/ConfigActions';
 import FormItemConfigDrawer from '../../../../../components/FormItemConfigDrawer';
+import ApiConfigDrawer from '../../drawers/ApiConfigDrawer';
 
 const formItemLayout = {
   labelCol: {
@@ -39,6 +40,8 @@ const colLayout = {
 
 export default () => {
   const { api } = useContext(Context);
+  const [initialFetch, setInitialFetch] = useState<string[]>();
+  const [submitFetch, setSubmitFetch] = useState<string[]>();
 
   const {
     formItemsDrawerVisible,
@@ -49,6 +52,8 @@ export default () => {
     setCardDrawerVisible,
     formItemConfigDrawerVisible,
     setFormItemConfigDrawerVisible,
+    apiConfigDrawerVisible,
+    setApiConfigDrawerVisible,
   } = useConfigVisible();
 
   const {
@@ -72,18 +77,15 @@ export default () => {
     setItemIndex,
   } = useCard();
 
+  const handleApiSubmit = (initialFetch?: string[], submitFetch?: string[]) => {
+    setInitialFetch(initialFetch);
+    setSubmitFetch(submitFetch);
+  };
+
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async ({
-    path,
-    initialFetch,
-    submitFetch,
-  }: {
-    path: string;
-    initialFetch?: string[];
-    submitFetch?: string[];
-  }) => {
+  const remoteCall = async ({ path }: { path: string }) => {
     try {
       if (cards.length === 0) {
         message.error('你还没有添加Card');
@@ -176,12 +178,22 @@ export default () => {
       >
         新增Card
       </Button>
+      <Button type="primary" onClick={() => setApiConfigDrawerVisible(true)}>
+        页面接口配置
+      </Button>
 
       {/**Card编辑的抽屉 */}
       <CardConfigDrawer
         visible={cardDrawerVisible}
         setVisible={setCardDrawerVisible}
         onFinish={configCard}
+      />
+
+      {/**页面接口配置 */}
+      <ApiConfigDrawer
+        visible={apiConfigDrawerVisible}
+        setVisible={setApiConfigDrawerVisible}
+        onSubmit={handleApiSubmit}
       />
 
       {/** 选择表单元素的抽屉 */}

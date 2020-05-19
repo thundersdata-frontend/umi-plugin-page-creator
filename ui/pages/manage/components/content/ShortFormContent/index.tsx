@@ -12,6 +12,7 @@ import ShortFormConfigDrawer from '../../drawers/ShortFormConfigDrawer';
 import useConfigVisible from '../../../../../hooks/useConfigVisible';
 import useFormItem from '../../../../../hooks/useFormItem';
 import faker from 'faker';
+import ApiConfigDrawer from '../../drawers/ApiConfigDrawer';
 
 const formItemLayout = {
   labelCol: {
@@ -31,16 +32,20 @@ export default () => {
   const [formConfig, setFormConfig] = useState<Store>({
     title: '单列表单',
   });
+  const [initialFetch, setInitialFetch] = useState<string[]>();
+  const [submitFetch, setSubmitFetch] = useState<string[]>();
 
   const {
     formItemsDrawerVisible,
-    pathModalVisible,
-    formConfigDrawerVisible,
-    formItemConfigDrawerVisible,
     setFormItemsDrawerVisible,
+    pathModalVisible,
     setPathModalVisible,
+    formConfigDrawerVisible,
     setFormConfigDrawerVisible,
+    formItemConfigDrawerVisible,
     setFormItemConfigDrawerVisible,
+    apiConfigDrawerVisible,
+    setApiConfigDrawerVisible,
   } = useConfigVisible();
 
   const {
@@ -55,6 +60,11 @@ export default () => {
     currentItem,
     onConfirm,
   } = useFormItem();
+
+  const handleApiSubmit = (initialFetch?: string[], submitFetch?: string[]) => {
+    setInitialFetch(initialFetch);
+    setSubmitFetch(submitFetch);
+  };
 
   /**
    * 添加表单元素
@@ -74,15 +84,7 @@ export default () => {
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async ({
-    path,
-    initialFetch,
-    submitFetch,
-  }: {
-    path: string;
-    initialFetch?: string[];
-    submitFetch?: string[];
-  }) => {
+  const remoteCall = async ({ path }: { path: string }) => {
     // 对formItems进行遍历，如果其中有任一项没有配置label/name，则不允许提交
     if (formItems.length === 0) {
       message.error('您还没有添加表单项，不能提交！');
@@ -112,7 +114,7 @@ export default () => {
         title={<Title text={formConfig.title} />}
         extra={
           <Button type="primary" onClick={() => setFormConfigDrawerVisible(true)}>
-            配置
+            卡片配置
           </Button>
         }
       >
@@ -140,12 +142,22 @@ export default () => {
           </Button>
         </Form>
       </Card>
+      <Button type="primary" onClick={() => setApiConfigDrawerVisible(true)}>
+        页面接口配置
+      </Button>
 
       {/**表单配置 */}
       <ShortFormConfigDrawer
         visible={formConfigDrawerVisible}
         setVisible={setFormConfigDrawerVisible}
         onFinish={setFormConfig}
+      />
+
+      {/**页面接口配置 */}
+      <ApiConfigDrawer
+        visible={apiConfigDrawerVisible}
+        setVisible={setApiConfigDrawerVisible}
+        onSubmit={handleApiSubmit}
       />
 
       {/**表单项集合 */}

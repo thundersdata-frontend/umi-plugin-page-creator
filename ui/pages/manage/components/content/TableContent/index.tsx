@@ -11,6 +11,7 @@ import TitleWithActions from './TitleWithActions';
 import useConfigVisible from '../../../../../hooks/useConfigVisible';
 import useTable from '../../../../../hooks/useTable';
 import { filterEmpty } from '../../../../../utils';
+import ApiConfigDrawer from '../../drawers/ApiConfigDrawer';
 
 export default () => {
   const { api } = useContext(Context);
@@ -19,14 +20,18 @@ export default () => {
     search: 1,
     bordered: 1,
   });
+  const [initialFetch, setInitialFetch] = useState<string[]>();
+  const [submitFetch, setSubmitFetch] = useState<string[]>();
 
   const {
     pathModalVisible,
-    tableConfigDrawerVisible,
-    columnConfigDrawerVisible,
     setPathModalVisible,
+    tableConfigDrawerVisible,
     setTableConfigDrawerVisible,
+    columnConfigDrawerVisible,
     setColumnConfigDrawerVisible,
+    apiConfigDrawerVisible,
+    setApiConfigDrawerVisible,
   } = useConfigVisible();
 
   const {
@@ -42,18 +47,15 @@ export default () => {
     onConfirm,
   } = useTable();
 
+  const handleApiSubmit = (initialFetch?: string[], submitFetch?: string[]) => {
+    setInitialFetch(initialFetch);
+    setSubmitFetch(submitFetch);
+  };
+
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async ({
-    path,
-    initialFetch,
-    submitFetch,
-  }: {
-    path: string;
-    initialFetch?: string[];
-    submitFetch?: string[];
-  }) => {
+  const remoteCall = async ({ path }: { path: string }) => {
     try {
       const result = await api.callRemote({
         type: 'org.umi-plugin-page-creator.table',
@@ -82,15 +84,6 @@ export default () => {
           </Button>
         }
       >
-        <Button
-          onClick={() => {
-            setIndex(0);
-            setCurrentColumn(undefined);
-            setColumnConfigDrawerVisible(true);
-          }}
-        >
-          添加列
-        </Button>
         <Table
           bordered
           pagination={{
@@ -117,7 +110,26 @@ export default () => {
           }))}
           dataSource={[]}
         />
+        <Button
+          onClick={() => {
+            setIndex(0);
+            setCurrentColumn(undefined);
+            setColumnConfigDrawerVisible(true);
+          }}
+        >
+          添加列
+        </Button>
+        <Button type="primary" onClick={() => setApiConfigDrawerVisible(true)}>
+          页面接口配置
+        </Button>
       </Card>
+
+      {/**页面接口配置 */}
+      <ApiConfigDrawer
+        visible={apiConfigDrawerVisible}
+        setVisible={setApiConfigDrawerVisible}
+        onSubmit={handleApiSubmit}
+      />
 
       <TableConfigDrawer
         visible={tableConfigDrawerVisible}

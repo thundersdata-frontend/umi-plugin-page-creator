@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
-import { Button, Modal, Form, Input, Cascader } from 'antd';
+import { Button, Modal, Form, Input } from 'antd';
 import classNames from 'classnames';
-import Context from '../../Context';
 import styles from './index.module.less';
 import { Store } from 'antd/lib/form/interface';
 
@@ -21,10 +20,7 @@ export default ({
   }) => void;
   modal?: boolean;
 }) => {
-  const { databases = [] } = useContext(Context);
   const [form] = Form.useForm();
-
-  console.log('databases: ', databases);
 
   const handleSubmit = (values: Store) => {
     const { initialFetch, submitFetch } = values;
@@ -102,12 +98,6 @@ export default ({
               </Form.Item>
             </>
           )}
-          <Form.Item label="页面加载时调用" name="initialFetch">
-            <Cascader options={databases} />
-          </Form.Item>
-          <Form.Item label="提交时调用" name="submitFetch">
-            <Cascader options={databases} />
-          </Form.Item>
         </Form>
       </Modal>
     </>

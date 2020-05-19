@@ -13,6 +13,7 @@ import faker from 'faker';
 import styles from './index.module.less';
 import useConfigVisible from '../../../../../hooks/useConfigVisible';
 import ConfigActions from '../../../../../components/ConfigActions';
+import ApiConfigDrawer from '../../drawers/ApiConfigDrawer';
 
 const formItemLayout = {
   labelCol: {
@@ -32,14 +33,18 @@ export default () => {
   const [formConfig, setFormConfig] = useState<Store>({
     title: '单列详情',
   });
+  const [initialFetch, setInitialFetch] = useState<string[]>();
+  const [submitFetch, setSubmitFetch] = useState<string[]>();
 
   const {
     pathModalVisible,
-    formConfigDrawerVisible,
-    formItemConfigDrawerVisible,
     setPathModalVisible,
+    formConfigDrawerVisible,
     setFormConfigDrawerVisible,
+    formItemConfigDrawerVisible,
     setFormItemConfigDrawerVisible,
+    apiConfigDrawerVisible,
+    setApiConfigDrawerVisible,
   } = useConfigVisible();
 
   const {
@@ -70,20 +75,15 @@ export default () => {
     );
   };
 
+  const handleApiSubmit = (initialFetch?: string[], submitFetch?: string[]) => {
+    setInitialFetch(initialFetch);
+    setSubmitFetch(submitFetch);
+  };
+
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async ({
-    path,
-    dirName,
-    initialFetch,
-    submitFetch,
-  }: {
-    path: string;
-    dirName?: string;
-    initialFetch?: string[];
-    submitFetch?: string[];
-  }) => {
+  const remoteCall = async ({ path, dirName }: { path: string; dirName?: string }) => {
     // 对formItems进行遍历，如果其中有任一项没有配置label/name，则不允许提交
     if (formItems.length === 0) {
       message.error('您还没有添加详情展示项，不能提交！');
@@ -139,8 +139,18 @@ export default () => {
           <Button onClick={addDetailItem} type="dashed" style={{ width: '100%', marginBottom: 32 }}>
             添加展示项
           </Button>
+          <Button type="primary" onClick={() => setApiConfigDrawerVisible(true)}>
+            页面接口配置
+          </Button>
         </Form>
       </Card>
+
+      {/**页面接口配置 */}
+      <ApiConfigDrawer
+        visible={apiConfigDrawerVisible}
+        setVisible={setApiConfigDrawerVisible}
+        onSubmit={handleApiSubmit}
+      />
 
       {/**表单配置 */}
       <ShortFormConfigDrawer
