@@ -4,9 +4,9 @@
  * @作者: 陈杰
  * @Date: 2020-05-08 16:05:30
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-19 11:34:22
+ * @LastEditTime: 2020-05-19 23:33:06
  */
-import { createFormComponentsByType, transformFormItemLines } from './util';
+import { createFormComponentsByType, transformFormItemLines, generateRules } from './util';
 import { CardItemProps } from '../../interfaces/common';
 
 export interface Payload {
@@ -130,19 +130,19 @@ export default function generateLongFormCode(payload: Payload): string {
                               customRules = [],
                               ...restProps
                             } = formItem;
-
+                            const rules = generateRules(customRules as string, required as boolean);
                             return `
-                            <Col {...colLayout}>
-                              <Form.Item
-                                label="${label}"
-                                name="${name}"
-                                required={${required}}
-                                rules={${JSON.stringify(customRules)}}
-                              >
-                                ${createFormComponentsByType(type, restProps)}
-                              </Form.Item>
-                            </Col>
-                          `;
+                              <Col {...colLayout}>
+                                <Form.Item
+                                  label="${label}"
+                                  name="${name}"
+                                  ${required ? `required` : `required={false}`}
+                                  ${rules !== '[]' ? `rules={${rules}}` : ''}
+                                >
+                                  ${createFormComponentsByType(type, restProps)}
+                                </Form.Item>
+                              </Col>
+                            `;
                           })
                           .join('')}
                       </Row>

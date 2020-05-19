@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-05-08 13:56:59
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-14 18:27:48
+ * @LastEditTime: 2020-05-19 23:31:55
  */
 import { LabeledValue } from 'antd/lib/select';
 import { FormItemType, FormItemProps } from '../../interfaces/common';
@@ -24,7 +24,15 @@ export function createFormComponentsByType(
       return `<Cascader ${propsStr} />`;
 
     case 'checkbox':
-      return `<Checkbox.Group ${propsStr} />`;
+      const { options: checkboxOptions, ...checkboxProps } = props;
+      return `<Checkbox.Group
+        options={${
+          checkboxOptions
+            ? JSON.stringify(eval((checkboxOptions as string).replace(/\u21b5/g, '')))
+            : []
+        }}
+        ${generatePropsStr(checkboxProps)}
+      />`;
 
     case 'date':
       return `<DatePicker ${propsStr} />`;
@@ -36,7 +44,13 @@ export function createFormComponentsByType(
       return `<Input.Password ${propsStr} />`;
 
     case 'radio':
-      return `<Radio.Group ${propsStr} />`;
+      const { options: radioOptions, ...radioProps } = props;
+      return `<Radio.Group
+        options={${
+          radioOptions ? JSON.stringify(eval((radioOptions as string).replace(/\u21b5/g, ''))) : []
+        }}
+        ${generatePropsStr(radioProps)}
+      />`;
 
     case 'range':
       return `<DatePicker.RangePicker ${propsStr} />`;
@@ -45,12 +59,14 @@ export function createFormComponentsByType(
       return `<Rate ${propsStr} />`;
 
     case 'select':
-      const { options = [], ...restProps } = props;
-
-      return `<Select ${generatePropsStr(restProps)}>
-        ${(options as LabeledValue[]).map(
-          option => `<Select.Option value={${option.value}}>${option.label}</Select.Option>`,
-        )}
+      const { options: selectOptions, ...selectProps } = props;
+      return `<Select ${generatePropsStr(selectProps)}>
+        ${(selectOptions
+          ? (eval((selectOptions as string).replace(/\u21b5/g, '')) as LabeledValue[])
+          : []
+        )
+          .map(option => `<Select.Option value="${option.value}">${option.label}</Select.Option>`)
+          .join('')}
       </Select>`;
 
     case 'slider':
@@ -80,8 +96,10 @@ export function generatePropsStr(props: object): string {
   const result = `${Object.entries(props)
     .map(item => {
       const [key, value] = item;
-      if (typeof value === 'boolean' || typeof value === 'number' || typeof value === 'bigint') {
+      if (typeof value === 'number' || typeof value === 'bigint') {
         return `${key}={${value}}`;
+      } else if (typeof value === 'boolean') {
+        return value ? `${key}` : `${key}={false}`;
       } else if (typeof value === 'string') {
         return `${key}="${value}"`;
       } else if (typeof value === 'function') {
@@ -113,4 +131,29 @@ export function transformFormItemLines(formItems: FormItemProps[], cols = 3) {
     res.push(temp);
   }
   return res;
+}
+
+export function generateRules(customRules?: string, required?: boolean) {
+  const rules = [];
+  try {
+    if (customRules) {
+      const _rules = eval((customRules as string).replace(/\u21b5/g, ''));
+      if (Array.isArray(_rules)) {
+        rules.push(..._rules);
+      }
+    }
+  } catch (error) {
+    console.error(error.message);
+  }
+
+  if (required) {
+    const requiredObj = rules.find(item => Object.keys(item).includes('required'));
+    if (!requiredObj || requiredObj['required'] === false) {
+      rules.push({
+        required: true,
+      });
+    }
+  }
+
+  return JSON.stringify(rules);
 }

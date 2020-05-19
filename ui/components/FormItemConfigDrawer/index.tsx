@@ -45,7 +45,13 @@ export default ({
       destroyOnClose
       width={400}
     >
-      <Form form={form} onFinish={handleFinish} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
+      <Form
+        form={form}
+        onFinish={handleFinish}
+        labelCol={{ span: 8 }}
+        wrapperCol={{ span: 16 }}
+        initialValues={{ required: false, disabled: false, allowClear: true }}
+      >
         <Form.Item
           label="标签"
           name="label"

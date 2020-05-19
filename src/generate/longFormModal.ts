@@ -4,9 +4,9 @@
  * @作者: 陈杰
  * @Date: 2020-05-08 16:05:30
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-19 11:38:12
+ * @LastEditTime: 2020-05-19 23:34:29
  */
-import { createFormComponentsByType, transformFormItemLines } from './util';
+import { createFormComponentsByType, transformFormItemLines, generateRules } from './util';
 import { FormItemProps } from '../../interfaces/common';
 import { Store } from 'antd/lib/form/interface';
 
@@ -150,14 +150,14 @@ export default function generateLongFormModalCode(payload: Payload): string {
                             customRules = [],
                             ...restProps
                           } = formItem;
-
+                          const rules = generateRules(customRules as string, required as boolean);
                           return `
                             <Col span={12}>
                               <Form.Item
                                 label="${label}"
                                 name="${name}"
-                                required={${required}}
-                                rules={${JSON.stringify(customRules)}}
+                                ${required ? `required` : `required={false}`}
+                                ${rules !== '[]' ? `rules={${rules}}` : ''}
                               >
                                 ${createFormComponentsByType(type, restProps)}
                               </Form.Item>

@@ -256,12 +256,13 @@ export default function renderFormItem({
       return numberItem;
 
     case 'checkbox':
+      const { options: checkboxOptions, ...checkboxProps } = restProps;
       const checkboxItem = (
         <Form.Item label={label} name={name}>
           <Checkbox.Group
             name={name}
-            options={defaultCheckboxOptions || restProps.options}
-            {...restProps}
+            options={!checkboxOptions ? defaultCheckboxOptions : eval(checkboxOptions as string)}
+            {...checkboxProps}
           />
         </Form.Item>
       );
@@ -283,12 +284,13 @@ export default function renderFormItem({
       return checkboxItem;
 
     case 'radio':
+      const { options: radioOptions, ...radioProps } = restProps;
       const radioItem = (
         <Form.Item label={label} name={name}>
           <Radio.Group
             name={name}
-            options={defaultRadioOptions || restProps.options}
-            {...restProps}
+            options={!radioOptions ? defaultRadioOptions : eval(radioOptions as string)}
+            {...radioProps}
           />
         </Form.Item>
       );
@@ -356,14 +358,16 @@ export default function renderFormItem({
       return sliderItem;
 
     case 'select':
+      const { options: selectOptions, ...selectProps } = restProps;
       const selectItem = (
         <Form.Item label={label} name={name}>
-          <Select {...restProps}>
-            {((formItem.options as LabeledValue[]) || []).map(option => (
-              <Option key={option.value} value={option.value}>
-                {option.label}
-              </Option>
-            ))}
+          <Select {...selectProps}>
+            {selectOptions &&
+              ((eval(selectOptions as string) as LabeledValue[]) || []).map(option => (
+                <Option key={option.value} value={option.value}>
+                  {option.label}
+                </Option>
+              ))}
           </Select>
         </Form.Item>
       );

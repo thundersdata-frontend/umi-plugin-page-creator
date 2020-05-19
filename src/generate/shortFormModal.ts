@@ -4,10 +4,10 @@
  * @作者: 陈杰
  * @Date: 2020-05-07 14:04:41
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-19 11:36:46
+ * @LastEditTime: 2020-05-19 23:34:05
  */
 import { Store } from 'antd/lib/form/interface';
-import { createFormComponentsByType } from './util';
+import { createFormComponentsByType, generateRules } from './util';
 import { FormItemProps } from '../../interfaces/common';
 
 export interface Payload {
@@ -140,11 +140,12 @@ export default function generateShortFormModalCode(payload: Payload): string {
                     customRules = [],
                     ...restProps
                   } = item;
+                  const rules = generateRules(customRules as string, required as boolean);
                   return `<Form.Item
                     label="${label}"
                     name="${name}"
-                    required={${required}}
-                    rules={${JSON.stringify(customRules)}}
+                    ${required ? `required` : `required={false}`}
+                    ${rules !== '[]' ? `rules={${rules}}` : ''}
                   >
                     ${createFormComponentsByType(type, restProps)}
                   </Form.Item>`;
