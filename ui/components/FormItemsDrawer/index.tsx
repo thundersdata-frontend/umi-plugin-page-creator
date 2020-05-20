@@ -18,7 +18,7 @@ import {
   Button,
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { FormItemType } from 'ui/interfaces/common';
+import { FormItemType } from '../../../interfaces/common';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 
 const { RangePicker } = DatePicker;

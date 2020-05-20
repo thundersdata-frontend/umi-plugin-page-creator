@@ -142,7 +142,11 @@ export default () => {
           </Button>
         </Form>
       </Card>
-      <Button type="primary" onClick={() => setApiConfigDrawerVisible(true)}>
+      <Button
+        type="primary"
+        style={{ marginBottom: 28 }}
+        onClick={() => setApiConfigDrawerVisible(true)}
+      >
         页面接口配置
       </Button>
 
@@ -161,11 +165,13 @@ export default () => {
       />
 
       {/**表单项集合 */}
-      <FormItemsDrawer
-        visible={formItemsDrawerVisible}
-        setVisible={setFormItemsDrawerVisible}
-        onSubmit={handleSubmit}
-      />
+      {formItemsDrawerVisible && (
+        <FormItemsDrawer
+          visible={formItemsDrawerVisible}
+          setVisible={setFormItemsDrawerVisible}
+          onSubmit={handleSubmit}
+        />
+      )}
 
       {/**配置单个表单项 */}
       {currentItem && (
