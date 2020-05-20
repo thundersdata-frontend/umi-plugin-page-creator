@@ -57,14 +57,13 @@ export default ({
     setCheckedComponents([]);
   };
 
+  const handleClose = () => {
+    setVisible(false);
+    setCheckedComponents([]);
+  };
+
   return (
-    <Drawer
-      title="选择表单元素"
-      visible={visible}
-      width={360}
-      onClose={() => setVisible(false)}
-      destroyOnClose
-    >
+    <Drawer title="选择表单元素" visible={visible} width={360} onClose={handleClose} destroyOnClose>
       <Form labelCol={{ span: 12 }} wrapperCol={{ span: 12 }} labelAlign="left">
         <Form.Item label={<Checkbox onChange={handleChange('input')}>文本输入框</Checkbox>}>
           <Input autoComplete="off" />

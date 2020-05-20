@@ -165,13 +165,11 @@ export default () => {
       />
 
       {/**表单项集合 */}
-      {formItemsDrawerVisible && (
-        <FormItemsDrawer
-          visible={formItemsDrawerVisible}
-          setVisible={setFormItemsDrawerVisible}
-          onSubmit={handleSubmit}
-        />
-      )}
+      <FormItemsDrawer
+        visible={formItemsDrawerVisible}
+        setVisible={setFormItemsDrawerVisible}
+        onSubmit={handleSubmit}
+      />
 
       {/**配置单个表单项 */}
       {currentItem && (
