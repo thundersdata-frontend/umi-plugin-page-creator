@@ -18,7 +18,7 @@ import {
   Button,
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { FormItemType } from 'ui/interfaces/common';
+import { FormItemType } from '../../../interfaces/common';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 
 const { RangePicker } = DatePicker;
@@ -57,14 +57,13 @@ export default ({
     setCheckedComponents([]);
   };
 
+  const handleClose = () => {
+    setVisible(false);
+    setCheckedComponents([]);
+  };
+
   return (
-    <Drawer
-      title="选择表单元素"
-      visible={visible}
-      width={360}
-      onClose={() => setVisible(false)}
-      destroyOnClose
-    >
+    <Drawer title="选择表单元素" visible={visible} width={360} onClose={handleClose} destroyOnClose>
       <Form labelCol={{ span: 12 }} wrapperCol={{ span: 12 }} labelAlign="left">
         <Form.Item label={<Checkbox onChange={handleChange('input')}>文本输入框</Checkbox>}>
           <Input autoComplete="off" />
