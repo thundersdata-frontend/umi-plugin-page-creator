@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-04-29 10:38:23
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-19 09:50:10
+ * @LastEditTime: 2020-05-20 12:03:39
  */
 // ref:
 // - https://umijs.org/plugin/develop.html
@@ -138,7 +138,7 @@ export default function(api: IApi) {
     const absPagesPath = api.paths.absPagesPath;
     if (!existsSync(absPagesPath + path)) {
       // 根据传入的路径，创建对应的文件夹以及index.tsx文件
-      mkdirSync(absPagesPath + path);
+      mkdirSync(absPagesPath + path, { recursive: true });
       writeFileSync(absPagesPath + `${path}/index.tsx`, code, 'utf-8');
       // 更新路由
       writeNewRoute(
@@ -175,11 +175,11 @@ export default function(api: IApi) {
   ) {
     const absPagesPath = api.paths.absPagesPath;
     if (!existsSync(absPagesPath + path + '/components')) {
-      mkdirSync(absPagesPath + path + '/components');
+      mkdirSync(absPagesPath + path + '/components', { recursive: true });
     }
     const prefixPath = absPagesPath + path + '/components/';
     if (!existsSync(prefixPath + dirName)) {
-      mkdirSync(prefixPath + dirName);
+      mkdirSync(prefixPath + dirName, { recursive: true });
       writeFileSync(prefixPath + `${dirName}/index.tsx`, code, 'utf-8');
 
       success({ success: true, message: '恭喜你，文件创建成功' });
