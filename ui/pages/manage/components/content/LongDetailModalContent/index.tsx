@@ -126,18 +126,19 @@ export default () => {
         <Form {...formItemLayout}>
           {formItemLines.map((line, index) => (
             <Row>
-              {line.map(formItem => (
+              {line.map((formItem, itemIndex) => (
                 <Col span={12}>
                   <div className={styles.formItemConfig}>
                     <ConfigActions
-                      moveUp={moveUp(index)}
-                      moveDown={moveDown(index)}
+                      position="top"
+                      moveUp={moveUp(index * cols + itemIndex)}
+                      moveDown={moveDown(index * cols + itemIndex)}
                       configItem={() => {
-                        configItem(formItem, index);
+                        configItem(formItem, index * cols + itemIndex);
                         setFormItemConfigDrawerVisible(true);
                       }}
-                      deleteItem={deleteItem(index)}
-                      copyItem={copyItem(index)}
+                      deleteItem={deleteItem(index * cols + itemIndex)}
+                      copyItem={copyItem(index * cols + itemIndex)}
                     />
                     <Form.Item label={formItem.label} name={formItem.name}>
                       <Input disabled />

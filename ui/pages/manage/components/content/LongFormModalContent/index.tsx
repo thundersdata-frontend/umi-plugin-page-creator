@@ -127,19 +127,20 @@ export default () => {
         <Form {...formItemLayout}>
           {formItemLines.map((line, index) => (
             <Row>
-              {line.map(formItem => (
+              {line.map((formItem, itemIndex) => (
                 <Col span={12}>
                   {renderFormItem({
                     formItem,
                     config: true,
-                    moveUp: moveUp(index),
-                    moveDown: moveDown(index),
+                    position: 'top',
+                    moveUp: moveUp(index * cols + itemIndex),
+                    moveDown: moveDown(index * cols + itemIndex),
                     configItem: () => {
-                      configItem(formItem, index);
+                      configItem(formItem, index * cols + itemIndex);
                       setFormItemConfigDrawerVisible(true);
                     },
-                    deleteItem: deleteItem(index),
-                    copyItem: copyItem(index),
+                    deleteItem: deleteItem(index * cols + itemIndex),
+                    copyItem: copyItem(index * cols + itemIndex),
                   })}
                 </Col>
               ))}
