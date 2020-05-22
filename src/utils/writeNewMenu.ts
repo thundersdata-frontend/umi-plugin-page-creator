@@ -48,7 +48,7 @@ function getNewMenuCode(resource: Resource, mockPath: string) {
             // 只是一级目录
             const newNode = (parser.parse(
               `(${JSON.stringify({
-                key: '/' + path,
+                key: path,
                 apiUrl: path,
                 description: menu,
                 children: [],
