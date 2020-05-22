@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
-import { Button, Modal, Form, Input } from 'antd';
+import { Button, Modal, Form, Input, Tooltip } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 import styles from './index.module.less';
 import { Store } from 'antd/lib/form/interface';
@@ -14,6 +15,7 @@ export default ({
   setModalVisible: (visible: boolean) => void;
   onRemoteCall: (values: {
     path: string;
+    menu?: string;
     dirName?: string;
     initialFetch?: string[];
     submitFetch?: string[];
@@ -25,8 +27,13 @@ export default ({
   const handleSubmit = (values: Store) => {
     const { initialFetch, submitFetch } = values;
     if (!modal) {
-      const path: string = values.path;
-      onRemoteCall({ path: path.startsWith('/') ? path : `/${path}`, initialFetch, submitFetch });
+      const { path, menu } = values;
+      onRemoteCall({
+        path: path.startsWith('/') ? path : `/${path}`,
+        menu,
+        initialFetch,
+        submitFetch,
+      });
     } else {
       const { path, dirName } = values;
       onRemoteCall({
@@ -64,14 +71,38 @@ export default ({
       >
         <Form form={form} onFinish={handleSubmit} {...formLayout}>
           {!modal ? (
-            <Form.Item
-              label="添加到路径"
-              name="path"
-              required
-              rules={[{ required: true, message: '请输入你要添加的路径' }]}
-            >
-              <Input />
-            </Form.Item>
+            <>
+              <Form.Item
+                label={
+                  <label>
+                    <span style={{ paddingRight: 10 }}>添加到路径</span>
+                    <Tooltip overlay="多级路径以/分隔">
+                      <QuestionCircleOutlined />
+                    </Tooltip>
+                  </label>
+                }
+                name="path"
+                required
+                rules={[{ required: true, message: '请输入你要添加的路径' }]}
+              >
+                <Input />
+              </Form.Item>
+              <Form.Item
+                label={
+                  <label>
+                    <span style={{ paddingRight: 10 }}>菜单</span>
+                    <Tooltip overlay="多级菜单以/分隔，目前只支持两级菜单">
+                      <QuestionCircleOutlined />
+                    </Tooltip>
+                  </label>
+                }
+                name="menu"
+                required
+                rules={[{ required: true, message: '请输入你要添加的菜单' }]}
+              >
+                <Input />
+              </Form.Item>
+            </>
           ) : (
             <>
               <Form.Item

@@ -83,18 +83,9 @@ export default ({
             <Form.Item
               label={
                 <label>
-                  自定义规则
-                  <Tooltip overlay="数组，参照antd官网Form文档进行配置">
-                    <QuestionCircleOutlined />
-                  </Tooltip>
-                </label>
-              }
-              name="customRules"
-            >
-              <Input.TextArea
-                rows={4}
-                autoSize
-                placeholder={`[
+                  <span style={{ paddingRight: 10 }}>自定义规则</span>
+                  <Tooltip
+                    overlay={`[
   {required: true},
   {enum: []},
   {whitespace: true},
@@ -103,7 +94,14 @@ export default ({
   {type: 'array', len: 10, max: 20, min: 6},
   {type: 'date', format: '', parse: '', invalid: ''}
 ]`}
-              />
+                  >
+                    <QuestionCircleOutlined />
+                  </Tooltip>
+                </label>
+              }
+              name="customRules"
+            >
+              <Input.TextArea rows={4} autoSize />
             </Form.Item>
             <Form.Item label="占位符" name="placeholder">
               <Input />

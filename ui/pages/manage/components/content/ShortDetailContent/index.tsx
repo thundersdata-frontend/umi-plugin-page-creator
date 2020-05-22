@@ -83,7 +83,7 @@ export default () => {
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async ({ path }: { path: string }) => {
+  const remoteCall = async ({ path, menu }: { path: string; menu?: string }) => {
     // 对formItems进行遍历，如果其中有任一项没有配置label/name，则不允许提交
     if (formItems.length === 0) {
       message.error('您还没有添加详情展示项，不能提交！');
@@ -96,6 +96,7 @@ export default () => {
           cardConfig,
           formItems,
           path,
+          menu,
           initialFetch,
           submitFetch,
         },

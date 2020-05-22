@@ -101,7 +101,7 @@ export default () => {
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async ({ path }: { path: string }) => {
+  const remoteCall = async ({ path, menu }: { path: string; menu?: string }) => {
     try {
       if (cards.length === 0) {
         message.error('你还没有添加Card');
@@ -116,6 +116,7 @@ export default () => {
         payload: {
           cards,
           path,
+          menu,
           initialFetch,
           submitFetch,
         },

@@ -14,6 +14,7 @@ import { writeFileSync, mkdirSync, existsSync } from 'fs';
 import { AjaxResponse } from '../interfaces/common';
 import prettier from 'prettier';
 import { writeNewRoute } from './utils/writeNewRoute';
+import { writeNewMenu } from './utils/writeNewMenu';
 import {
   generateShortFormCode,
   generateLongFormCode,
@@ -106,17 +107,17 @@ export default function(api: IApi) {
    */
   function generateFile(
     code: string,
-    payload: { path: string; route?: boolean; dirName?: string },
+    payload: { path: string; menu?: string; dirName?: string },
     failure: (data: AjaxResponse<null>) => void,
     success: (data: AjaxResponse<null>) => void,
   ) {
     if (payload && payload.path && code) {
-      const { path, dirName } = payload;
+      const { path, dirName, menu } = payload;
 
       if (dirName) {
         generateComponent(path, dirName, code, failure, success);
       } else {
-        generatePage(path, code, failure, success);
+        generatePage(path, menu!, code, failure, success);
       }
     }
   }
@@ -131,6 +132,7 @@ export default function(api: IApi) {
    */
   function generatePage(
     path: string,
+    menu: string,
     code: string,
     failure: (data: AjaxResponse<null>) => void,
     success: (data: AjaxResponse<null>) => void,
@@ -150,6 +152,12 @@ export default function(api: IApi) {
         api.paths.cwd + '/config/config.ts',
         api.paths.absSrcPath!,
       );
+      // 更新菜单
+      if (!existsSync(api.paths.cwd + '/mock')) {
+        mkdirSync(api.paths.cwd + '/mock');
+      }
+      writeNewMenu({ path, menu }, api.paths.cwd + '/mock/route.ts');
+
       success({ success: true, message: '恭喜你，文件创建成功' });
     } else {
       failure({ success: false, message: '对不起，目录已存在' });

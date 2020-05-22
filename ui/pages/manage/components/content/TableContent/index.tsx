@@ -55,7 +55,7 @@ export default () => {
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async ({ path }: { path: string }) => {
+  const remoteCall = async ({ path, menu }: { path: string; menu?: string }) => {
     try {
       const result = await api.callRemote({
         type: 'org.umi-plugin-page-creator.table',
@@ -63,6 +63,7 @@ export default () => {
           tableConfig,
           columns,
           path,
+          menu,
           initialFetch,
           submitFetch,
         },
