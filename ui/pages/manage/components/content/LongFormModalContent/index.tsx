@@ -188,6 +188,7 @@ export default () => {
           index={index}
           formItem={currentItem}
           onConfirm={onConfirm}
+          submitFetch={submitFetch}
         />
       )}
 

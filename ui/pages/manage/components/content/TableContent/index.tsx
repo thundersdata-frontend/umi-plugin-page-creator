@@ -111,7 +111,11 @@ export default () => {
           }))}
           dataSource={[]}
         />
+        <Button type="primary" style={{ margin: 24 }} onClick={() => setApiConfigDrawerVisible(true)}>
+          页面接口配置
+        </Button>
         <Button
+          type="primary"
           onClick={() => {
             setIndex(0);
             setCurrentColumn(undefined);
@@ -119,9 +123,6 @@ export default () => {
           }}
         >
           添加列
-        </Button>
-        <Button type="primary" onClick={() => setApiConfigDrawerVisible(true)}>
-          页面接口配置
         </Button>
       </Card>
 
@@ -150,6 +151,7 @@ export default () => {
           setColumnConfigDrawerVisible(false);
         }}
         current={currentColumn}
+        initialFetch={initialFetch}
       />
 
       {/**提交时候弹出的输入文件路径 */}

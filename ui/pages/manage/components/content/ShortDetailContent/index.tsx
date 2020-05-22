@@ -168,6 +168,7 @@ export default () => {
           formItem={currentItem}
           onConfirm={onConfirm}
           from="detail"
+          initialFetch={initialFetch}
         />
       )}
 

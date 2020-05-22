@@ -3,8 +3,8 @@
  * @公司: thundersdata
  * @作者: 陈杰
  * @Date: 2020-05-07 14:04:41
- * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-19 23:32:04
+ * @LastEditors: 黄姗姗
+ * @LastEditTime: 2020-05-22 17:02:13
  */
 import { Store } from 'antd/lib/form/interface';
 import { createFormComponentsByType, generateRules } from './util';
@@ -71,9 +71,9 @@ export default function generateShortFormCode(payload: Payload): string {
         ${!submitFetch ? `const submitBtn = useToggle(false);` : ''}
 
         ${
-          initialFetch
+          initialFetch && initialFetch.length > 0
             ? `
-          useRequest(() => API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2]}.fetch({}), {
+          useRequest(() => API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2].split('-')[0]}.fetch({}), {
             onSuccess: data => {
               form.setFieldsValue(data);
             },
@@ -86,11 +86,11 @@ export default function generateShortFormCode(payload: Payload): string {
         }
 
         ${
-          submitFetch
+          submitFetch && submitFetch.length > 0
             ? `
           const submit = (values: Store) => {
             console.log(values);
-            return API.${submitFetch[0]}.${submitFetch[1]}.${submitFetch[2]}.fetch({ ... values });
+            return API.${submitFetch[0]}.${submitFetch[1]}.${submitFetch[2].split('-')[0]}.fetch({ ... values });
           };
 
           const { loading, run: handleFinish } = useRequest(submit, {

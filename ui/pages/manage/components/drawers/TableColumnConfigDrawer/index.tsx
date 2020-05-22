@@ -1,19 +1,29 @@
-import React from 'react';
+import React, { useContext, useMemo, useEffect, useState } from 'react';
 import { Drawer, Form, Input, Button, Radio, Select, InputNumber } from 'antd';
 import { Store } from 'antd/lib/form/interface';
 import { ColumnType } from 'antd/lib/table';
+import Context from '../../../Context';
 
-export default function<T>({
+const { Option } = Select;
+
+export default function <T>({
   setVisible,
   visible,
   onSubmit,
   current,
+  initialFetch,
 }: {
   visible: boolean;
   setVisible: (visible: boolean) => void;
   onSubmit: (values: Store) => void;
   current?: ColumnType<T>;
+  initialFetch?: string[];
 }) {
+  const [form] = Form.useForm();
+  const { baseClasses = [] } = useContext(Context);
+
+  const [responseName, setResponseName] = useState<string>();
+
   const initialValues = current || {
     align: 'left',
     ellipsis: true,
@@ -21,6 +31,31 @@ export default function<T>({
     valueType: 'text',
     hideInSearch: false,
   };
+
+  /** initialFetch中第三个值为value-paramsName-responseName，获取初始数据选用responseName作为DTO */
+  useEffect(() => {
+    if (initialFetch && initialFetch.length > 0) {
+      const responseName = initialFetch[2].split('-')[2];
+      setResponseName(responseName);
+    }
+  }, [initialFetch]);
+
+  const properties = useMemo(() => (baseClasses.find(item => item.name === responseName)?.properties || []), [baseClasses, responseName]);
+
+  const handleChange = (value: string) => {
+    const matchClass = properties.find(item => item.value === value);
+    form.setFieldsValue({
+      title: matchClass?.label,
+      dataIndex: value,
+    })
+  };
+
+  const handleFinish = (values: Store) => {
+    const { prop, ...restValues } = values;
+    onSubmit(restValues);
+    form.resetFields();
+  }
+
   return (
     <Drawer
       title="表格列配置"
@@ -30,12 +65,25 @@ export default function<T>({
       destroyOnClose
     >
       <Form
+        form={form}
         labelCol={{ span: 10 }}
         wrapperCol={{ span: 14 }}
         labelAlign="right"
-        onFinish={onSubmit}
+        onFinish={handleFinish}
         initialValues={initialValues}
       >
+        {initialFetch && initialFetch.length > 0 && (
+          <Form.Item
+            label="属性值"
+            name="prop"
+          >
+            <Select onChange={handleChange}>
+              {properties.map(prop => (
+                <Option key={prop.value} value={prop.value}>{`${prop.label}(${prop.value})`}</Option>
+              ))}
+            </Select>
+          </Form.Item>
+        )}
         <Form.Item
           label="列头显示文字"
           name="title"

@@ -213,6 +213,7 @@ export default () => {
           index={itemIndex}
           formItem={currentItem}
           onConfirm={configItem}
+          submitFetch={submitFetch}
         />
       )}
       <DropdownActions

@@ -3,8 +3,8 @@
  * @公司: thundersdata
  * @作者: 陈杰
  * @Date: 2020-05-18 21:18:11
- * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-18 21:45:13
+ * @LastEditors: 黄姗姗
+ * @LastEditTime: 2020-05-22 15:29:38
  */
 
 /** api-lock.json的结构 */
@@ -33,7 +33,7 @@ export interface ApiInterface {
 }
 
 export interface DataType {
-  typeArgs: string[];
+  typeArgs: DataType[];
   typeName: string;
   isDefsType: boolean;
 }
@@ -49,4 +49,17 @@ export interface ApiProperty {
 export interface ApiClass {
   name: string;
   properties: ApiProperty[];
+  description?: string;
+  required: boolean;
+}
+
+export interface BaseClass {
+  name: string;
+  dbId: string;
+  description: string;
+  properties: {
+    label: string;
+    value: string;
+    required: boolean;
+  }[];
 }
