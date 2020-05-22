@@ -3,6 +3,7 @@ import * as types from '@babel/types';
 import * as parser from '@babel/parser';
 import traverse from '@babel/traverse';
 import generate from '@babel/generator';
+import prettier from 'prettier';
 
 interface Resource {
   menu: string;
@@ -149,7 +150,14 @@ function getNewMenuCode(resource: Resource, mockPath: string) {
     });
 
     // 根据处理之后的ast生成最终的代码
-    return generate(ast, {}).code;
+    const code = generate(ast, {}).code;
+    return prettier.format(code, {
+      // format same as ant-design-pro
+      singleQuote: true,
+      trailingComma: 'es5',
+      printWidth: 100,
+      parser: 'typescript',
+    });
   }
   return '';
 }
