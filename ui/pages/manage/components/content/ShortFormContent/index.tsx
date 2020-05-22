@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useMemo } from 'react';
 import { Form, Button, Card, message } from 'antd';
 import Title from '../../../../../components/Title';
 import renderFormItem from '../../../../../components/FormItemConfig';
@@ -179,6 +179,7 @@ export default () => {
           index={index}
           formItem={currentItem}
           onConfirm={onConfirm}
+          submitFetch={submitFetch}
         />
       )}
 

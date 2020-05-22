@@ -3,8 +3,8 @@
  * @公司: thundersdata
  * @作者: 陈杰
  * @Date: 2020-05-08 16:05:30
- * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-19 11:29:57
+ * @LastEditors: 黄姗姗
+ * @LastEditTime: 2020-05-22 17:02:47
  */
 import { transformFormItemLines } from './util';
 import { CardItemProps } from '../../interfaces/common';
@@ -50,9 +50,9 @@ export default function generateLongFormCode(payload: Payload): string {
       export default () => {
         const [form] = Form.useForm();
         ${
-          initialFetch
+          initialFetch && initialFetch.length > 0
             ? `
-          const { loading } = useRequest(() => API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2]}.fetch({}), {
+          const { loading } = useRequest(() => API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2].split('-')[0]}.fetch({}), {
             onSuccess: data => {
               form.setFieldsValue(data);
             },

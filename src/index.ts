@@ -3,8 +3,8 @@
  * @公司: thundersdata
  * @作者: 陈杰
  * @Date: 2020-04-29 10:38:23
- * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-20 12:03:39
+ * @LastEditors: 黄姗姗
+ * @LastEditTime: 2020-05-22 17:21:04
  */
 // ref:
 // - https://umijs.org/plugin/develop.html
@@ -27,7 +27,7 @@ import {
 } from './generate';
 import { ApiJSON } from '../interfaces/api';
 
-export default function(api: IApi) {
+export default function (api: IApi) {
   let mods = [];
 
   // @ts-ignore
@@ -80,7 +80,7 @@ export default function(api: IApi) {
       switch (type) {
         case 'org.umi-plugin-page-creator.apiGenerator':
         default:
-          const { databases, mods: apiMods } = generateApiBaseOnApiLockJson();
+          const { databases, mods: apiMods, baseClasses } = generateApiBaseOnApiLockJson();
           if (databases === null || apiMods === null) {
             failure({
               success: false,
@@ -91,6 +91,8 @@ export default function(api: IApi) {
             success({
               success: true,
               databases,
+              baseClasses,
+              apiMods,
             });
           }
       }
@@ -209,10 +211,23 @@ export default function(api: IApi) {
       children: db.mods.map(mod => ({
         label: mod.description,
         value: mod.name,
-        children: mod.interfaces.map(inter => ({
-          label: `${inter.description}(${inter.method})`,
-          value: inter.name,
-        })),
+        children: mod.interfaces.map(({ name, response, description, method, parameters }) => {
+          // 提交表单数据时的DTO
+          const paramsName = parameters.find(param => param.in === 'body')?.dataType.typeName;
+          // 获取数据时的DTO
+          let responseName;
+          if (response.typeArgs.length > 0) {
+            responseName = response.typeArgs.find(arg => arg.isDefsType)?.typeName;
+          } else {
+            if (response.isDefsType) {
+              responseName = response.typeName;
+            }
+          }
+          return {
+            label: `${description}(${method})`,
+            value: `${name}-${paramsName}-${responseName}`,
+          }
+        }),
       })),
     }));
 
@@ -231,6 +246,12 @@ export default function(api: IApi) {
         accu.concat(curr.baseClasses.map(mod => ({
           name: mod.name,
           dbId: curr.name,
+          description: mod.description || '',
+          properties: mod.properties.map(prop => ({
+            label: prop.description,
+            value: prop.name,
+            required: prop.required,
+          })),
         })) as []),
       [],
     );

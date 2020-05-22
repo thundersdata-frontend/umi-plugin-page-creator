@@ -3,8 +3,8 @@
  * @公司: thundersdata
  * @作者: 陈杰
  * @Date: 2020-05-07 14:04:41
- * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-19 23:34:05
+ * @LastEditors: 黄姗姗
+ * @LastEditTime: 2020-05-22 17:05:04
  */
 import { Store } from 'antd/lib/form/interface';
 import { createFormComponentsByType, generateRules } from './util';
@@ -70,11 +70,11 @@ export default function generateShortFormModalCode(payload: Payload): string {
         }
 
         ${
-          submitFetch
+          submitFetch && submitFetch.length > 0
             ? `
           const submit = (values: Store) => {
             console.log(values);
-            return API.${submitFetch[0]}.${submitFetch[1]}.${submitFetch[2]}.fetch({ ... values });
+            return API.${submitFetch[0]}.${submitFetch[1]}.${submitFetch[2].split('-')[0]}.fetch({ ... values });
           };
 
           const { run: handleFinish } = useRequest(submit, {

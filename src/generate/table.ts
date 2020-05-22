@@ -3,8 +3,8 @@
  * @公司: thundersdata
  * @作者: 陈杰
  * @Date: 2020-05-08 16:14:11
- * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-19 11:48:02
+ * @LastEditors: 黄姗姗
+ * @LastEditTime: 2020-05-22 17:05:17
  */
 import { Store } from 'antd/lib/form/interface';
 import { ColumnType } from 'antd/lib/table';
@@ -33,8 +33,8 @@ export default function generateTable<T>(payload: Payload<T>): string {
           <ProTable
             actionRef={actionRef}
             ${
-              initialFetch
-                ? `request={API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2]}.fetch}`
+              initialFetch && initialFetch.length > 0
+                ? `request={API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2].split('-')[0]}.fetch}`
                 : ''
             }
             onRequestError={error => {

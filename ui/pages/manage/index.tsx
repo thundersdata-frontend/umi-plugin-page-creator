@@ -3,8 +3,8 @@
  * @公司: thundersdata
  * @作者: 陈杰
  * @Date: 2020-04-29 11:06:58
- * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-19 10:21:03
+ * @LastEditors: 黄姗姗
+ * @LastEditTime: 2020-05-22 15:48:54
  */
 import React, { useState, useEffect } from 'react'; // -> 暂时先解决报错，后期全部删掉
 import { Layout, message } from 'antd';
@@ -14,12 +14,14 @@ import TemplateList from './components/TemplateList';
 import Dashboard from './components/Dashboard';
 import './index.module.less';
 import { TemplateType } from '../../../interfaces/common';
-import { ApiJSON } from '../../../interfaces/api';
+import { CascaderOptionType } from 'antd/lib/cascader';
+import { BaseClass } from '../../../interfaces/api';
 
 const { Header, Content } = Layout;
 
 export default ({ api }: { api: IUiApi }) => {
-  const [databases, setDatabases] = useState<ApiJSON[]>([]);
+  const [databases, setDatabases] = useState<CascaderOptionType[]>([]);
+  const [baseClasses, setBaseClasses] = useState<BaseClass[]>([]);
   const [templateType, setTemplate] = useState<TemplateType>();
 
   /** 页面加载时调用后端接口，后端从services/api-lock.json读取数据，生成对应的接口以及类型 */
@@ -30,12 +32,13 @@ export default ({ api }: { api: IUiApi }) => {
         payload: {
           fetchApiJson: true,
         },
-      })) as { databases: ApiJSON[]; success: boolean };
+      })) as { databases: CascaderOptionType[]; success: boolean; baseClasses: BaseClass[]; };
 
       if (!result.success) {
         message.warning('你的项目没有集成pont');
       } else {
         setDatabases(result.databases);
+        setBaseClasses(result.baseClasses);
       }
     })();
   }, []);
@@ -52,6 +55,7 @@ export default ({ api }: { api: IUiApi }) => {
         templateType,
         addTemplate,
         databases,
+        baseClasses,
       }}
     >
       <Layout style={{ overflowY: 'auto' }}>

@@ -3,8 +3,8 @@
  * @公司: thundersdata
  * @作者: 陈杰
  * @Date: 2020-05-07 14:04:41
- * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-19 11:31:22
+ * @LastEditors: 黄姗姗
+ * @LastEditTime: 2020-05-22 17:04:35
  */
 import { Store } from 'antd/lib/form/interface';
 import { FormItemProps } from '../../interfaces/common';
@@ -45,9 +45,9 @@ export default function generateShortDetail(payload: Payload): string {
       export default () => {
         const [form] = Form.useForm();
         ${
-          initialFetch
+          initialFetch && initialFetch.length > 0
             ? `
-          const { loading } = useRequest(() => API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2]}.fetch({}), {
+          const { loading } = useRequest(() => API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2].split('-')[0]}.fetch({}), {
             onSuccess: data => {
               form.setFieldsValue(data);
             },

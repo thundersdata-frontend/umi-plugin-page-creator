@@ -218,6 +218,7 @@ export default () => {
           formItem={currentItem}
           onConfirm={configItem}
           from="detail"
+          initialFetch={initialFetch}
         />
       )}
       <DropdownActions
