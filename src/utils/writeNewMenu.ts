@@ -44,12 +44,12 @@ function getNewMenuCode(resource: Resource, mockPath: string) {
           const { elements = [] } = (property as types.ObjectProperty)
             .value as types.ArrayExpression;
 
-          if (!menu.includes('/') && path.substr(1).includes('/') && path.startsWith('/')) {
+          if (!menu.includes('/') && !path.substr(1).includes('/') && path.startsWith('/')) {
             // 只是一级目录
             const newNode = (parser.parse(
               `(${JSON.stringify({
                 key: '/' + path,
-                apiUrl: '/' + path,
+                apiUrl: path,
                 description: menu,
                 children: [],
               })})`,
