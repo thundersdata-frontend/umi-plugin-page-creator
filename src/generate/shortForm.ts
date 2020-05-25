@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-05-07 14:04:41
  * @LastEditors: 黄姗姗
- * @LastEditTime: 2020-05-22 17:02:13
+ * @LastEditTime: 2020-05-25 09:48:39
  */
 import { Store } from 'antd/lib/form/interface';
 import { createFormComponentsByType, generateRules } from './util';
@@ -71,7 +71,7 @@ export default function generateShortFormCode(payload: Payload): string {
         ${!submitFetch ? `const submitBtn = useToggle(false);` : ''}
 
         ${
-          initialFetch && initialFetch.length > 0
+          initialFetch && initialFetch.length === 3
             ? `
           useRequest(() => API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2].split('-')[0]}.fetch({}), {
             onSuccess: data => {
@@ -86,7 +86,7 @@ export default function generateShortFormCode(payload: Payload): string {
         }
 
         ${
-          submitFetch && submitFetch.length > 0
+          submitFetch && submitFetch.length === 3
             ? `
           const submit = (values: Store) => {
             console.log(values);

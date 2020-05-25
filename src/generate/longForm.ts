@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-05-08 16:05:30
  * @LastEditors: 黄姗姗
- * @LastEditTime: 2020-05-22 17:03:52
+ * @LastEditTime: 2020-05-25 09:48:07
  */
 import { createFormComponentsByType, transformFormItemLines, generateRules } from './util';
 import { CardItemProps } from '../../interfaces/common';
@@ -65,7 +65,7 @@ export default function generateLongFormCode(payload: Payload): string {
         ${!submitFetch ? `const submitBtn = useToggle(false);` : ''}
 
         ${
-          initialFetch && initialFetch.length > 0
+          initialFetch && initialFetch.length === 3
             ? `
           useRequest(() => API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2].split('-')[0]}.fetch({}), {
             onSuccess: data => {
@@ -80,7 +80,7 @@ export default function generateLongFormCode(payload: Payload): string {
         }
 
         ${
-          submitFetch && submitFetch.length > 0
+          submitFetch && submitFetch.length === 3
             ? `
           const submit = (values: Store) => {
             console.log(values);
