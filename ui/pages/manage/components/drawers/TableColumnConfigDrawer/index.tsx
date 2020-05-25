@@ -6,7 +6,7 @@ import Context from '../../../Context';
 
 const { Option } = Select;
 
-export default function <T>({
+export default function<T>({
   setVisible,
   visible,
   onSubmit,
@@ -21,16 +21,25 @@ export default function <T>({
 }) {
   const [form] = Form.useForm();
   const { baseClasses = [] } = useContext(Context);
-
   const [responseName, setResponseName] = useState<string>();
 
-  const initialValues = current || {
+  const initialValues = {
+    title: '',
+    dataIndex: '',
     align: 'left',
     ellipsis: true,
     copyable: true,
     valueType: 'text',
     hideInSearch: false,
+    order: undefined,
   };
+  useEffect(() => {
+    if (current) {
+      form.setFieldsValue(current);
+    } else {
+      form.setFieldsValue(initialValues)
+    }
+  }, [current]);
 
   /** initialFetch中第三个值为value-paramsName-responseName，获取初始数据选用responseName作为DTO */
   useEffect(() => {
@@ -40,29 +49,34 @@ export default function <T>({
     }
   }, [initialFetch]);
 
-  const properties = useMemo(() => (baseClasses.find(item => item.name === responseName)?.properties || []), [baseClasses, responseName]);
+  const properties = useMemo(
+    () => baseClasses.find(item => item.name === responseName)?.properties || [],
+    [baseClasses, responseName],
+  );
 
   const handleChange = (value: string) => {
     const matchClass = properties.find(item => item.value === value);
     form.setFieldsValue({
       title: matchClass?.label,
       dataIndex: value,
-    })
+    });
   };
 
   const handleFinish = (values: Store) => {
     const { prop, ...restValues } = values;
     onSubmit(restValues);
     form.resetFields();
-  }
+  };
 
   return (
     <Drawer
       title="表格列配置"
       visible={visible}
       width={360}
-      onClose={() => setVisible(false)}
-      destroyOnClose
+      onClose={() => {
+        form.setFieldsValue(initialValues);
+        setVisible(false);
+      }}
     >
       <Form
         form={form}
@@ -73,13 +87,13 @@ export default function <T>({
         initialValues={initialValues}
       >
         {initialFetch && initialFetch.length > 0 && (
-          <Form.Item
-            label="属性值"
-            name="prop"
-          >
+          <Form.Item label="属性值" name="prop">
             <Select onChange={handleChange}>
               {properties.map(prop => (
-                <Option key={prop.value} value={prop.value}>{`${prop.label}(${prop.value})`}</Option>
+                <Option
+                  key={prop.value}
+                  value={prop.value}
+                >{`${prop.label}(${prop.value})`}</Option>
               ))}
             </Select>
           </Form.Item>
@@ -110,10 +124,20 @@ export default function <T>({
           />
         </Form.Item>
         <Form.Item label="自动缩略" name="ellipsis">
-          <Radio.Group options={[{ label: '是', value: true }, { label: '否', value: false }]} />
+          <Radio.Group
+            options={[
+              { label: '是', value: true },
+              { label: '否', value: false },
+            ]}
+          />
         </Form.Item>
         <Form.Item label="支持复制" name="copyable">
-          <Radio.Group options={[{ label: '是', value: true }, { label: '否', value: false }]} />
+          <Radio.Group
+            options={[
+              { label: '是', value: true },
+              { label: '否', value: false },
+            ]}
+          />
         </Form.Item>
         <Form.Item label="枚举值" name="valueEnum">
           <Input.TextArea
@@ -159,7 +183,12 @@ export default function <T>({
           </Select>
         </Form.Item>
         <Form.Item label="不在查询里显示" name="hideInSearch">
-          <Radio.Group options={[{ label: '是', value: true }, { label: '否', value: false }]} />
+          <Radio.Group
+            options={[
+              { label: '是', value: true },
+              { label: '否', value: false },
+            ]}
+          />
         </Form.Item>
         <Form.Item label="查询显示顺序" name="order">
           <InputNumber min={0} />

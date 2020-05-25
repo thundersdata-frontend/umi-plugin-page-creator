@@ -27,6 +27,7 @@ import {
   generateLongDetailModalCode,
 } from './generate';
 import { ApiJSON } from '../interfaces/api';
+import { removeUnusedImport } from './utils/removeUnusedImport';
 
 export default function (api: IApi) {
   let mods = [];
@@ -70,7 +71,8 @@ export default function (api: IApi) {
           code = generateTableCode(payload);
           break;
       }
-      const formattedCode = prettier.format(code, {
+      const removeUnusedImportCode = removeUnusedImport(code);
+      const formattedCode = prettier.format(removeUnusedImportCode, {
         singleQuote: true,
         trailingComma: 'es5',
         printWidth: 100,

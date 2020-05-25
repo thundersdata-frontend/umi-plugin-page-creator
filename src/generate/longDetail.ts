@@ -52,7 +52,9 @@ export default function generateLongFormCode(payload: Payload): string {
         ${
           initialFetch && initialFetch.length === 3
             ? `
-          const { loading } = useRequest(() => API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2].split('-')[0]}.fetch({}), {
+          const { loading } = useRequest(() => API.${initialFetch[0]}.${initialFetch[1]}.${
+                initialFetch[2].split('-')[0]
+              }.fetch({}), {
             onSuccess: data => {
               form.setFieldsValue(data);
             },
@@ -69,13 +71,14 @@ export default function generateLongFormCode(payload: Payload): string {
         return (
           <Spin spinning={${initialFetch ? 'loading' : 'toggle.state'}}>
             <Form form={form} layout="vertical">
-              ${cards.map(card => {
-                const { title = '', formItems = [] } = card;
-                const cols = 3;
-                // 把formItems分成3列
-                const formItemLines = transformFormItemLines(formItems, cols);
+              ${cards
+                .map(card => {
+                  const { title = '', formItems = [] } = card;
+                  const cols = 3;
+                  // 把formItems分成3列
+                  const formItemLines = transformFormItemLines(formItems, cols);
 
-                return `
+                  return `
                   <Card title={<Title text="${title}" />} style={{ marginBottom: 16 }}>
                     ${formItemLines
                       .map(line => {
@@ -103,7 +106,8 @@ export default function generateLongFormCode(payload: Payload): string {
                       .join('')}
                   </Card>
                 `;
-              })}
+                })
+                .join('')}
             </Form>
           </Spin>
         );

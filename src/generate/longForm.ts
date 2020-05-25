@@ -67,7 +67,9 @@ export default function generateLongFormCode(payload: Payload): string {
         ${
           initialFetch && initialFetch.length === 3
             ? `
-          useRequest(() => API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2].split('-')[0]}.fetch({}), {
+          useRequest(() => API.${initialFetch[0]}.${initialFetch[1]}.${
+                initialFetch[2].split('-')[0]
+              }.fetch({}), {
             onSuccess: data => {
               form.setFieldsValue(data);
             },
@@ -84,7 +86,9 @@ export default function generateLongFormCode(payload: Payload): string {
             ? `
           const submit = (values: Store) => {
             console.log(values);
-            return API.${submitFetch[0]}.${submitFetch[1]}.${submitFetch[2].split('-')[0]}.fetch({ ... values });
+            return API.${submitFetch[0]}.${submitFetch[1]}.${
+                submitFetch[2].split('-')[0]
+              }.fetch({ ... values });
           };
 
           const { loading, run: handleFinish } = useRequest(submit, {
@@ -108,13 +112,14 @@ export default function generateLongFormCode(payload: Payload): string {
 
         return (
           <Form form={form} onFinish={handleFinish} layout="vertical">
-            ${cards.map(card => {
-              const { title = '', formItems = [] } = card;
-              const cols = 3;
-              // 把formItems分成3列
-              const formItemLines = transformFormItemLines(formItems, cols);
+            ${cards
+              .map(card => {
+                const { title = '', formItems = [] } = card;
+                const cols = 3;
+                // 把formItems分成3列
+                const formItemLines = transformFormItemLines(formItems, cols);
 
-              return `
+                return `
                 <Card title={<Title text="${title}" />} style={{ marginBottom: 16 }}>
                   ${formItemLines
                     .map(line => {
@@ -151,7 +156,8 @@ export default function generateLongFormCode(payload: Payload): string {
                     .join('')}
                 </Card>
               `;
-            })}
+              })
+              .join('')}
             <FooterToolbar>
               <Button
                 type="primary"

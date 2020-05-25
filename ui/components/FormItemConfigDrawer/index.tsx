@@ -25,8 +25,8 @@ export default ({
   index?: number;
   formItem: FormItemProps;
   onConfirm: (index: number, formItem: FormItemProps) => void;
-  submitFetch?: string[],
-  initialFetch?: string[],
+  submitFetch?: string[];
+  initialFetch?: string[];
   from?: 'form' | 'detail';
 }) => {
   const { baseClasses = [] } = useContext(Context);
@@ -79,17 +79,18 @@ export default ({
       label: matchClass?.label,
       name: value,
       required: matchClass?.required,
-    })
+    });
   };
 
-  const propVisible = (from === 'form' && submitFetch && submitFetch.length > 0) || (from === 'detail' && initialFetch && initialFetch.length > 0);
+  const propVisible =
+    (from === 'form' && submitFetch && submitFetch.length > 0) ||
+    (from === 'detail' && initialFetch && initialFetch.length > 0);
 
   return (
     <Drawer
       title="表单项配置"
       visible={visible}
       onClose={() => onVisible(false)}
-      destroyOnClose
       width={400}
     >
       <Form
@@ -100,13 +101,13 @@ export default ({
         initialValues={{ required: false, disabled: false, allowClear: true }}
       >
         {propVisible && (
-          <Form.Item
-            label="属性值"
-            name="prop"
-          >
+          <Form.Item label="属性值" name="prop">
             <Select onChange={handleChange}>
               {properties.map(prop => (
-                <Option key={prop.value} value={prop.value}>{`${prop.label}(${prop.value})`}</Option>
+                <Option
+                  key={prop.value}
+                  value={prop.value}
+                >{`${prop.label}(${prop.value})`}</Option>
               ))}
             </Select>
           </Form.Item>
@@ -136,7 +137,10 @@ export default ({
               rules={[{ required: true, message: '请选择是否必填' }]}
             >
               <Radio.Group
-                options={[{ label: '是', value: true }, { label: '否', value: false }]}
+                options={[
+                  { label: '是', value: true },
+                  { label: '否', value: false },
+                ]}
               />
             </Form.Item>
             <Form.Item
