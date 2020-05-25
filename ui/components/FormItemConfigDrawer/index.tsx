@@ -43,7 +43,7 @@ export default ({
 
   /** submitFetch中第三个值为value-paramsName-responseName，提交表单数据选用paramsName作为DTO */
   useEffect(() => {
-    if (submitFetch && submitFetch.length > 0) {
+    if (submitFetch && submitFetch.length === 3) {
       const paramsName = submitFetch[2].split('-')[1];
       setParamsName(paramsName);
     }
@@ -51,7 +51,7 @@ export default ({
 
   /** initialFetch中第三个值为value-paramsName-responseName，获取初始数据选用responseName作为DTO */
   useEffect(() => {
-    if (initialFetch && initialFetch.length > 0) {
+    if (initialFetch && initialFetch.length === 3) {
       const responseName = initialFetch[2].split('-')[2];
       setResponseName(responseName);
     }

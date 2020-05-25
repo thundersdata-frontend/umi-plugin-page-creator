@@ -70,7 +70,7 @@ export default function generateShortFormModalCode(payload: Payload): string {
         }
 
         ${
-          submitFetch && submitFetch.length > 0
+          submitFetch && submitFetch.length === 3
             ? `
           const submit = (values: Store) => {
             console.log(values);

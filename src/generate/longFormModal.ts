@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-05-08 16:05:30
  * @LastEditors: 黄姗姗
- * @LastEditTime: 2020-05-22 17:04:10
+ * @LastEditTime: 2020-05-25 09:48:26
  */
 import { createFormComponentsByType, transformFormItemLines, generateRules } from './util';
 import { FormItemProps } from '../../interfaces/common';
@@ -75,7 +75,7 @@ export default function generateLongFormModalCode(payload: Payload): string {
         };
 
         ${
-          submitFetch && submitFetch.length > 0
+          submitFetch && submitFetch.length === 3
             ? `
           const submit = (values: Store) => {
             console.log(values);

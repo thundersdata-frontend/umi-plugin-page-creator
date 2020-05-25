@@ -34,7 +34,7 @@ export default function <T>({
 
   /** initialFetch中第三个值为value-paramsName-responseName，获取初始数据选用responseName作为DTO */
   useEffect(() => {
-    if (initialFetch && initialFetch.length > 0) {
+    if (initialFetch && initialFetch.length === 3) {
       const responseName = initialFetch[2].split('-')[2];
       setResponseName(responseName);
     }

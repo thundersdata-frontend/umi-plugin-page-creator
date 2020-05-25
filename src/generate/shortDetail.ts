@@ -45,7 +45,7 @@ export default function generateShortDetail(payload: Payload): string {
       export default () => {
         const [form] = Form.useForm();
         ${
-          initialFetch && initialFetch.length > 0
+          initialFetch && initialFetch.length === 3
             ? `
           const { loading } = useRequest(() => API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2].split('-')[0]}.fetch({}), {
             onSuccess: data => {
