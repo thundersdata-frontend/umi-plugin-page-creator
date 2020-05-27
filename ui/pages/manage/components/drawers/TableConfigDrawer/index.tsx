@@ -20,7 +20,6 @@ export default ({
       visible={visible}
       width={360}
       onClose={() => setVisible(false)}
-      destroyOnClose
     >
       <Form
         labelCol={{ span: 12 }}

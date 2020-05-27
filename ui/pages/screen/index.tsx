@@ -1,19 +1,12 @@
-import { Button } from 'antd';
+import React from 'react';
 import { IUiApi } from '@umijs/ui-types';
+import Context from './Context';
+import Dashboard from './Dashboard';
 
 export default ({ api }: { api: IUiApi }) => {
-  const { callRemote } = api;
   return (
-    <Button
-      type="primary"
-      onClick={async () => {
-        const { data } = await callRemote({
-          type: 'org.umi-plugin-page-creator.test',
-        });
-        alert(data);
-      }}
-    >
-      Test
-    </Button>
+    <Context.Provider value={{ api }}>
+      <Dashboard />
+    </Context.Provider>
   );
 };

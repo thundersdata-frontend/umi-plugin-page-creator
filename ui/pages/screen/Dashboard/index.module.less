@@ -1,0 +1,36 @@
+.floatBtn {
+  width: 60px;
+  height: 60px;
+  border-radius: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 40px;
+  right: 10px;
+}
+.screen {
+  padding: 0 16px;
+  height: 100%;
+}
+.layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.row {
+  margin-bottom: 16px;
+}
+.col {
+  border: 1px solid blue;
+  position: relative;
+  flex: 1;
+
+  :global {
+    .ant-btn {
+      position: absolute;
+      right: 0;
+      top: -30px;
+    }
+  }
+}
