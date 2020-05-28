@@ -14,6 +14,9 @@ import styles from './index.module.less';
 import useConfigVisible from '../../../../../hooks/useConfigVisible';
 import ConfigActions from '../../../../../components/ConfigActions';
 import ApiConfigDrawer from '../../drawers/ApiConfigDrawer';
+import ImportActions from '../../ImportActions';
+import ExportActions from '../../ExportActions';
+import useConfig from '../../../../../hooks/useConfig';
 
 const formItemLayout = {
   labelCol: {
@@ -33,8 +36,13 @@ export default () => {
   const [formConfig, setFormConfig] = useState<Store>({
     title: '单列详情',
   });
-  const [initialFetch, setInitialFetch] = useState<string[]>();
-  const [submitFetch, setSubmitFetch] = useState<string[]>();
+  
+  const {
+    initialFetch,
+    setInitialFetch,
+    submitFetch,
+    setSubmitFetch,
+  } = useConfig();
 
   const {
     pathModalVisible,
@@ -45,6 +53,10 @@ export default () => {
     setFormItemConfigDrawerVisible,
     apiConfigDrawerVisible,
     setApiConfigDrawerVisible,
+    importModalVisible,
+    setImportModalVisible,
+    exportModalVisible,
+    setExportModalVisible,
   } = useConfigVisible();
 
   const {
@@ -108,6 +120,17 @@ export default () => {
     }
   };
 
+  /** 把导入的配置信息进行解析 */
+  const handleImportSubmit = (values: Store) => {
+    setImportModalVisible(false);
+    const { importConfig } = values;
+    const { formConfig, formItems, initialFetch, submitFetch } = JSON.parse(importConfig);
+    setFormConfig(formConfig);
+    setFormItems(formItems);
+    setInitialFetch(initialFetch);
+    setSubmitFetch(submitFetch);
+  }
+
   return (
     <>
       <Card
@@ -150,6 +173,8 @@ export default () => {
         visible={apiConfigDrawerVisible}
         setVisible={setApiConfigDrawerVisible}
         onSubmit={handleApiSubmit}
+        initialFetch={initialFetch}
+        submitFetch={submitFetch}
       />
 
       {/**表单配置 */}
@@ -157,6 +182,7 @@ export default () => {
         visible={formConfigDrawerVisible}
         setVisible={setFormConfigDrawerVisible}
         onFinish={setFormConfig}
+        formConfig={formConfig}
       />
 
       {/**配置单个表单项 */}
@@ -178,6 +204,25 @@ export default () => {
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}
         modal
+      />
+
+      {/* 导入 */}
+      <ImportActions
+        modalVisible={importModalVisible}
+        setModalVisible={setImportModalVisible}
+        onSubmit={handleImportSubmit}
+      />
+
+      {/* 导出 */}
+      <ExportActions
+        config={{
+          formConfig,
+          formItems,
+          initialFetch,
+          submitFetch,
+        }}
+        modalVisible={exportModalVisible}
+        setModalVisible={setExportModalVisible}
       />
     </>
   );

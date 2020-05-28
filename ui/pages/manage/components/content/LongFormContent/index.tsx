@@ -13,6 +13,10 @@ import useCard from '../../../../../hooks/useCard';
 import ConfigActions from '../../../../../components/ConfigActions';
 import FormItemConfigDrawer from '../../../../../components/FormItemConfigDrawer';
 import ApiConfigDrawer from '../../drawers/ApiConfigDrawer';
+import ImportActions from '../../ImportActions';
+import ExportActions from '../../ExportActions';
+import useConfig from '../../../../../hooks/useConfig';
+import { Store } from 'antd/lib/form/interface';
 
 const formItemLayout = {
   labelCol: {
@@ -40,8 +44,13 @@ const colLayout = {
 
 export default () => {
   const { api } = useContext(Context);
-  const [initialFetch, setInitialFetch] = useState<string[]>();
-  const [submitFetch, setSubmitFetch] = useState<string[]>();
+
+  const {
+    initialFetch,
+    setInitialFetch,
+    submitFetch,
+    setSubmitFetch,
+  } = useConfig();
 
   const {
     formItemsDrawerVisible,
@@ -54,6 +63,10 @@ export default () => {
     setFormItemConfigDrawerVisible,
     apiConfigDrawerVisible,
     setApiConfigDrawerVisible,
+    importModalVisible,
+    setImportModalVisible,
+    exportModalVisible,
+    setExportModalVisible,
   } = useConfigVisible();
 
   const {
@@ -107,6 +120,16 @@ export default () => {
       message.error(error.message);
     }
   };
+
+  /** 把导入的配置信息进行解析 */
+  const handleImportSubmit = (values: Store) => {
+    setImportModalVisible(false);
+    const { importConfig } = values;
+    const { cards, initialFetch, submitFetch } = JSON.parse(importConfig);
+    setCards(cards);
+    setInitialFetch(initialFetch);
+    setSubmitFetch(submitFetch);
+  }
 
   return (
     <>
@@ -195,6 +218,8 @@ export default () => {
         visible={apiConfigDrawerVisible}
         setVisible={setApiConfigDrawerVisible}
         onSubmit={handleApiSubmit}
+        initialFetch={initialFetch}
+        submitFetch={submitFetch}
       />
 
       {/** 选择表单元素的抽屉 */}
@@ -220,6 +245,24 @@ export default () => {
         onRemoteCall={remoteCall}
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}
+      />
+
+      {/* 导入 */}
+      <ImportActions
+        modalVisible={importModalVisible}
+        setModalVisible={setImportModalVisible}
+        onSubmit={handleImportSubmit}
+      />
+
+      {/* 导出 */}
+      <ExportActions
+        config={{
+          cards,
+          initialFetch,
+          submitFetch,
+        }}
+        modalVisible={exportModalVisible}
+        setModalVisible={setExportModalVisible}
       />
     </>
   );
