@@ -1,11 +1,15 @@
 import React, { useContext, useState } from 'react';
 import Context from '../Context';
-import { Button, Row, Col, Tooltip, Space, Divider, InputNumber } from 'antd';
+import { Button, Row, Col, Tooltip, Space, Divider, InputNumber, message } from 'antd';
 import { SettingOutlined, PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import styles from './index.module.less';
 import useScreen from '../../../hooks/useScreen';
 import ScreenConfigDrawer from '../ScreenConfigDrawer';
 import ColConfigDrawer from '../ColConfigDrawer';
+import classNames from 'classnames';
+import { transformConfig } from '../../../utils';
+import { ScreenConfigPayload } from '../../../../interfaces/screen';
+import { AjaxResponse } from '../../../../interfaces/common';
 
 const initialStyle = {
   textAlign: 'center',
@@ -38,6 +42,32 @@ export default () => {
           ...JSON.parse(screenConfig.titleStyle.replace(/'/g, '"').replace(/(\w+):/is, '"$1":')),
         }
       : initialStyle;
+
+  /**
+   * 提交配置信息到后台生成页面和组件
+   */
+  const remoteCall = async () => {
+    if (!screenConfig.title) {
+      message.error('您还没有做任何配置，不能提交');
+      return;
+    }
+    const payload: ScreenConfigPayload = {
+      title: screenConfig.title,
+      titleStyle: titleStyleJSON,
+      gutter: 16,
+      ...transformConfig(screenConfig),
+    };
+
+    try {
+      const result = await api.callRemote({
+        type: 'org.umi-plugin-page-creator.screen',
+        payload,
+      });
+      message.success((result as AjaxResponse<string>).message);
+    } catch (error) {
+      message.error(error.message);
+    }
+  };
 
   return (
     <div className={styles.screen}>
@@ -118,8 +148,15 @@ export default () => {
           </Col>
         ) : null}
       </Row>
-      <Button className={styles.floatBtn} onClick={() => toggleScreenConfigVisible()}>
+      <Button
+        type="primary"
+        className={styles.floatBtn}
+        onClick={() => toggleScreenConfigVisible()}
+      >
         大屏配置
+      </Button>
+      <Button className={classNames(styles.floatBtn, styles.submitBtn)} onClick={remoteCall}>
+        提交
       </Button>
       <ScreenConfigDrawer
         visible={screenConfigDrawerVisible}

@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-05-25 09:48:26
  */
 import { createFormComponentsByType, transformFormItemLines, generateRules } from './util';
-import { FormItemProps } from '../../interfaces/common';
+import { FormItemProps } from '../../../interfaces/common';
 import { Store } from 'antd/lib/form/interface';
 
 export interface Payload {

@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-05-22 17:04:35
  */
 import { Store } from 'antd/lib/form/interface';
-import { FormItemProps } from '../../interfaces/common';
+import { FormItemProps } from '../../../interfaces/common';
 
 export interface Payload {
   cardConfig: Store;

@@ -1,29 +1,35 @@
 /*
- * @文件描述: 生成单列详情弹窗
+ * @文件描述: 生成大表单页面
  * @公司: thundersdata
  * @作者: 陈杰
- * @Date: 2020-05-07 14:04:41
+ * @Date: 2020-05-08 16:05:30
  * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-19 11:39:50
+ * @LastEditTime: 2020-05-15 19:33:41
  */
+import { transformFormItemLines } from './util';
+import { FormItemProps } from '../../../interfaces/common';
 import { Store } from 'antd/lib/form/interface';
-import { FormItemProps } from '../../interfaces/common';
 
 export interface Payload {
   formConfig: Store;
   formItems: FormItemProps[];
 }
 
-export default function generateShortDetailModalCode(payload: Payload): string {
+export default function generateLongDetailModalCode(payload: Payload): string {
   if (payload && payload.formConfig && payload.formItems) {
-    const { formConfig, formItems } = payload;
+    const { formConfig, formItems = [] } = payload;
+
+    const cols = 2;
+    // 把formItems分成2列
+    const formItemLines = transformFormItemLines(formItems, cols);
 
     const code = `
       import React, { useEffect } from 'react';
       import {
-        Button,
         Modal,
         Form,
+        Row,
+        Col,
         Spin,
         Input,
         DatePicker,
@@ -39,9 +45,9 @@ export default function generateShortDetailModalCode(payload: Payload): string {
         Upload,
         Rate,
       } from 'antd';
-      import isEmpty from 'lodash/isEmpty';
       import { FormInstance } from 'antd/lib/form';
       import { Store } from 'antd/es/form/interface';
+      import isEmpty from 'lodash/isEmpty';
       import DetailValue from '@/components/DetailValue';
 
       export default ({
@@ -65,6 +71,7 @@ export default function generateShortDetailModalCode(payload: Payload): string {
 
         return (
           <Modal
+            width={650}
             centered
             visible={visible}
             destroyOnClose
@@ -87,28 +94,32 @@ export default function generateShortDetailModalCode(payload: Payload): string {
         loading: boolean;
       }) => {
         const layout = {
-          labelCol: { span: 5 },
-          wrapperCol: { span: 18 },
+          labelCol: { span: 8 },
+          wrapperCol: { span: 16 },
         };
         return (
           <Spin spinning={loading}>
             <Form form={form} {...layout}>
-              ${formItems
-                .map(item => {
-                  const {
-                    label,
-                    name,
-                    type,
-                    required = false,
-                    customRules = [],
-                    ...restProps
-                  } = item;
-                  return `<Form.Item
-                    label="${label}"
-                    name="${name}"
-                  >
-                    <DetailValue />
-                  </Form.Item>`;
+              ${formItemLines
+                .map(line => {
+                  return `
+                    <Row>
+                      ${line
+                        .map(formItem => {
+                          return `
+                            <Col span={12}>
+                              <Form.Item
+                                label="${formItem.label}"
+                                name="${formItem.name}"
+                              >
+                                <DetailValue />
+                              </Form.Item>
+                            </Col>
+                          `;
+                        })
+                        .join('')}
+                    </Row>
+                  `;
                 })
                 .join('')}
             </Form>

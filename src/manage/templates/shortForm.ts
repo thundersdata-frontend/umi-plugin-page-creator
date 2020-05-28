@@ -8,7 +8,7 @@
  */
 import { Store } from 'antd/lib/form/interface';
 import { createFormComponentsByType, generateRules } from './util';
-import { FormItemProps } from '../../interfaces/common';
+import { FormItemProps } from '../../../interfaces/common';
 
 export interface Payload {
   formConfig: Store;

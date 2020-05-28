@@ -8,6 +8,7 @@
  */
 import { Store } from 'antd/lib/form/interface';
 import { FormItemProps } from '../../interfaces/common';
+import { ScreenConfig, ScreenConfigPayload, LayoutType } from '../../interfaces/screen';
 
 /**
  * 将一个数组按照指定的列拆分成N个二维数组
@@ -40,4 +41,42 @@ export function filterEmpty(values: Store) {
     }
   });
   return filteredValues;
+}
+
+/**
+ * 将大屏配置参数转换成后端需要的数据结构
+ * @param screenConfig
+ */
+type ScreenConfigPayloadPart = Omit<ScreenConfigPayload, 'title' | 'titleStyle' | 'gutter'>;
+export function transformConfig(screenConfig: ScreenConfig): ScreenConfigPayloadPart {
+  const payload: ScreenConfigPayloadPart = {
+    layout: [],
+  };
+
+  function generateConfig(type: LayoutType, config: ScreenConfig) {
+    return {
+      name: type.charAt(0).toUpperCase() + type.substr(1, type.length),
+      flex: config[type].flex,
+      rows: config[type].rows.map((row, rowIndex) => ({
+        name: `Row${rowIndex}`,
+        height: row.height,
+        cols: row.cols.map((col, colIndex) => ({
+          name: `Row${rowIndex}Col${colIndex}`,
+          flex: col.flex,
+          type: col.type,
+          chartConfig: col.chartConfig,
+        })),
+      })),
+    };
+  }
+
+  const leftConfig = generateConfig('left', screenConfig);
+  const centerConfig = generateConfig('center', screenConfig);
+  const rightConfig = generateConfig('right', screenConfig);
+
+  payload.layout.push(leftConfig);
+  payload.layout.push(centerConfig);
+  payload.layout.push(rightConfig);
+
+  return payload;
 }

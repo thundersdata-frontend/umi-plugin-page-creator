@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-05-25 09:47:49
  */
 import { transformFormItemLines } from './util';
-import { CardItemProps } from '../../interfaces/common';
+import { CardItemProps } from '../../../interfaces/common';
 
 export interface Payload {
   cards: CardItemProps[];

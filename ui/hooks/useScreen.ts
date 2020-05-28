@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { Store } from 'antd/lib/form/interface';
-import { ScreenConfig, ScreenCol } from '../../interfaces/screen';
+import { ScreenConfig, LayoutType } from '../../interfaces/screen';
 import { useImmer } from 'use-immer';
-
-export type LayoutType = 'left' | 'center' | 'right';
 
 const initialConfig: ScreenConfig = {
   title: '',
@@ -63,27 +61,27 @@ export default function useScreen() {
         flex: leftWidth,
         rows: Array(leftRows)
           .fill('')
-          .map((_, index) => ({
+          .map((_) => ({
             height: 1,
-            cols: [{ flex: 1, chartConfig: {} }],
+            cols: [{ flex: 1, type: 'custom', chartConfig: {} }],
           })),
       },
       center: {
         flex: centerWidth,
         rows: Array(centerRows)
           .fill('')
-          .map((_, index) => ({
+          .map((_) => ({
             height: 1,
-            cols: [{ flex: 1, chartConfig: {} }],
+            cols: [{ flex: 1, type: 'custom', chartConfig: {} }],
           })),
       },
       right: {
         flex: rightWidth,
         rows: Array(rightRows)
           .fill('')
-          .map((_, index) => ({
+          .map((_) => ({
             height: 1,
-            cols: [{ flex: 1, chartConfig: {} }],
+            cols: [{ flex: 1, type: 'custom', chartConfig: {} }],
           })),
       },
     };
@@ -99,7 +97,7 @@ export default function useScreen() {
       const layout = draft[type];
       layout.rows.push({
         height: 1,
-        cols: [{ flex: 1, chartConfig: {} }],
+        cols: [{ flex: 1, type: 'custom', chartConfig: {} }],
       });
     });
   };
@@ -141,7 +139,7 @@ export default function useScreen() {
       const layout = draft[type];
       const row = layout.rows[rowIndex];
       row.cols.push({
-        flex: 1,
+        flex: 1,type: 'custom',
         chartConfig: {},
       });
     });
