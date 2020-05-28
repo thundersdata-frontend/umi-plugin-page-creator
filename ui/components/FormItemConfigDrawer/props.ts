@@ -5,8 +5,8 @@ import { FormItemProps } from '../../../interfaces/common';
  * @公司: thundersdata
  * @作者: 陈杰
  * @Date: 2020-04-30 15:27:34
- * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-14 18:28:28
+ * @LastEditors: 黄姗姗
+ * @LastEditTime: 2020-05-28 15:56:12
  */
 export const inputProps: FormItemProps[] = [
   {
@@ -225,9 +225,11 @@ export const radioProps: FormItemProps[] = [
   },
   {
     name: 'options',
-    label: '配置',
+    label: 'options配置',
     type: 'textarea',
     placeholder: `[{label: '', value: ''}]`,
+    tooltip: `[{label: '', value: ''}]`,
+    required: true,
   },
 ];
 
@@ -240,9 +242,11 @@ export const checkboxProps: FormItemProps[] = [
   },
   {
     name: 'options',
-    label: '配置',
+    label: 'options配置',
     type: 'textarea',
     placeholder: `[{label: '', value: ''}]`,
+    tooltip: `[{label: '', value: ''}]`,
+    required: true,
   },
 ];
 
@@ -347,9 +351,11 @@ export const selectProps: FormItemProps[] = [
   },
   {
     name: 'options',
-    label: '配置',
+    label: 'options配置',
     type: 'textarea',
     placeholder: `[{label: '', value: ''}]`,
+    tooltip: `[{label: '', value: ''}]`,
+    required: true,
   },
 ];
 
