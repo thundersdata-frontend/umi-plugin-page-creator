@@ -15,8 +15,9 @@ import {
   TimePicker,
   InputNumber,
   Rate,
+  Tooltip,
 } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { FormItemProps } from '../../../interfaces/common';
 import ConfigActions from '../ConfigActions';
 import styles from './index.module.less';
@@ -102,7 +103,18 @@ export default function renderFormItem({
 
     case 'textarea':
       const textareaItem = (
-        <Form.Item label={label} name={name}>
+        <Form.Item required={(formItem.required || false) as boolean} label={
+          <label>
+            <span style={{ paddingRight: 10 }}>{label}</span>
+            {formItem.tooltip && (
+              <Tooltip
+                overlay={(formItem.tooltip) as string}
+              >
+                <QuestionCircleOutlined />
+              </Tooltip>
+            )}
+          </label>
+        } name={name}>
           <Input.TextArea placeholder={placeholder as string} {...restProps} />
         </Form.Item>
       );
