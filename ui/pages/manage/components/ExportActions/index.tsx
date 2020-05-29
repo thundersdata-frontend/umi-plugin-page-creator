@@ -1,22 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button, Modal, Input, message } from 'antd';
 import classNames from 'classnames';
 import styles from './index.module.less';
-import { ConfigProps } from '../../../../../interfaces/common';
 import copy from 'copy-to-clipboard';
+import Context from '../../Context';
 
 export default ({
   modalVisible,
   setModalVisible,
-  config,
 }: {
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
-  config: ConfigProps,
 }) => {
+  const { expConfigJson, templateType } = useContext(Context);
 
   const handleOk = () => {
-    copy(JSON.stringify(config));
+    copy(expConfigJson);
     message.success('复制成功');
     setModalVisible(false);
   };
@@ -25,7 +24,13 @@ export default ({
     <>
       <Button
         type="primary"
-        onClick={() => setModalVisible(true)}
+        onClick={() => {
+          if (templateType) {
+            setModalVisible(true)
+          } else {
+            message.warning('请先选择模板')
+          }
+        }}
         className={classNames(styles.bubble, styles.fixed)}
       >
         导出
@@ -41,7 +46,7 @@ export default ({
         onOk={handleOk}
         onCancel={() => setModalVisible(false)}
       >
-        <Input.TextArea autoSize value={JSON.stringify(config)} />
+        <Input.TextArea autoSize value={expConfigJson} />
       </Modal>
     </>
   )

@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-04-29 11:29:07
  * @LastEditors: 黄姗姗
- * @LastEditTime: 2020-05-22 11:31:29
+ * @LastEditTime: 2020-05-29 11:34:04
  */
 import { createContext } from 'react';
 import { IUiApi } from '@umijs/ui-types';
@@ -19,6 +19,11 @@ const MainContext = createContext({} as {
   addTemplate: (templateType: TemplateType) => void;
   databases: CascaderOptionType[];
   baseClasses: BaseClass[];
+  impConfigJson: string;
+  setImpConfigJson: (configJson: string) => void;
+  exportModalVisible: boolean;
+  expConfigJson: string;
+  setExpConfigJson: (expConfig: string) => void;
 });
 
 export default MainContext;

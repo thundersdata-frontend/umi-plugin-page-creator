@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Button, Card, message, Table } from 'antd';
 import Title from '../../../../../components/Title';
 import { AjaxResponse } from '../../../../../../interfaces/common';
@@ -12,13 +12,11 @@ import useConfigVisible from '../../../../../hooks/useConfigVisible';
 import useTable from '../../../../../hooks/useTable';
 import { filterEmpty } from '../../../../../utils';
 import ApiConfigDrawer from '../../drawers/ApiConfigDrawer';
-import ImportActions from '../../ImportActions';
-import ExportActions from '../../ExportActions';
 import useConfig from '../../../../../hooks/useConfig';
 import { ColumnType } from 'antd/lib/table/interface';
 
 export default () => {
-  const { api } = useContext(Context);
+  const { api, impConfigJson, setExpConfigJson, exportModalVisible } = useContext(Context);
   const [tableConfig, setTableConfig] = useState<Store>({
     headerTitle: '表格配置',
     search: 1,
@@ -41,10 +39,6 @@ export default () => {
     setColumnConfigDrawerVisible,
     apiConfigDrawerVisible,
     setApiConfigDrawerVisible,
-    importModalVisible,
-    setImportModalVisible,
-    exportModalVisible,
-    setExportModalVisible,
   } = useConfigVisible();
 
   const {
@@ -89,16 +83,31 @@ export default () => {
   };
 
   /** 把导入的配置信息进行解析 */
-  const handleImportSubmit = (values: Store) => {
-    setImportModalVisible(false);
-    const { importConfig } = values;
-    const { tableConfig, columns, initialFetch, submitFetch } = JSON.parse(importConfig);
-    setTableConfig(tableConfig);
+  useEffect(() => {
+    if (impConfigJson) {
+      const { tableConfig = {
+        headerTitle: '表格配置',
+        search: 1,
+        bordered: 1,
+      }, columns = [], initialFetch = [], submitFetch = [] } = JSON.parse(impConfigJson);
+      setTableConfig(tableConfig);
+      (columns as ColumnType<any>[]).map(item => onConfirm(item));
+      setInitialFetch(initialFetch);
+      setSubmitFetch(submitFetch);
+    }
+  }, [impConfigJson]);
 
-    (columns as ColumnType<any>[]).map(item => onConfirm(item));
-    setInitialFetch(initialFetch);
-    setSubmitFetch(submitFetch);
-  }
+  /** 导出弹窗打开时把配置放到configJson中 */
+  useEffect(() => {
+    if (exportModalVisible) {
+      setExpConfigJson(JSON.stringify({
+        tableConfig,
+        columns,
+        initialFetch,
+        submitFetch
+      }))
+    }
+  }, [tableConfig, columns, initialFetch, submitFetch, exportModalVisible]);
 
   return (
     <>
@@ -186,25 +195,6 @@ export default () => {
         onRemoteCall={remoteCall}
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}
-      />
-
-      {/* 导入 */}
-      <ImportActions
-        modalVisible={importModalVisible}
-        setModalVisible={setImportModalVisible}
-        onSubmit={handleImportSubmit}
-      />
-
-      {/* 导出 */}
-      <ExportActions
-        config={{
-          columns,
-          tableConfig,
-          initialFetch,
-          submitFetch,
-        }}
-        modalVisible={exportModalVisible}
-        setModalVisible={setExportModalVisible}
       />
     </>
   );

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useMemo } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Form, Button, Card, message } from 'antd';
 import Title from '../../../../../components/Title';
 import renderFormItem from '../../../../../components/FormItemConfig';
@@ -13,8 +13,6 @@ import useConfigVisible from '../../../../../hooks/useConfigVisible';
 import useFormItem from '../../../../../hooks/useFormItem';
 import faker from 'faker';
 import ApiConfigDrawer from '../../drawers/ApiConfigDrawer';
-import ImportActions from '../../ImportActions';
-import ExportActions from '../../ExportActions';
 import useConfig from '../../../../../hooks/useConfig';
 
 const formItemLayout = {
@@ -31,7 +29,7 @@ const formItemLayout = {
 };
 
 export default () => {
-  const { api } = useContext(Context);
+  const { api, impConfigJson, setExpConfigJson, exportModalVisible } = useContext(Context);
   const [formConfig, setFormConfig] = useState<Store>({
     title: '单列表单',
   });
@@ -54,10 +52,6 @@ export default () => {
     setFormItemConfigDrawerVisible,
     apiConfigDrawerVisible,
     setApiConfigDrawerVisible,
-    importModalVisible,
-    setImportModalVisible,
-    exportModalVisible,
-    setExportModalVisible,
   } = useConfigVisible();
 
   const {
@@ -122,15 +116,27 @@ export default () => {
   };
 
   /** 把导入的配置信息进行解析 */
-  const handleImportSubmit = (values: Store) => {
-    setImportModalVisible(false);
-    const { importConfig } = values;
-    const { formConfig, formItems, initialFetch, submitFetch } = JSON.parse(importConfig);
-    setFormConfig(formConfig);
-    setFormItems(formItems);
-    setInitialFetch(initialFetch);
-    setSubmitFetch(submitFetch);
-  }
+  useEffect(() => {
+    if (impConfigJson) {
+      const { formConfig = { title: '单列表单', }, formItems = [], initialFetch = [], submitFetch = [] } = JSON.parse(impConfigJson);
+      setFormConfig(formConfig);
+      setFormItems(formItems);
+      setInitialFetch(initialFetch);
+      setSubmitFetch(submitFetch);
+    }
+  }, [impConfigJson]);
+
+  /** 导出弹窗打开时把配置放到configJson中 */
+  useEffect(() => {
+    if (exportModalVisible) {
+      setExpConfigJson(JSON.stringify({
+        formConfig,
+        formItems,
+        initialFetch,
+        submitFetch
+      }))
+    }
+  }, [formConfig, formItems, initialFetch, submitFetch, exportModalVisible]);
 
   return (
     <>
@@ -215,25 +221,6 @@ export default () => {
         onRemoteCall={remoteCall}
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}
-      />
-
-      {/* 导入 */}
-      <ImportActions
-        modalVisible={importModalVisible}
-        setModalVisible={setImportModalVisible}
-        onSubmit={handleImportSubmit}
-      />
-
-      {/* 导出 */}
-      <ExportActions
-        config={{
-          formConfig,
-          formItems,
-          initialFetch,
-          submitFetch,
-        }}
-        modalVisible={exportModalVisible}
-        setModalVisible={setExportModalVisible}
       />
     </>
   );

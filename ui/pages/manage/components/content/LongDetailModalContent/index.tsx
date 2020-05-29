@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Form, Button, Card, message, Input, Row, Col } from 'antd';
 import Title from '../../../../../components/Title';
 import { AjaxResponse } from '../../../../../../interfaces/common';
@@ -15,8 +15,6 @@ import useConfigVisible from '../../../../../hooks/useConfigVisible';
 import ConfigActions from '../../../../../components/ConfigActions';
 import { transformFormItemLines } from '../../../../../utils';
 import ApiConfigDrawer from '../../drawers/ApiConfigDrawer';
-import ImportActions from '../../ImportActions';
-import ExportActions from '../../ExportActions';
 import useConfig from '../../../../../hooks/useConfig';
 
 const formItemLayout = {
@@ -33,7 +31,7 @@ const formItemLayout = {
 };
 
 export default () => {
-  const { api } = useContext(Context);
+  const { api, impConfigJson, setExpConfigJson, exportModalVisible } = useContext(Context);
   const [formConfig, setFormConfig] = useState<Store>({
     title: '两列详情',
   });
@@ -54,10 +52,6 @@ export default () => {
     setFormItemConfigDrawerVisible,
     apiConfigDrawerVisible,
     setApiConfigDrawerVisible,
-    importModalVisible,
-    setImportModalVisible,
-    exportModalVisible,
-    setExportModalVisible,
   } = useConfigVisible();
 
   const {
@@ -122,15 +116,27 @@ export default () => {
   };
 
   /** 把导入的配置信息进行解析 */
-  const handleImportSubmit = (values: Store) => {
-    setImportModalVisible(false);
-    const { importConfig } = values;
-    const { formConfig, formItems, initialFetch, submitFetch } = JSON.parse(importConfig);
-    setFormConfig(formConfig);
-    setFormItems(formItems);
-    setInitialFetch(initialFetch);
-    setSubmitFetch(submitFetch);
-  }
+  useEffect(() => {
+    if (impConfigJson) {
+      const { formConfig = { title: '两列详情', }, formItems = [], initialFetch = [], submitFetch = [] } = JSON.parse(impConfigJson);
+      setFormConfig(formConfig);
+      setFormItems(formItems);
+      setInitialFetch(initialFetch);
+      setSubmitFetch(submitFetch);
+    }
+  }, [impConfigJson]);
+
+  /** 导出弹窗打开时把配置放到configJson中 */
+  useEffect(() => {
+    if (exportModalVisible) {
+      setExpConfigJson(JSON.stringify({
+        formConfig,
+        formItems,
+        initialFetch,
+        submitFetch
+      }))
+    }
+  }, [formConfig, formItems, initialFetch, submitFetch, exportModalVisible]);
 
   const cols = 2;
   // 把formItems分成2列
@@ -216,25 +222,6 @@ export default () => {
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}
         modal
-      />
-
-      {/* 导入 */}
-      <ImportActions
-        modalVisible={importModalVisible}
-        setModalVisible={setImportModalVisible}
-        onSubmit={handleImportSubmit}
-      />
-
-      {/* 导出 */}
-      <ExportActions
-        config={{
-          formConfig,
-          formItems,
-          initialFetch,
-          submitFetch,
-        }}
-        modalVisible={exportModalVisible}
-        setModalVisible={setExportModalVisible}
       />
     </>
   );

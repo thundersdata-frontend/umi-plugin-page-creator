@@ -1,8 +1,9 @@
-import React from 'react';
-import { Button, Modal, Form, Input } from 'antd';
+import React, { useContext } from 'react';
+import { Button, Modal, Form, Input, message } from 'antd';
 import classNames from 'classnames';
 import styles from './index.module.less';
 import { Store } from 'antd/lib/form/interface';
+import Context from '../../Context';
 
 const formLayout = {
   labelCol: { span: 4 },
@@ -20,11 +21,23 @@ export default ({
 }) => {
   const [form] = Form.useForm();
 
+  const { templateType } = useContext(Context);
+
+  const handleFinish = (values: Store) => {
+    form.resetFields();
+    onSubmit(values);
+  }
   return (
     <>
       <Button
         type="primary"
-        onClick={() => setModalVisible(true)}
+        onClick={() => {
+          if (templateType) {
+            setModalVisible(true)
+          } else {
+            message.warning('请先选择模板')
+          }
+        }}
         className={classNames(styles.bubble, styles.fixed)}
       >
         导入
@@ -39,7 +52,7 @@ export default ({
         onOk={() => form.submit()}
         onCancel={() => setModalVisible(false)}
       >
-        <Form form={form} onFinish={onSubmit} {...formLayout}>
+        <Form form={form} onFinish={handleFinish} {...formLayout}>
           <Form.Item
             label="配置参数"
             name="importConfig"

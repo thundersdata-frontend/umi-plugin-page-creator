@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Form, Button, Card, message, Row, Col } from 'antd';
 import Title from '../../../../../components/Title';
 import renderFormItem from '../../../../../components/FormItemConfig';
@@ -13,10 +13,7 @@ import useCard from '../../../../../hooks/useCard';
 import ConfigActions from '../../../../../components/ConfigActions';
 import FormItemConfigDrawer from '../../../../../components/FormItemConfigDrawer';
 import ApiConfigDrawer from '../../drawers/ApiConfigDrawer';
-import ImportActions from '../../ImportActions';
-import ExportActions from '../../ExportActions';
 import useConfig from '../../../../../hooks/useConfig';
-import { Store } from 'antd/lib/form/interface';
 
 const formItemLayout = {
   labelCol: {
@@ -43,7 +40,7 @@ const colLayout = {
 };
 
 export default () => {
-  const { api } = useContext(Context);
+  const { api, impConfigJson, setExpConfigJson, exportModalVisible } = useContext(Context);
 
   const {
     initialFetch,
@@ -63,10 +60,6 @@ export default () => {
     setFormItemConfigDrawerVisible,
     apiConfigDrawerVisible,
     setApiConfigDrawerVisible,
-    importModalVisible,
-    setImportModalVisible,
-    exportModalVisible,
-    setExportModalVisible,
   } = useConfigVisible();
 
   const {
@@ -122,14 +115,25 @@ export default () => {
   };
 
   /** 把导入的配置信息进行解析 */
-  const handleImportSubmit = (values: Store) => {
-    setImportModalVisible(false);
-    const { importConfig } = values;
-    const { cards, initialFetch, submitFetch } = JSON.parse(importConfig);
-    setCards(cards);
-    setInitialFetch(initialFetch);
-    setSubmitFetch(submitFetch);
-  }
+  useEffect(() => {
+    if (impConfigJson) {
+      const { cards = [{ title: '自定义Card0', formItems: [] }], initialFetch = [], submitFetch = [] } = JSON.parse(impConfigJson);
+      setCards(cards);
+      setInitialFetch(initialFetch);
+      setSubmitFetch(submitFetch);
+    }
+  }, [impConfigJson]);
+
+  /** 导出弹窗打开时把配置放到configJson中 */
+  useEffect(() => {
+    if (exportModalVisible) {
+      setExpConfigJson(JSON.stringify({
+        cards,
+        initialFetch,
+        submitFetch
+      }))
+    }
+  }, [cards, initialFetch, submitFetch, exportModalVisible]);
 
   return (
     <>
@@ -245,24 +249,6 @@ export default () => {
         onRemoteCall={remoteCall}
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}
-      />
-
-      {/* 导入 */}
-      <ImportActions
-        modalVisible={importModalVisible}
-        setModalVisible={setImportModalVisible}
-        onSubmit={handleImportSubmit}
-      />
-
-      {/* 导出 */}
-      <ExportActions
-        config={{
-          cards,
-          initialFetch,
-          submitFetch,
-        }}
-        modalVisible={exportModalVisible}
-        setModalVisible={setExportModalVisible}
       />
     </>
   );
