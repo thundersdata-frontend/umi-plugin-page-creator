@@ -3,9 +3,12 @@
  * @公司: thundersdata
  * @作者: 陈杰
  * @Date: 2020-04-29 21:58:39
- * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-18 21:59:39
+ * @LastEditors: 黄姗姗
+ * @LastEditTime: 2020-05-28 18:53:47
  */
+import { Store } from "antd/lib/form/interface";
+import { ColumnType } from 'antd/lib/table';
+
 export type FormItemType =
   | 'input'
   | 'cascader'
@@ -63,4 +66,15 @@ export type AjaxResponse<T> = {
 export type CardItemProps = {
   title: string;
   formItems: FormItemProps[];
+};
+
+/** 导出/导入的json格式 */
+export type ConfigProps = {
+  formConfig?: Store;
+  formItems?: FormItemProps[];
+  initialFetch?: string[];
+  submitFetch?: string[];
+  cards?: CardItemProps[];
+  tableConfig?: Store;
+  columns?: ColumnType<any>[];
 };

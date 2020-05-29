@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Form, Button, Card, message, Row, Col, Input } from 'antd';
 import Title from '../../../../../components/Title';
 import { AjaxResponse } from '../../../../../../interfaces/common';
@@ -14,6 +14,9 @@ import useCard from '../../../../../hooks/useCard';
 import ConfigActions from '../../../../../components/ConfigActions';
 import FormItemConfigDrawer from '../../../../../components/FormItemConfigDrawer';
 import ApiConfigDrawer from '../../drawers/ApiConfigDrawer';
+import useConfig from '../../../../../hooks/useConfig';
+import copy from 'copy-to-clipboard';
+import ExportActions from '../../ExportActions';
 
 const formItemLayout = {
   labelCol: {
@@ -40,9 +43,14 @@ const colLayout = {
 };
 
 export default () => {
-  const { api } = useContext(Context);
-  const [initialFetch, setInitialFetch] = useState<string[]>();
-  const [submitFetch, setSubmitFetch] = useState<string[]>();
+  const { api, impConfigJson } = useContext(Context);
+
+  const {
+    initialFetch,
+    setInitialFetch,
+    submitFetch,
+    setSubmitFetch,
+  } = useConfig();
 
   const {
     formItemsDrawerVisible,
@@ -128,6 +136,26 @@ export default () => {
     }
   };
 
+  /** 把导入的配置信息进行解析 */
+  useEffect(() => {
+    if (impConfigJson) {
+      const { cards = [{ title: '自定义Card0', formItems: [] }], initialFetch = [], submitFetch = [] } = JSON.parse(impConfigJson);
+      setCards(cards);
+      setInitialFetch(initialFetch);
+      setSubmitFetch(submitFetch);
+    }
+  }, [impConfigJson]);
+
+  /** 导出 */
+  const handleExport = () => {
+    copy(JSON.stringify({
+      cards,
+      initialFetch,
+      submitFetch
+    }, null, 2));
+    message.success('配置已复制到剪贴板');
+  };
+
   return (
     <>
       <Form {...formItemLayout}>
@@ -204,13 +232,17 @@ export default () => {
         visible={apiConfigDrawerVisible}
         setVisible={setApiConfigDrawerVisible}
         onSubmit={handleApiSubmit}
+        initialFetch={initialFetch}
+        submitFetch={submitFetch}
       />
+
       {/**Card编辑的抽屉 */}
       <CardConfigDrawer
         visible={cardDrawerVisible}
         setVisible={setCardDrawerVisible}
         onFinish={configCard}
       />
+
       {currentItem && (
         <FormItemConfigDrawer
           visible={formItemConfigDrawerVisible}
@@ -222,11 +254,15 @@ export default () => {
           initialFetch={initialFetch}
         />
       )}
+
       <DropdownActions
         onRemoteCall={remoteCall}
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}
       />
+
+      {/* 导出 */}
+      <ExportActions onClick={handleExport} />
     </>
   );
 };

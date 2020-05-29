@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Button, Card, message, Table } from 'antd';
 import Title from '../../../../../components/Title';
 import { AjaxResponse } from '../../../../../../interfaces/common';
@@ -12,16 +12,25 @@ import useConfigVisible from '../../../../../hooks/useConfigVisible';
 import useTable from '../../../../../hooks/useTable';
 import { filterEmpty } from '../../../../../utils';
 import ApiConfigDrawer from '../../drawers/ApiConfigDrawer';
+import useConfig from '../../../../../hooks/useConfig';
+import { ColumnType } from 'antd/lib/table/interface';
+import copy from 'copy-to-clipboard';
+import ExportActions from '../../ExportActions';
 
 export default () => {
-  const { api } = useContext(Context);
+  const { api, impConfigJson } = useContext(Context);
   const [tableConfig, setTableConfig] = useState<Store>({
     headerTitle: '表格配置',
-    search: 1,
-    bordered: 1,
+    search: false,
+    bordered: true,
   });
-  const [initialFetch, setInitialFetch] = useState<string[]>();
-  const [submitFetch, setSubmitFetch] = useState<string[]>();
+
+  const {
+    initialFetch,
+    setInitialFetch,
+    submitFetch,
+    setSubmitFetch,
+  } = useConfig();
 
   const {
     pathModalVisible,
@@ -73,6 +82,32 @@ export default () => {
     } catch (error) {
       message.error(error.message);
     }
+  };
+
+  /** 把导入的配置信息进行解析 */
+  useEffect(() => {
+    if (impConfigJson) {
+      const { tableConfig = {
+        headerTitle: '表格配置',
+        search: false,
+        bordered: true,
+      }, columns = [], initialFetch = [], submitFetch = [] } = JSON.parse(impConfigJson);
+      setTableConfig(tableConfig);
+      (columns as ColumnType<any>[]).map(item => onConfirm(item));
+      setInitialFetch(initialFetch);
+      setSubmitFetch(submitFetch);
+    }
+  }, [impConfigJson]);
+
+  /** 导出 */
+  const handleExport = () => {
+    copy(JSON.stringify({
+      tableConfig,
+      columns,
+      initialFetch,
+      submitFetch
+    }, null, 2));
+    message.success('配置已复制到剪贴板');
   };
 
   return (
@@ -131,6 +166,8 @@ export default () => {
         visible={apiConfigDrawerVisible}
         setVisible={setApiConfigDrawerVisible}
         onSubmit={handleApiSubmit}
+        initialFetch={initialFetch}
+        submitFetch={submitFetch}
       />
 
       <TableConfigDrawer
@@ -160,6 +197,8 @@ export default () => {
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}
       />
+
+      <ExportActions onClick={handleExport} />
     </>
   );
 };

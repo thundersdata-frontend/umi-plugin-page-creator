@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Form, Button, Card, message, Input } from 'antd';
 import Title from '../../../../../components/Title';
 import { AjaxResponse } from '../../../../../../interfaces/common';
@@ -14,6 +14,9 @@ import styles from './index.module.less';
 import useConfigVisible from '../../../../../hooks/useConfigVisible';
 import ConfigActions from '../../../../../components/ConfigActions';
 import ApiConfigDrawer from '../../drawers/ApiConfigDrawer';
+import useConfig from '../../../../../hooks/useConfig';
+import copy from 'copy-to-clipboard';
+import ExportActions from '../../ExportActions';
 
 const formItemLayout = {
   labelCol: {
@@ -29,12 +32,17 @@ const formItemLayout = {
 };
 
 export default () => {
-  const { api } = useContext(Context);
-  const [cardConfig, setCardConfig] = useState<Store>({
+  const { api, impConfigJson } = useContext(Context);
+  const [formConfig, setFormConfig] = useState<Store>({
     title: '单列详情',
   });
-  const [initialFetch, setInitialFetch] = useState<string[]>();
-  const [submitFetch, setSubmitFetch] = useState<string[]>();
+
+  const {
+    initialFetch,
+    setInitialFetch,
+    submitFetch,
+    setSubmitFetch,
+  } = useConfig();
 
   const {
     pathModalVisible,
@@ -93,7 +101,7 @@ export default () => {
       const result = await api.callRemote({
         type: 'org.umi-plugin-page-creator.shortDetail',
         payload: {
-          cardConfig,
+          formConfig,
           formItems,
           path,
           menu,
@@ -108,10 +116,32 @@ export default () => {
     }
   };
 
+  /** 把导入的配置信息进行解析 */
+  useEffect(() => {
+    if (impConfigJson) {
+      const { formConfig = { title: '单列详情', }, formItems = [], initialFetch = [], submitFetch = [] } = JSON.parse(impConfigJson);
+      setFormConfig(formConfig);
+      setFormItems(formItems);
+      setInitialFetch(initialFetch);
+      setSubmitFetch(submitFetch);
+    }
+  }, [impConfigJson]);
+
+  /** 导出 */
+  const handleExport = () => {
+    copy(JSON.stringify({
+      formConfig,
+      formItems,
+      initialFetch,
+      submitFetch
+    }, null, 2));
+    message.success('配置已复制到剪贴板');
+  };
+
   return (
     <>
       <Card
-        title={<Title text={cardConfig.title} />}
+        title={<Title text={formConfig.title} />}
         extra={
           <Button type="primary" onClick={() => setFormConfigDrawerVisible(true)}>
             配置
@@ -150,13 +180,16 @@ export default () => {
         visible={apiConfigDrawerVisible}
         setVisible={setApiConfigDrawerVisible}
         onSubmit={handleApiSubmit}
+        initialFetch={initialFetch}
+        submitFetch={submitFetch}
       />
 
       {/**表单配置 */}
       <ShortFormConfigDrawer
         visible={formConfigDrawerVisible}
         setVisible={setFormConfigDrawerVisible}
-        onFinish={setCardConfig}
+        onFinish={setFormConfig}
+        formConfig={formConfig}
       />
 
       {/**配置单个表单项 */}
@@ -178,6 +211,8 @@ export default () => {
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}
       />
+
+      <ExportActions onClick={handleExport} />
     </>
   );
 };

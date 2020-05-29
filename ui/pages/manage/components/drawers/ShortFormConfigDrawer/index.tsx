@@ -3,10 +3,10 @@
  * @公司: thundersdata
  * @作者: 陈杰
  * @Date: 2020-04-29 17:56:31
- * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-18 22:15:47
+ * @LastEditors: 黄姗姗
+ * @LastEditTime: 2020-05-28 18:21:40
  */
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Form, Button, Input, Drawer } from 'antd';
 import { Store } from 'antd/lib/form/interface';
 
@@ -14,12 +14,18 @@ export default ({
   visible,
   setVisible,
   onFinish,
+  formConfig,
 }: {
   visible: boolean;
   setVisible: (visible: boolean) => void;
   onFinish: (values: Store) => void;
+  formConfig: Store;
 }) => {
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    form.setFieldsValue(formConfig);
+  }, [formConfig]);
 
   const handleFinish = (values: Store) => {
     setVisible(false);

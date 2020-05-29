@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Form, Button, Card, message, Row, Col } from 'antd';
 import Title from '../../../../../components/Title';
 import renderFormItem from '../../../../../components/FormItemConfig';
@@ -13,6 +13,9 @@ import useCard from '../../../../../hooks/useCard';
 import ConfigActions from '../../../../../components/ConfigActions';
 import FormItemConfigDrawer from '../../../../../components/FormItemConfigDrawer';
 import ApiConfigDrawer from '../../drawers/ApiConfigDrawer';
+import useConfig from '../../../../../hooks/useConfig';
+import copy from 'copy-to-clipboard';
+import ExportActions from '../../ExportActions';
 
 const formItemLayout = {
   labelCol: {
@@ -39,9 +42,14 @@ const colLayout = {
 };
 
 export default () => {
-  const { api } = useContext(Context);
-  const [initialFetch, setInitialFetch] = useState<string[]>();
-  const [submitFetch, setSubmitFetch] = useState<string[]>();
+  const { api, impConfigJson } = useContext(Context);
+
+  const {
+    initialFetch,
+    setInitialFetch,
+    submitFetch,
+    setSubmitFetch,
+  } = useConfig();
 
   const {
     formItemsDrawerVisible,
@@ -106,6 +114,26 @@ export default () => {
     } catch (error) {
       message.error(error.message);
     }
+  };
+
+  /** 把导入的配置信息进行解析 */
+  useEffect(() => {
+    if (impConfigJson) {
+      const { cards = [{ title: '自定义Card0', formItems: [] }], initialFetch = [], submitFetch = [] } = JSON.parse(impConfigJson);
+      setCards(cards);
+      setInitialFetch(initialFetch);
+      setSubmitFetch(submitFetch);
+    }
+  }, [impConfigJson]);
+
+  /** 导出 */
+  const handleExport = () => {
+    copy(JSON.stringify({
+      cards,
+      initialFetch,
+      submitFetch
+    }, null, 2));
+    message.success('配置已复制到剪贴板');
   };
 
   return (
@@ -195,6 +223,8 @@ export default () => {
         visible={apiConfigDrawerVisible}
         setVisible={setApiConfigDrawerVisible}
         onSubmit={handleApiSubmit}
+        initialFetch={initialFetch}
+        submitFetch={submitFetch}
       />
 
       {/** 选择表单元素的抽屉 */}
@@ -221,6 +251,8 @@ export default () => {
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}
       />
+
+      <ExportActions onClick={handleExport} />
     </>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Form, Button, Card, message } from 'antd';
 import Title from '../../../../../components/Title';
 import renderFormItem from '../../../../../components/FormItemConfig';
@@ -13,6 +13,9 @@ import useConfigVisible from '../../../../../hooks/useConfigVisible';
 import useFormItem from '../../../../../hooks/useFormItem';
 import faker from 'faker';
 import ApiConfigDrawer from '../../drawers/ApiConfigDrawer';
+import useConfig from '../../../../../hooks/useConfig';
+import copy from 'copy-to-clipboard';
+import ExportActions from '../../ExportActions';
 
 const formItemLayout = {
   labelCol: {
@@ -28,12 +31,17 @@ const formItemLayout = {
 };
 
 export default () => {
-  const { api } = useContext(Context);
+  const { api, impConfigJson } = useContext(Context);
   const [formConfig, setFormConfig] = useState<Store>({
     title: '单列表单',
   });
-  const [initialFetch, setInitialFetch] = useState<string[]>();
-  const [submitFetch, setSubmitFetch] = useState<string[]>();
+
+  const {
+    initialFetch,
+    setInitialFetch,
+    submitFetch,
+    setSubmitFetch,
+  } = useConfig();
 
   const {
     formItemsDrawerVisible,
@@ -94,7 +102,7 @@ export default () => {
       const result = await api.callRemote({
         type: 'org.umi-plugin-page-creator.shortFormModal',
         payload: {
-          formConfig: formConfig,
+          formConfig,
           formItems,
           path,
           dirName,
@@ -107,6 +115,28 @@ export default () => {
     } catch (error) {
       message.error(error.message);
     }
+  };
+
+  /** 把导入的配置信息进行解析 */
+  useEffect(() => {
+    if (impConfigJson) {
+      const { formConfig = { title: '单列表单', }, formItems = [], initialFetch = [], submitFetch = [] } = JSON.parse(impConfigJson);
+      setFormConfig(formConfig);
+      setFormItems(formItems);
+      setInitialFetch(initialFetch);
+      setSubmitFetch(submitFetch);
+    }
+  }, [impConfigJson]);
+
+  /** 导出 */
+  const handleExport = () => {
+    copy(JSON.stringify({
+      formConfig,
+      formItems,
+      initialFetch,
+      submitFetch
+    }, null, 2));
+    message.success('配置已复制到剪贴板');
   };
 
   return (
@@ -152,6 +182,8 @@ export default () => {
         visible={apiConfigDrawerVisible}
         setVisible={setApiConfigDrawerVisible}
         onSubmit={handleApiSubmit}
+        initialFetch={initialFetch}
+        submitFetch={submitFetch}
       />
 
       {/**表单配置 */}
@@ -159,6 +191,7 @@ export default () => {
         visible={formConfigDrawerVisible}
         setVisible={setFormConfigDrawerVisible}
         onFinish={setFormConfig}
+        formConfig={formConfig}
       />
 
       {/**表单项集合 */}
@@ -187,6 +220,8 @@ export default () => {
         setModalVisible={setPathModalVisible}
         modal
       />
+
+      <ExportActions onClick={handleExport} />
     </>
   );
 };
