@@ -146,7 +146,6 @@ export default () => {
     }
   }, [impConfigJson]);
 
-  /** 导出弹窗打开时把配置放到configJson中 */
   /** 导出 */
   const handleExport = () => {
     copy(JSON.stringify({
