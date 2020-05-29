@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-04-29 11:29:07
  * @LastEditors: 黄姗姗
- * @LastEditTime: 2020-05-29 11:34:04
+ * @LastEditTime: 2020-05-29 14:12:04
  */
 import { createContext } from 'react';
 import { IUiApi } from '@umijs/ui-types';
@@ -21,9 +21,6 @@ const MainContext = createContext({} as {
   baseClasses: BaseClass[];
   impConfigJson: string;
   setImpConfigJson: (configJson: string) => void;
-  exportModalVisible: boolean;
-  expConfigJson: string;
-  setExpConfigJson: (expConfig: string) => void;
 });
 
 export default MainContext;

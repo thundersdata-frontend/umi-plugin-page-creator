@@ -14,13 +14,15 @@ import { filterEmpty } from '../../../../../utils';
 import ApiConfigDrawer from '../../drawers/ApiConfigDrawer';
 import useConfig from '../../../../../hooks/useConfig';
 import { ColumnType } from 'antd/lib/table/interface';
+import copy from 'copy-to-clipboard';
+import ExportActions from '../../ExportActions';
 
 export default () => {
-  const { api, impConfigJson, setExpConfigJson, exportModalVisible } = useContext(Context);
+  const { api, impConfigJson } = useContext(Context);
   const [tableConfig, setTableConfig] = useState<Store>({
     headerTitle: '表格配置',
-    search: 1,
-    bordered: 1,
+    search: false,
+    bordered: true,
   });
 
   const {
@@ -87,8 +89,8 @@ export default () => {
     if (impConfigJson) {
       const { tableConfig = {
         headerTitle: '表格配置',
-        search: 1,
-        bordered: 1,
+        search: false,
+        bordered: true,
       }, columns = [], initialFetch = [], submitFetch = [] } = JSON.parse(impConfigJson);
       setTableConfig(tableConfig);
       (columns as ColumnType<any>[]).map(item => onConfirm(item));
@@ -97,17 +99,16 @@ export default () => {
     }
   }, [impConfigJson]);
 
-  /** 导出弹窗打开时把配置放到configJson中 */
-  useEffect(() => {
-    if (exportModalVisible) {
-      setExpConfigJson(JSON.stringify({
-        tableConfig,
-        columns,
-        initialFetch,
-        submitFetch
-      }))
-    }
-  }, [tableConfig, columns, initialFetch, submitFetch, exportModalVisible]);
+  /** 导出 */
+  const handleExport = () => {
+    copy(JSON.stringify({
+      tableConfig,
+      columns,
+      initialFetch,
+      submitFetch
+    }, null, 2));
+    message.success('复制成功');
+  };
 
   return (
     <>
@@ -196,6 +197,8 @@ export default () => {
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}
       />
+
+      <ExportActions onClick={handleExport} />
     </>
   );
 };

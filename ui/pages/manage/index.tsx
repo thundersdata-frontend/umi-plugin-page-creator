@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-04-29 11:06:58
  * @LastEditors: 黄姗姗
- * @LastEditTime: 2020-05-29 11:40:48
+ * @LastEditTime: 2020-05-29 14:27:52
  */
 import React, { useState, useEffect } from 'react'; // -> 暂时先解决报错，后期全部删掉
 import { Layout, message } from 'antd';
@@ -17,7 +17,6 @@ import { TemplateType } from '../../../interfaces/common';
 import { CascaderOptionType } from 'antd/lib/cascader';
 import { BaseClass } from '../../../interfaces/api';
 import ImportActions from './components/ImportActions';
-import ExportActions from './components/ExportActions';
 import { Store } from 'antd/lib/form/interface';
 
 const { Header, Content } = Layout;
@@ -27,9 +26,7 @@ export default ({ api }: { api: IUiApi }) => {
   const [baseClasses, setBaseClasses] = useState<BaseClass[]>([]);
   const [templateType, setTemplate] = useState<TemplateType>();
   const [importModalVisible, setImportModalVisible] = useState(false);
-  const [exportModalVisible, setExportModalVisible] = useState(false);
   const [impConfigJson, setImpConfigJson] = useState<string>(''); // 导入的json
-  const [expConfigJson, setExpConfigJson] = useState<string>(''); // 导出的json
 
   /** 页面加载时调用后端接口，后端从services/api-lock.json读取数据，生成对应的接口以及类型 */
   useEffect(() => {
@@ -53,7 +50,6 @@ export default ({ api }: { api: IUiApi }) => {
   const addTemplate = (templateType: TemplateType) => {
     setTemplate(templateType);
     setImpConfigJson('');
-    setExpConfigJson('');
     message.success('模板添加成功，你可以开始配置了');
   };
 
@@ -74,9 +70,6 @@ export default ({ api }: { api: IUiApi }) => {
         baseClasses,
         impConfigJson,
         setImpConfigJson,
-        exportModalVisible,
-        expConfigJson,
-        setExpConfigJson,
       }}
     >
       <Layout style={{ overflowY: 'auto' }}>
@@ -89,12 +82,6 @@ export default ({ api }: { api: IUiApi }) => {
             modalVisible={importModalVisible}
             setModalVisible={setImportModalVisible}
             onSubmit={handleImportSubmit}
-          />
-
-          {/* 导出 */}
-          <ExportActions
-            modalVisible={exportModalVisible}
-            setModalVisible={setExportModalVisible}
           />
           <Dashboard />
         </Content>

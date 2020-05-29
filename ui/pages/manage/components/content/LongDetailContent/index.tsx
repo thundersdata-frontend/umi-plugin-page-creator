@@ -15,6 +15,8 @@ import ConfigActions from '../../../../../components/ConfigActions';
 import FormItemConfigDrawer from '../../../../../components/FormItemConfigDrawer';
 import ApiConfigDrawer from '../../drawers/ApiConfigDrawer';
 import useConfig from '../../../../../hooks/useConfig';
+import copy from 'copy-to-clipboard';
+import ExportActions from '../../ExportActions';
 
 const formItemLayout = {
   labelCol: {
@@ -41,7 +43,7 @@ const colLayout = {
 };
 
 export default () => {
-  const { api, impConfigJson, setExpConfigJson, exportModalVisible } = useContext(Context);
+  const { api, impConfigJson } = useContext(Context);
 
   const {
     initialFetch,
@@ -145,15 +147,15 @@ export default () => {
   }, [impConfigJson]);
 
   /** 导出弹窗打开时把配置放到configJson中 */
-  useEffect(() => {
-    if (exportModalVisible) {
-      setExpConfigJson(JSON.stringify({
-        cards,
-        initialFetch,
-        submitFetch
-      }))
-    }
-  }, [cards, initialFetch, submitFetch, exportModalVisible]);
+  /** 导出 */
+  const handleExport = () => {
+    copy(JSON.stringify({
+      cards,
+      initialFetch,
+      submitFetch
+    }, null, 2));
+    message.success('复制成功');
+  };
 
   return (
     <>
@@ -259,6 +261,9 @@ export default () => {
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}
       />
+
+      {/* 导出 */}
+      <ExportActions onClick={handleExport} />
     </>
   );
 };

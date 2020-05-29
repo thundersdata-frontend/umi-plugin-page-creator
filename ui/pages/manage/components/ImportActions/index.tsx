@@ -51,6 +51,7 @@ export default ({
         visible={modalVisible}
         onOk={() => form.submit()}
         onCancel={() => setModalVisible(false)}
+        bodyStyle={{ maxHeight: 650, overflowY: 'auto' }}
       >
         <Form form={form} onFinish={handleFinish} {...formLayout}>
           <Form.Item

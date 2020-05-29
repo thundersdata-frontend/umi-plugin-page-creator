@@ -15,6 +15,8 @@ import useConfigVisible from '../../../../../hooks/useConfigVisible';
 import ConfigActions from '../../../../../components/ConfigActions';
 import ApiConfigDrawer from '../../drawers/ApiConfigDrawer';
 import useConfig from '../../../../../hooks/useConfig';
+import copy from 'copy-to-clipboard';
+import ExportActions from '../../ExportActions';
 
 const formItemLayout = {
   labelCol: {
@@ -30,7 +32,7 @@ const formItemLayout = {
 };
 
 export default () => {
-  const { api, impConfigJson, setExpConfigJson, exportModalVisible } = useContext(Context);
+  const { api, impConfigJson } = useContext(Context);
   const [formConfig, setFormConfig] = useState<Store>({
     title: '单列详情',
   });
@@ -125,17 +127,16 @@ export default () => {
     }
   }, [impConfigJson]);
 
-  /** 导出弹窗打开时把配置放到configJson中 */
-  useEffect(() => {
-    if (exportModalVisible) {
-      setExpConfigJson(JSON.stringify({
-        formConfig,
-        formItems,
-        initialFetch,
-        submitFetch
-      }))
-    }
-  }, [formConfig, formItems, initialFetch, submitFetch, exportModalVisible]);
+  /** 导出 */
+  const handleExport = () => {
+    copy(JSON.stringify({
+      formConfig,
+      formItems,
+      initialFetch,
+      submitFetch
+    }, null, 2));
+    message.success('复制成功');
+  };
 
   return (
     <>
@@ -211,6 +212,8 @@ export default () => {
         setModalVisible={setPathModalVisible}
         modal
       />
+
+      <ExportActions onClick={handleExport} />
     </>
   );
 };
