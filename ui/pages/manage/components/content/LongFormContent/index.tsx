@@ -133,7 +133,7 @@ export default () => {
       initialFetch,
       submitFetch
     }, null, 2));
-    message.success('复制成功');
+    message.success('配置已复制到剪贴板');
   };
 
   return (
