@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import { transformConfig } from '../../../utils';
 import { ScreenConfigPayload } from '../../../../interfaces/screen';
 import { AjaxResponse } from '../../../../interfaces/common';
+import { renderPreviewImage } from '../helper';
 
 const initialStyle = {
   textAlign: 'center',
@@ -35,26 +36,27 @@ export default () => {
     handleConfigRow,
   } = useScreen();
 
-  const titleStyleJSON =
-    screenConfig && screenConfig.titleStyle
-      ? {
-          ...initialStyle,
-          ...JSON.parse(screenConfig.titleStyle.replace(/'/g, '"').replace(/(\w+):/is, '"$1":')),
-        }
-      : initialStyle;
+  const { title, titleStyle, gutter, left, right, center } = screenConfig;
+
+  const titleStyleJSON = titleStyle
+    ? {
+        ...initialStyle,
+        ...JSON.parse(titleStyle.replace(/'/g, '"').replace(/(\w+):/is, '"$1":')),
+      }
+    : initialStyle;
 
   /**
    * 提交配置信息到后台生成页面和组件
    */
   const remoteCall = async () => {
-    if (!screenConfig.title) {
+    if (!title) {
       message.error('您还没有做任何配置，不能提交');
       return;
     }
     const payload: ScreenConfigPayload = {
-      title: screenConfig.title,
+      title,
       titleStyle: titleStyleJSON,
-      gutter: 16,
+      gutter: gutter,
       ...transformConfig(screenConfig),
     };
 
@@ -70,93 +72,146 @@ export default () => {
   };
 
   return (
-    <div className={styles.screen}>
+    <div
+      style={{
+        height: '100%',
+        paddingLeft: gutter,
+        paddingRight: gutter,
+      }}
+    >
       <Row>
         <Col span={24}>
-          <div style={titleStyleJSON}>{screenConfig?.title}</div>
+          <div style={titleStyleJSON}>{title}</div>
         </Col>
       </Row>
-      <Row style={{ height: `calc(100% - ${titleStyleJSON.height} - 30px)` }}>
+      <Row style={{ height: `calc(100% - ${titleStyleJSON.height} - 30px)` }} gutter={gutter}>
         {/**左侧 */}
-        {screenConfig.left.flex ? (
-          <Col flex={screenConfig.left.flex} className={styles.layout}>
-            {screenConfig.left.rows.map((row, rowIndex) => (
-              <Row key={rowIndex} className={styles.row} style={{ flex: row.height }}>
-                {row.cols.map((col, colIndex) => (
-                  <Col key={colIndex} className={styles.col} flex={col.flex}>
-                    <ColConfigBtn
-                      onAddCol={() => handleAddCol('left', rowIndex)}
-                      onDeleteCol={() => handleDeleteCol('left', rowIndex, colIndex)}
-                      onChooseCol={() => chooseConfigCol('left', rowIndex, colIndex)}
-                      onAddRow={() => handleAddRow('left')}
-                      onDeleteRow={() => handleDeleteRow('left', rowIndex)}
-                      rowFlex={row.height}
-                      onConfigRow={value => handleConfigRow('left', rowIndex, value)}
-                    />
-                  </Col>
-                ))}
-              </Row>
-            ))}
+        {left.xs && left.sm && left.md && left.lg && left.xl && left.xxl ? (
+          <Col xs={left.xs} sm={left.sm} md={left.md} lg={left.lg} xl={left.xl} xxl={left.xxl}>
+            <div className={styles.layout}>
+              {left.rows.map((row, rowIndex) => (
+                <Row key={rowIndex} gutter={[gutter, gutter]} style={{ flex: row.height }}>
+                  {row.cols.map((col, colIndex) => (
+                    <Col
+                      key={colIndex}
+                      xs={col.xs}
+                      sm={col.sm}
+                      md={col.md}
+                      lg={col.lg}
+                      xl={col.xl}
+                      xxl={col.xxl}
+                    >
+                      <div className={styles.col}>
+                        {renderPreviewImage(col.type)}
+                        <ColConfigBtn
+                          onAddCol={() => handleAddCol('left', rowIndex)}
+                          onDeleteCol={() => handleDeleteCol('left', rowIndex, colIndex)}
+                          onChooseCol={() => chooseConfigCol('left', rowIndex, colIndex)}
+                          onAddRow={() => handleAddRow('left')}
+                          onDeleteRow={() => handleDeleteRow('left', rowIndex)}
+                          rowFlex={row.height}
+                          onConfigRow={value => handleConfigRow('left', rowIndex, value)}
+                        />
+                      </div>
+                    </Col>
+                  ))}
+                </Row>
+              ))}
+            </div>
           </Col>
         ) : null}
         {/**中间 */}
-        {screenConfig.center.flex ? (
+        {center.xs && center.sm && center.md && center.lg && center.xl && center.xxl ? (
           <Col
-            flex={screenConfig.center.flex}
-            className={styles.layout}
-            style={{ marginLeft: 16, marginRight: 16 }}
+            xs={center.xs}
+            sm={center.sm}
+            md={center.md}
+            lg={center.lg}
+            xl={center.xl}
+            xxl={center.xxl}
           >
-            {screenConfig.center.rows.map((row, rowIndex) => (
-              <Row key={rowIndex} className={styles.row} style={{ flex: row.height }}>
-                {row.cols.map((col, colIndex) => (
-                  <Col key={colIndex} className={styles.col} flex={col.flex}>
-                    <ColConfigBtn
-                      onAddCol={() => handleAddCol('center', rowIndex)}
-                      onDeleteCol={() => handleDeleteCol('center', rowIndex, colIndex)}
-                      onChooseCol={() => chooseConfigCol('center', rowIndex, colIndex)}
-                      onAddRow={() => handleAddRow('center')}
-                      onDeleteRow={() => handleDeleteRow('center', rowIndex)}
-                      rowFlex={row.height}
-                      onConfigRow={value => handleConfigRow('center', rowIndex, value)}
-                    />
-                  </Col>
-                ))}
-              </Row>
-            ))}
+            <div className={styles.layout}>
+              {center.rows.map((row, rowIndex) => (
+                <Row key={rowIndex} gutter={[gutter, gutter]} style={{ flex: row.height }}>
+                  {row.cols.map((col, colIndex) => (
+                    <Col
+                      key={colIndex}
+                      xs={col.xs}
+                      sm={col.sm}
+                      md={col.md}
+                      lg={col.lg}
+                      xl={col.xl}
+                      xxl={col.xxl}
+                    >
+                      <div className={styles.col}>
+                        <ColConfigBtn
+                          onAddCol={() => handleAddCol('center', rowIndex)}
+                          onDeleteCol={() => handleDeleteCol('center', rowIndex, colIndex)}
+                          onChooseCol={() => chooseConfigCol('center', rowIndex, colIndex)}
+                          onAddRow={() => handleAddRow('center')}
+                          onDeleteRow={() => handleDeleteRow('center', rowIndex)}
+                          rowFlex={row.height}
+                          onConfigRow={value => handleConfigRow('center', rowIndex, value)}
+                        />
+                      </div>
+                    </Col>
+                  ))}
+                </Row>
+              ))}
+            </div>
           </Col>
         ) : null}
         {/**右侧 */}
-        {screenConfig.right.flex ? (
-          <Col flex={screenConfig.right.flex} className={styles.layout}>
-            {screenConfig.right.rows.map((row, rowIndex) => (
-              <Row key={rowIndex} className={styles.row} style={{ flex: row.height }}>
-                {row.cols.map((col, colIndex) => (
-                  <Col key={colIndex} className={styles.col} flex={col.flex}>
-                    <ColConfigBtn
-                      onAddCol={() => handleAddCol('right', rowIndex)}
-                      onDeleteCol={() => handleDeleteCol('right', rowIndex, colIndex)}
-                      onChooseCol={() => chooseConfigCol('right', rowIndex, colIndex)}
-                      onAddRow={() => handleAddRow('right')}
-                      onDeleteRow={() => handleDeleteRow('right', rowIndex)}
-                      rowFlex={row.height}
-                      onConfigRow={value => handleConfigRow('right', rowIndex, value)}
-                    />
-                  </Col>
-                ))}
-              </Row>
-            ))}
+        {right.xs && right.sm && right.md && right.lg && right.xl && right.xxl ? (
+          <Col
+            xs={right.xs}
+            sm={right.sm}
+            md={right.md}
+            lg={right.lg}
+            xl={right.xl}
+            xxl={right.xxl}
+          >
+            <div className={styles.layout}>
+              {right.rows.map((row, rowIndex) => (
+                <Row key={rowIndex} gutter={[gutter, gutter]} style={{ flex: row.height }}>
+                  {row.cols.map((col, colIndex) => (
+                    <Col
+                      key={colIndex}
+                      xs={col.xs}
+                      sm={col.sm}
+                      md={col.md}
+                      lg={col.lg}
+                      xl={col.xl}
+                      xxl={col.xxl}
+                    >
+                      <div className={styles.col}>
+                        <ColConfigBtn
+                          onAddCol={() => handleAddCol('right', rowIndex)}
+                          onDeleteCol={() => handleDeleteCol('right', rowIndex, colIndex)}
+                          onChooseCol={() => chooseConfigCol('right', rowIndex, colIndex)}
+                          onAddRow={() => handleAddRow('right')}
+                          onDeleteRow={() => handleDeleteRow('right', rowIndex)}
+                          rowFlex={row.height}
+                          onConfigRow={value => handleConfigRow('right', rowIndex, value)}
+                        />
+                      </div>
+                    </Col>
+                  ))}
+                </Row>
+              ))}
+            </div>
           </Col>
         ) : null}
       </Row>
+      <Button type="primary" className={styles.floatBtn} onClick={remoteCall}>
+        提交
+      </Button>
       <Button
         type="primary"
-        className={styles.floatBtn}
+        className={classNames(styles.floatBtn, styles.submitBtn)}
         onClick={() => toggleScreenConfigVisible()}
       >
-        大屏配置
-      </Button>
-      <Button className={classNames(styles.floatBtn, styles.submitBtn)} onClick={remoteCall}>
-        提交
+        配置
       </Button>
       <ScreenConfigDrawer
         visible={screenConfigDrawerVisible}

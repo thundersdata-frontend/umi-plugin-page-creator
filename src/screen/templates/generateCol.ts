@@ -3,7 +3,7 @@ import { writeFileSync } from "fs";
 import { ScreenConfigPayloadCol } from "../../../interfaces/screen";
 import { removeUnusedImport } from "../../utils/removeUnusedImport";
 
-export default function(colPath: string, col: ScreenConfigPayloadCol) {
+export default function(colPath: string, col: ScreenConfigPayloadCol, gutter: number, marginRight: boolean) {
   const code = `
     import React from 'react';
     import { Col } from 'antd';
@@ -11,7 +11,7 @@ export default function(colPath: string, col: ScreenConfigPayloadCol) {
     export default () => {
 
       return (
-        <Col flex={${col.flex}}>
+        <Col flex={${col.flex}} style={{ marginRight: ${marginRight ? gutter : 0 }}}>
           <div>123</div>
         </Col>
       );

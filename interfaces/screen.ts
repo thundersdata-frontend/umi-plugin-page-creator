@@ -1,16 +1,34 @@
+import { ColSize } from "antd/lib/col";
+
 export interface ScreenConfig {
   title: string;
   titleStyle: string;
+  gutter: number;
   left: {
-    flex: number;
+    xs: number;
+    sm: number;
+    md: number;
+    lg: number;
+    xl: number;
+    xxl: number;
     rows: ScreenRow[];
   };
   center: {
-    flex: number;
+    xs: number;
+    sm: number;
+    md: number;
+    lg: number;
+    xl: number;
+    xxl: number;
     rows: ScreenRow[];
   };
   right: {
-    flex: number;
+    xs: number;
+    sm: number;
+    md: number;
+    lg: number;
+    xl: number;
+    xxl: number;
     rows: ScreenRow[];
   };
 }
@@ -21,7 +39,12 @@ export interface ScreenRow {
 }
 
 export interface ScreenCol {
-  flex: number;
+  xs?: ColSize;
+  sm?: ColSize;
+  md?: ColSize;
+  lg?: ColSize;
+  xl?: ColSize;
+  xxl?: ColSize;
   type: ColType;
   chartConfig: ChartConfig;
 }

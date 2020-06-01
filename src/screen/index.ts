@@ -23,7 +23,7 @@ export default function(payload: ScreenConfigPayload, api: IApi) {
   const { gutter, layout } = payload;
 
   // 生成布局组件(Left/Center/Right)
-  layout.forEach(item => {
+  layout.forEach((item, itemIndex) => {
     const {
       name: layoutName,
       rows,
@@ -33,7 +33,7 @@ export default function(payload: ScreenConfigPayload, api: IApi) {
     if (!existsSync(layoutPath)) {
       mkdirSync(layoutPath); // <- 创建布局的文件夹
     }
-    generateLayout(layoutPath, item);
+    generateLayout(layoutPath, item, gutter, itemIndex < layout.length - 1);
 
     rows.forEach(row => {
       const { name: rowName, cols } = row;
@@ -44,14 +44,14 @@ export default function(payload: ScreenConfigPayload, api: IApi) {
       }
       generateRow(rowPath, gutter, row);
 
-      cols.forEach(col => {
+      cols.forEach((col, colIndex) => {
         const { name: colName } = col;
 
         const colPath = rowPath + '/' + colName;
         if (!existsSync(colPath)) {
           mkdirSync(colPath);
         }
-        generateCol(colPath, col);
+        generateCol(colPath, col, gutter, colIndex < cols.length - 1);
       });
     });
   });

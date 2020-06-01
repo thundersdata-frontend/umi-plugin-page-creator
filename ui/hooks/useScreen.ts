@@ -6,16 +6,32 @@ import { useImmer } from 'use-immer';
 const initialConfig: ScreenConfig = {
   title: '',
   titleStyle: '',
+  gutter: 16,
   left: {
-    flex: 0,
+    xs: 24,
+    sm: 24,
+    md: 24,
+    lg: 24,
+    xl: 7,
+    xxl: 7,
     rows: [],
   },
   center: {
-    flex: 0,
+    xs: 24,
+    sm: 24,
+    md: 24,
+    lg: 24,
+    xl: 10,
+    xxl: 10,
     rows: [],
   },
   right: {
-    flex: 0,
+    xs: 24,
+    sm: 24,
+    md: 24,
+    lg: 24,
+    xl: 7,
+    xxl: 7,
     rows: [],
   },
 };
@@ -47,41 +63,106 @@ export default function useScreen() {
     const {
       title,
       titleStyle,
-      leftWidth,
-      centerWidth,
-      rightWidth,
+      gutter,
       leftRows,
       centerRows,
       rightRows,
+      leftXs,
+      leftSm,
+      leftMd,
+      leftLg,
+      leftXl,
+      leftXxl,
+      centerXs,
+      centerSm,
+      centerMd,
+      centerLg,
+      centerXl,
+      centerXxl,
+      rightXs,
+      rightSm,
+      rightMd,
+      rightLg,
+      rightXl,
+      rightXxl,
     } = values;
     const config: ScreenConfig = {
       title,
       titleStyle,
+      gutter,
       left: {
-        flex: leftWidth,
+        xs: leftXs,
+        sm: leftSm,
+        md: leftMd,
+        lg: leftLg,
+        xl: leftXl,
+        xxl: leftXxl,
         rows: Array(leftRows)
           .fill('')
-          .map((_) => ({
+          .map(_ => ({
             height: 1,
-            cols: [{ flex: 1, type: 'custom', chartConfig: {} }],
+            cols: [
+              {
+                xs: { span: 24 },
+                sm: { span: 24 },
+                md: { span: 24 },
+                lg: { span: 24 },
+                xl: { span: 24 },
+                xxl: { span: 24 },
+                type: 'custom',
+                chartConfig: {},
+              },
+            ],
           })),
       },
       center: {
-        flex: centerWidth,
+        xs: centerXs,
+        sm: centerSm,
+        md: centerMd,
+        lg: centerLg,
+        xl: centerXl,
+        xxl: centerXxl,
         rows: Array(centerRows)
           .fill('')
-          .map((_) => ({
+          .map(_ => ({
             height: 1,
-            cols: [{ flex: 1, type: 'custom', chartConfig: {} }],
+            cols: [
+              {
+                xs: { span: 24 },
+                sm: { span: 24 },
+                md: { span: 24 },
+                lg: { span: 24 },
+                xl: { span: 24 },
+                xxl: { span: 24 },
+                type: 'custom',
+                chartConfig: {},
+              },
+            ],
           })),
       },
       right: {
-        flex: rightWidth,
+        xs: rightXs,
+        sm: rightSm,
+        md: rightMd,
+        lg: rightLg,
+        xl: rightXl,
+        xxl: rightXxl,
         rows: Array(rightRows)
           .fill('')
-          .map((_) => ({
+          .map(_ => ({
             height: 1,
-            cols: [{ flex: 1, type: 'custom', chartConfig: {} }],
+            cols: [
+              {
+                xs: { span: 24 },
+                sm: { span: 24 },
+                md: { span: 24 },
+                lg: { span: 24 },
+                xl: { span: 24 },
+                xxl: { span: 24 },
+                type: 'custom',
+                chartConfig: {},
+              },
+            ],
           })),
       },
     };
@@ -97,7 +178,18 @@ export default function useScreen() {
       const layout = draft[type];
       layout.rows.push({
         height: 1,
-        cols: [{ flex: 1, type: 'custom', chartConfig: {} }],
+        cols: [
+          {
+            xs: { span: 24 },
+            sm: { span: 24 },
+            md: { span: 24 },
+            lg: { span: 24 },
+            xl: { span: 24 },
+            xxl: { span: 24 },
+            type: 'custom',
+            chartConfig: {},
+          },
+        ],
       });
     });
   };
@@ -127,7 +219,7 @@ export default function useScreen() {
       const row = layout.rows[rowIndex];
       row.height = flex;
     });
-  }
+  };
 
   /**
    * 在某一行里面新增一列
@@ -139,8 +231,16 @@ export default function useScreen() {
       const layout = draft[type];
       const row = layout.rows[rowIndex];
       row.cols.push({
-        flex: 1,type: 'custom',
+        type: 'custom',
         chartConfig: {},
+      });
+      row.cols.forEach(col => {
+        col.xs = { span: 24 };
+        col.sm = { span: 24 };
+        col.md = { span: 24 };
+        col.lg = { span: 24 };
+        col.xl = { span: Math.floor(24 / row.cols.length) };
+        col.xxl = { span: Math.floor(24 / row.cols.length) };
       });
     });
   };
@@ -189,6 +289,14 @@ export default function useScreen() {
       const layout = draft[type];
       const row = layout.rows[rowIndex];
       row.cols.splice(colIndex, 1);
+      row.cols.forEach(col => {
+        col.xs = { span: 24 };
+        col.sm = { span: 24 };
+        col.md = { span: 24 };
+        col.lg = { span: 24 };
+        col.xl = { span: Math.floor(24 / row.cols.length) };
+        col.xxl = { span: Math.floor(24 / row.cols.length) };
+      });
     });
   };
 

@@ -4,13 +4,13 @@ export default {
   gutter: 16, // <- 大屏每个组件之间的间距
   layout: [{
     name: 'Left', // <- 要渲染的组件名称
-    flex: 3, // <- 左/中/右 布局占比
+    span: 7, // <- 左/中/右 布局占比
     rows: [{
       name: 'Row1', // <- 要渲染的组件名称
       height: 1, // <- 每行高度占比
       cols: [{
         name: 'Row1Col1', // <- 要渲染的组件名称
-        flex: 1, // <- 每列宽度占比
+        span: 24, // <- 每列宽度占比
         type: 'bar', // <- 列中元素的类型（图表、自定义、其他）
         chartConfig: {},
       }]
@@ -19,7 +19,7 @@ export default {
       height: 1,
       cols: [{
         name: 'Row2Col1', // <- 要渲染的组件名称
-        flex: 1,
+        span: 24,
         type: 'bar',
         chartConfig: {},
       }]
@@ -28,7 +28,7 @@ export default {
       height: 1,
       cols: [{
         name: 'Row3Col1', // <- 要渲染的组件名称
-        flex: 1,
+        span: 24,
         type: 'custom', // 自定义时，用一个div占位
         chartConfig: {},
       }]
