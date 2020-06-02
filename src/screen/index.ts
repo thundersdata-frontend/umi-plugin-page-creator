@@ -33,7 +33,7 @@ export default function(payload: ScreenConfigPayload, api: IApi) {
     if (!existsSync(layoutPath)) {
       mkdirSync(layoutPath); // <- 创建布局的文件夹
     }
-    generateLayout(layoutPath, item, gutter, itemIndex < layout.length - 1);
+    generateLayout(layoutPath, item);
 
     rows.forEach(row => {
       const { name: rowName, cols } = row;
@@ -51,7 +51,7 @@ export default function(payload: ScreenConfigPayload, api: IApi) {
         if (!existsSync(colPath)) {
           mkdirSync(colPath);
         }
-        generateCol(colPath, col, gutter, colIndex < cols.length - 1);
+        generateCol(colPath, col);
       });
     });
   });

@@ -23,7 +23,7 @@ export default function(screenPath: string, payload: ScreenConfigPayload) {
               <div style={${JSON.stringify(titleStyle)}}>${title}</div>
             </Col>
           </Row>
-          <Row style={{ height: 'calc(100% - ${(titleStyle as any).height})'}}>
+          <Row style={{ height: 'calc(100% - ${(titleStyle as any).height})'}} gutter={${gutter}}>
             ${layout.map(item => `
               <${item.name} />
             `).join('')}

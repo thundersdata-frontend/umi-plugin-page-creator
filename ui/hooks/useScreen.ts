@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Store } from 'antd/lib/form/interface';
-import { ScreenConfig, LayoutType } from '../../interfaces/screen';
+import { ScreenConfig, LayoutType, ScreenColConfig } from '../../interfaces/screen';
 import { useImmer } from 'use-immer';
 
 const initialConfig: ScreenConfig = {
@@ -8,30 +8,30 @@ const initialConfig: ScreenConfig = {
   titleStyle: '',
   gutter: 16,
   left: {
-    xs: 24,
-    sm: 24,
-    md: 24,
-    lg: 24,
-    xl: 7,
-    xxl: 7,
+    xs: { span: 24 },
+    sm: { span: 24 },
+    md: { span: 24 },
+    lg: { span: 24 },
+    xl: { span: 7 },
+    xxl: { span: 7 },
     rows: [],
   },
   center: {
-    xs: 24,
-    sm: 24,
-    md: 24,
-    lg: 24,
-    xl: 10,
-    xxl: 10,
+    xs: { span: 24 },
+    sm: { span: 24 },
+    md: { span: 24 },
+    lg: { span: 24 },
+    xl: { span: 10 },
+    xxl: { span: 10 },
     rows: [],
   },
   right: {
-    xs: 24,
-    sm: 24,
-    md: 24,
-    lg: 24,
-    xl: 7,
-    xxl: 7,
+    xs: { span: 24 },
+    sm: { span: 24 },
+    md: { span: 24 },
+    lg: { span: 24 },
+    xl: { span: 7 },
+    xxl: { span: 7 },
     rows: [],
   },
 };
@@ -40,8 +40,8 @@ export default function useScreen() {
   const [screenConfigDrawerVisible, setScreenConfigDrawerVisible] = useState(false);
   const [colConfigDrawerVisible, setColConfigDrawerVisible] = useState(false);
   const [screenConfig, setScreenConfig] = useImmer<ScreenConfig>(initialConfig);
-  const [currentCol, setCurrentCol] = useImmer({
-    type: '',
+  const [currentCol, setCurrentCol] = useImmer<ScreenColConfig>({
+    layoutType: 'left',
     rowIndex: 0,
     colIndex: 0,
     config: {},
@@ -213,7 +213,6 @@ export default function useScreen() {
    * @param flex
    */
   const handleConfigRow = (type: LayoutType, rowIndex: number, flex: number) => {
-    console.log(type, rowIndex, flex);
     setScreenConfig(draft => {
       const layout = draft[type];
       const row = layout.rows[rowIndex];
@@ -253,9 +252,14 @@ export default function useScreen() {
    */
   const chooseConfigCol = (type: LayoutType, rowIndex: number, colIndex: number) => {
     setCurrentCol(draft => {
-      draft.type = type;
+      const layout = screenConfig[type];
+      const row = layout.rows[rowIndex];
+      const col = row.cols[colIndex];
+
+      draft.layoutType = type;
       draft.rowIndex = rowIndex;
       draft.colIndex = colIndex;
+      draft.config = col;
     });
     toggleColConfigVisible();
   };
@@ -266,10 +270,23 @@ export default function useScreen() {
    * @param rowIndex
    * @param colIndex
    */
-  const handleConfigCol = (config: Store) => {
-    const { type, rowIndex, colIndex } = currentCol;
+  const handleConfigCol = (values: Store) => {
+    const { layoutType, rowIndex, colIndex } = currentCol;
+    const { type, xs, sm, md, lg, xl, xxl, ...restValues } = values;
+
+    const config = {
+      type,
+      xs: { span: xs },
+      sm: { span: sm },
+      md: { span: md },
+      lg: { span: lg },
+      xl: { span: xl },
+      xxl: { span: xxl },
+      chartConfig: restValues,
+    };
+
     setScreenConfig(draft => {
-      const layout = draft[type];
+      const layout = draft[layoutType];
       const row = layout.rows[rowIndex];
       row.cols[colIndex] = config;
     });
@@ -307,6 +324,7 @@ export default function useScreen() {
     toggleColConfigVisible,
     screenConfig,
     setScreenConfig: handleScreenConfig,
+    currentCol,
     handleAddCol,
     handleDeleteCol,
     chooseConfigCol,

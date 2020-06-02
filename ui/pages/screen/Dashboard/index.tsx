@@ -27,6 +27,7 @@ export default () => {
     toggleColConfigVisible,
     screenConfig,
     setScreenConfig,
+    currentCol,
     handleAddCol,
     handleDeleteCol,
     chooseConfigCol,
@@ -144,6 +145,7 @@ export default () => {
                       xxl={col.xxl}
                     >
                       <div className={styles.col}>
+                        {renderPreviewImage(col.type)}
                         <ColConfigBtn
                           onAddCol={() => handleAddCol('center', rowIndex)}
                           onDeleteCol={() => handleDeleteCol('center', rowIndex, colIndex)}
@@ -185,6 +187,7 @@ export default () => {
                       xxl={col.xxl}
                     >
                       <div className={styles.col}>
+                        {renderPreviewImage(col.type)}
                         <ColConfigBtn
                           onAddCol={() => handleAddCol('right', rowIndex)}
                           onDeleteCol={() => handleDeleteCol('right', rowIndex, colIndex)}
@@ -223,6 +226,7 @@ export default () => {
         visible={colConfigDrawerVisible}
         toggleVisible={toggleColConfigVisible}
         onFinish={handleConfigCol}
+        col={currentCol}
       />
     </div>
   );

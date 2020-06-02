@@ -11,14 +11,9 @@ export default function(rowPath: string, gutter: number, row: ScreenConfigPayloa
 
     export default () => {
       return (
-        <Col
-          style={{
-            marginBottom: ${gutter},
-            flex: ${row.height}
-          }}
-        >
-          ${row.cols.map(row => `<${row.name} />`).join('')}
-        </Col>
+        <Row gutter={[${gutter}, ${gutter}]} style={{ flex: ${row.height}}}>
+          ${row.cols.map(col => `<${col.name} />`).join('')}
+        </Row>
       );
     }
   `;

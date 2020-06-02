@@ -7,7 +7,7 @@ import { removeUnusedImport } from "../../utils/removeUnusedImport";
  * 生成布局组件
  * @param payload
  */
-export default function(layoutPath: string, layout: ScreenConfigPayloadLayout, gutter: number, marginRight: boolean) {
+export default function(layoutPath: string, layout: ScreenConfigPayloadLayout) {
   const code = `
     import React from 'react';
     import { Row, Col } from 'antd';
@@ -15,16 +15,15 @@ export default function(layoutPath: string, layout: ScreenConfigPayloadLayout, g
 
     export default () => {
       return (
-        <Col
-          flex={${layout.flex}}
-          style={{
+        <Col xs={${layout.xs}} sm={${layout.sm}} md={${layout.md}} lg={${layout.lg}} xl={${layout.xl}} xxl={${layout.xxl}}>
+          <div style={{
+            height: '100%',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            marginRight: ${marginRight ? gutter : 0}
-          }}
-        >
-          ${layout.rows.map(row => `<${row.name} />`).join('')}
+          }}>
+            ${layout.rows.map(row => `<${row.name} />`).join('')}
+          </div>
         </Col>
       );
     }

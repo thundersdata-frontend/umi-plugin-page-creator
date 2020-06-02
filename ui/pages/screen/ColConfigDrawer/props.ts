@@ -3,11 +3,13 @@ const baseProps = [
     label: 'x轴字段',
     name: 'xField',
     type: 'input',
+    required: true,
   },
   {
     label: 'y轴字段',
     name: 'yField',
     type: 'input',
+    required: true,
   },
 ];
 
