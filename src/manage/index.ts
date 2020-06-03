@@ -1,5 +1,4 @@
 import { IApi } from 'umi';
-import prettier from 'prettier';
 import { writeFileSync, mkdirSync, existsSync } from 'fs';
 import {
   generateShortFormCode,
@@ -15,6 +14,7 @@ import {
 import { removeUnusedImport } from '../utils/removeUnusedImport';
 import { writeNewRoute } from '../utils/writeNewRoute';
 import { writeNewMenu } from '../utils/writeNewMenu';
+import { execSync } from 'child_process';
 
 export default function(payload: any, type: string, api: IApi) {
   let code = '';
@@ -49,14 +49,8 @@ export default function(payload: any, type: string, api: IApi) {
       break;
   }
   const removeUnusedImportCode = removeUnusedImport(code);
-  const formattedCode = prettier.format(removeUnusedImportCode, {
-    singleQuote: true,
-    trailingComma: 'es5',
-    printWidth: 100,
-    parser: 'typescript',
-  });
-  if (formattedCode) {
-    return generateFile(formattedCode, payload, api);
+  if (removeUnusedImportCode) {
+    return generateFile(removeUnusedImportCode, payload, api);
   }
   return false;
 }
@@ -89,6 +83,8 @@ function generatePage(path: string, menu: string, code: string, api: IApi) {
     // 根据传入的路径，创建对应的文件夹以及index.tsx文件
     mkdirSync(absPagesPath + path, { recursive: true });
     writeFileSync(absPagesPath + `${path}/index.tsx`, code, 'utf-8');
+    execSync(`cd ${api.paths.cwd} && npm run eslint:fix`);
+
     // 更新路由
     writeNewRoute(
       {
@@ -127,6 +123,7 @@ function generateComponent(path: string, dirName: string, code: string, api: IAp
     mkdirSync(prefixPath + dirName, { recursive: true });
     writeFileSync(prefixPath + `${dirName}/index.tsx`, code, 'utf-8');
 
+    execSync(`cd ${api.paths.cwd} && npm run eslint:fix`);
     return true;
   }
   return false;

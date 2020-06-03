@@ -1,4 +1,3 @@
-import prettier from 'prettier';
 import { writeFileSync } from "fs";
 import { ScreenConfigPayloadRow } from "../../../interfaces/screen";
 import { removeUnusedImport } from "../../utils/removeUnusedImport";
@@ -18,13 +17,7 @@ export default function(rowPath: string, gutter: number, row: ScreenConfigPayloa
     }
   `;
   const removeUnusedImportCode = removeUnusedImport(code);
-  const formattedCode = prettier.format(removeUnusedImportCode, {
-    singleQuote: true,
-    trailingComma: 'es5',
-    printWidth: 100,
-    parser: 'typescript',
-  });
-  if (formattedCode) {
-    writeFileSync(`${rowPath}/index.tsx`, formattedCode, 'utf-8');
+  if (removeUnusedImportCode) {
+    writeFileSync(`${rowPath}/index.tsx`, removeUnusedImportCode, 'utf-8');
   }
 }

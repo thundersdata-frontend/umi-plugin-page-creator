@@ -1,5 +1,6 @@
-import { IApi } from "umi";
-import { existsSync, writeFileSync, readFileSync } from "fs";
+import { IApi } from 'umi';
+import { existsSync, writeFileSync, readFileSync } from 'fs';
+import { execSync } from 'child_process';
 import * as types from '@babel/types';
 import * as parser from '@babel/parser';
 import generate from '@babel/generator';
@@ -18,9 +19,7 @@ export function getConstantConfig(api: IApi) {
       sourceType: 'module',
       plugins: ['typescript'],
     });
-    const code = generate(ast, {}).code;
-    console.log(code);
-    return code;
+    return generate(ast, {}).code;
   }
 }
 
@@ -32,4 +31,6 @@ export function getConstantConfig(api: IApi) {
 export function saveConstantConfig(api: IApi, code: string) {
   const constantFilePath = api.paths.absSrcPath + '/constant.ts';
   writeFileSync(constantFilePath, code, 'utf-8');
+
+  execSync(`cd ${api.paths.cwd} && npm run eslint:fix`);
 }

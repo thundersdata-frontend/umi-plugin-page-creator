@@ -5,6 +5,7 @@ import generateScreen from './templates/generateScreen';
 import generateLayout from './templates/generateLayout';
 import generateRow from './templates/generateRow';
 import generateCol from './templates/generateCol';
+import { execSync } from 'child_process';
 
 /**
  * 生成大屏的一系列文件
@@ -23,7 +24,7 @@ export default function(payload: ScreenConfigPayload, api: IApi) {
   const { gutter, layout } = payload;
 
   // 生成布局组件(Left/Center/Right)
-  layout.forEach((item, itemIndex) => {
+  layout.forEach((item) => {
     const {
       name: layoutName,
       rows,
@@ -44,7 +45,7 @@ export default function(payload: ScreenConfigPayload, api: IApi) {
       }
       generateRow(rowPath, gutter, row);
 
-      cols.forEach((col, colIndex) => {
+      cols.forEach(col => {
         const { name: colName } = col;
 
         const colPath = rowPath + '/' + colName;
@@ -55,6 +56,7 @@ export default function(payload: ScreenConfigPayload, api: IApi) {
       });
     });
   });
+  execSync(`cd ${api.paths.cwd} && npm run eslint:fix`);
 
   return true;
 }
