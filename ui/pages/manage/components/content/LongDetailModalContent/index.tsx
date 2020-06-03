@@ -4,7 +4,7 @@ import Title from '../../../../../components/Title';
 import { AjaxResponse } from '../../../../../../interfaces/common';
 import FormItemConfigDrawer from '../../../../../components/FormItemConfigDrawer';
 import Context from '../../../Context';
-import DropdownActions from '../../DropdownActions';
+import DropDownAction from '../../DropdownAction';
 import { Store } from 'antd/lib/form/interface';
 import ShortFormConfigDrawer from '../../drawers/ShortFormConfigDrawer';
 import useFormItem from '../../../../../hooks/useFormItem';
@@ -37,7 +37,7 @@ export default () => {
   const [formConfig, setFormConfig] = useState<Store>({
     title: '两列详情',
   });
-  
+
   const {
     initialFetch,
     setInitialFetch,
@@ -218,7 +218,7 @@ export default () => {
       )}
 
       {/**提交时候弹出的输入文件路径 */}
-      <DropdownActions
+      <DropDownAction
         onRemoteCall={remoteCall}
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}

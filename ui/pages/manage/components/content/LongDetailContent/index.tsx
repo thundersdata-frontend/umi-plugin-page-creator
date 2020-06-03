@@ -3,7 +3,7 @@ import { Form, Button, Card, message, Row, Col, Input } from 'antd';
 import Title from '../../../../../components/Title';
 import { AjaxResponse } from '../../../../../../interfaces/common';
 import Context from '../../../Context';
-import DropdownActions from '../../DropdownActions';
+import DropDownAction from '../../DropdownAction';
 import CardConfigDrawer from '../../drawers/CardConfigDrawer';
 import { transformFormItemLines } from '../../../../../utils';
 import produce from 'immer';
@@ -255,7 +255,7 @@ export default () => {
         />
       )}
 
-      <DropdownActions
+      <DropDownAction
         onRemoteCall={remoteCall}
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}

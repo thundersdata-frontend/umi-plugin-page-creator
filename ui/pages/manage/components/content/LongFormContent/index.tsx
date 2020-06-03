@@ -5,7 +5,7 @@ import renderFormItem from '../../../../../components/FormItemConfig';
 import FormItemsDrawer from '../../../../../components/FormItemsDrawer';
 import { AjaxResponse } from '../../../../../../interfaces/common';
 import Context from '../../../Context';
-import DropdownActions from '../../DropdownActions';
+import DropDownAction from '../../DropdownAction';
 import CardConfigDrawer from '../../drawers/CardConfigDrawer';
 import { transformFormItemLines } from '../../../../../utils';
 import useConfigVisible from '../../../../../hooks/useConfigVisible';
@@ -246,7 +246,7 @@ export default () => {
           submitFetch={submitFetch}
         />
       )}
-      <DropdownActions
+      <DropDownAction
         onRemoteCall={remoteCall}
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}

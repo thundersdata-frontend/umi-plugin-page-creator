@@ -14,6 +14,7 @@ import { join } from 'path';
 import generatePage from './manage';
 import generateApi from './api';
 import generateScreen from './screen';
+import {getConstantConfig, saveConstantConfig} from './constantConfig'
 
 export default function(api: IApi) {
   let mods = [];
@@ -44,6 +45,20 @@ export default function(api: IApi) {
           databases,
           baseClasses,
           apiMods: mods,
+        });
+      }
+    } else if (type.includes('constant')) {
+      if (type === 'org.umi-plugin-page-creator.constantLoad') {
+        const code = getConstantConfig(api);
+        success({
+          success: true,
+          data: code,
+        })
+      } else if (type === 'org.umi-plugin-page-creator.constantSave') {
+        saveConstantConfig(api, payload.code);
+        success({
+          success: true,
+          message: '常量配置保存成功'
         });
       }
     } else {

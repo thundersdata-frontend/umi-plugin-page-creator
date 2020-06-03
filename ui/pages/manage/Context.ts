@@ -21,6 +21,7 @@ const MainContext = createContext({} as {
   baseClasses: BaseClass[];
   impConfigJson: string;
   setImpConfigJson: (configJson: string) => void;
+  constantConfig: string;
 });
 
 export default MainContext;
