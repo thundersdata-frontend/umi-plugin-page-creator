@@ -109,7 +109,7 @@ export default function(payload: any, type: string, api: IApi) {
         });
         const formattedDetailCode = prettierfy(removeUnusedImport(detailCode));
         generateFile(
-          removeUnusedImport(formattedDetailCode),
+          formattedDetailCode,
           {
             path: payload.detailPath,
             dirName: payload.detailDirName,
@@ -205,7 +205,7 @@ export default function(payload: any, type: string, api: IApi) {
         });
         const formattedDetailCode = prettierfy(removeUnusedImport(detailCode))
         generateFile(
-          removeUnusedImport(formattedDetailCode),
+          formattedDetailCode,
           {
             path: payload.detailPath,
             dirName: payload.detailDirName,
