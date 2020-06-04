@@ -32,5 +32,5 @@ export function saveConstantConfig(api: IApi, code: string) {
   const constantFilePath = api.paths.absSrcPath + '/constant.ts';
   writeFileSync(constantFilePath, code, 'utf-8');
 
-  execSync(`cd ${api.paths.cwd} && npm run eslint:fix`);
+  execSync(`cd ${api.paths.cwd} && npm run eslint:fix --scripts-prepend-node-path`);
 }

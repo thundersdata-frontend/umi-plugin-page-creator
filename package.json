@@ -1,6 +1,6 @@
 {
   "name": "umi-plugin-page-creator",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "",
   "authors": {
     "name": "chenjie",
@@ -11,7 +11,7 @@
   "scripts": {
     "start": "cross-env UMI_UI=1 APP_ROOT=example umi dev",
     "watch": "father-build --watch",
-    "build": "rm -rf dist lib && father-build",
+    "build": "rm -rf dist lib && cross-env NODE_ENV=prod father-build",
     "ui:build": "ui-build",
     "prettier": "prettier --parser=typescript --write '{src,ui}/**/*.ts?(x)'",
     "test": "umi-test",

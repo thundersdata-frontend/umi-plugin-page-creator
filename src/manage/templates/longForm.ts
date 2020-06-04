@@ -68,7 +68,7 @@ export default function generateLongFormCode(payload: Payload): string {
             const result = await API.${initialFetch && initialFetch.length === 3 ? `${initialFetch[0]}.${initialFetch[1]}.${
               initialFetch[2].split('-')[0]
             }` : 'recruitment.person.getPerson'}.fetch(
-              { id },
+              { personCode: id },
             );
             // 这里可以做数据转换操作
             const values = {

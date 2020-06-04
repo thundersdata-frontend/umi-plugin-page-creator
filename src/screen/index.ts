@@ -56,7 +56,7 @@ export default function(payload: ScreenConfigPayload, api: IApi) {
       });
     });
   });
-  execSync(`cd ${api.paths.cwd} && npm run eslint:fix`);
+  execSync(`cd ${api.paths.cwd} && npm run eslint:fix --scripts-prepend-node-path`);
 
   return true;
 }
