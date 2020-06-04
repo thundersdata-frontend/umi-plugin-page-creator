@@ -1,21 +1,23 @@
 import React, { useContext, useMemo, useEffect, useState } from 'react';
-import { Drawer, Form, Input, Button, Radio, Select, InputNumber } from 'antd';
+import { Drawer, Form, Input, Button, Radio, Select, InputNumber, message } from 'antd';
 import { Store } from 'antd/lib/form/interface';
 import { ColumnType } from 'antd/lib/table';
 import Context from '../../../Context';
 
 const { Option } = Select;
 
-export default function<T>({
+export default function <T>({
   setVisible,
   visible,
   onSubmit,
+  columns,
   current,
   initialFetch,
 }: {
   visible: boolean;
   setVisible: (visible: boolean) => void;
   onSubmit: (values: Store) => void;
+  columns: ColumnType<T>[];
   current?: ColumnType<T>;
   initialFetch?: string[];
 }) {
@@ -64,8 +66,13 @@ export default function<T>({
 
   const handleFinish = (values: Store) => {
     const { prop, ...restValues } = values;
-    onSubmit(restValues);
-    form.resetFields();
+    const repeatDataIndex = columns.find(column => column.dataIndex === values.dataIndex);
+    if (repeatDataIndex) {
+      message.error('此表格列的dataIndex已存在，请修改后重新提交');
+    } else {
+      onSubmit(restValues);
+      form.resetFields();
+    }
   };
 
   return (
