@@ -90,7 +90,7 @@ export default function generateLongFormModalCode(payload: Payload): string {
           }` : 'recruitment.person.addPerson'}.fetch(payload);
         };
 
-        const { loading, run: handleFinish } = useRequest(submit, {
+        const { submitting, run: handleFinish } = useRequest(submit, {
           manual: true,
           onSuccess: () => {
             message.success('保存成功');
@@ -111,7 +111,7 @@ export default function generateLongFormModalCode(payload: Payload): string {
             getContainer={false}
             maskClosable={false}
             title="${formConfig.title}"
-            okButtonProps={{ htmlType: 'submit' }}
+            okButtonProps={{ htmlType: 'submit', loading: submitting }}
             onOk={() => form.submit()}
             onCancel={handleCancel}
           >
@@ -128,7 +128,7 @@ export default function generateLongFormModalCode(payload: Payload): string {
                               name,
                               type,
                               required = false,
-                              customRules = [],
+                              customRules = '',
                               ...restProps
                             } = formItem;
                             const rules = generateRules(customRules as string, required as boolean);

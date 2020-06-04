@@ -126,7 +126,7 @@ export default () => {
           generateDetail: checked,
         },
       });
-      message.success({ content: (result as AjaxResponse<string>).message , key });
+      message.success({ content: (result as AjaxResponse<string>).message, key });
       setPathModalVisible(false);
     } catch (error) {
       message.error({ content: error.message, key });
@@ -209,6 +209,13 @@ export default () => {
           <Switch checked={checked} onChange={setChecked} />
         </Form.Item>
       </Card>
+      <Button
+        type="primary"
+        style={{ marginBottom: 28 }}
+        onClick={() => setApiConfigDrawerVisible(true)}
+      >
+        页面接口配置
+      </Button>
 
       {/**页面接口配置 */}
       <ApiConfigDrawer
@@ -246,7 +253,7 @@ export default () => {
 
       {/**提交时候弹出的输入文件路径 */}
       <PathMenuAction
-        type="formWithDetail"
+        type={checked ? 'formWithDetail' : 'form'}
         onRemoteCall={remoteCall}
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}

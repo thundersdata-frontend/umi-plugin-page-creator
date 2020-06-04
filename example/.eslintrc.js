@@ -20,6 +20,7 @@ module.exports = {
   ],
   plugins: ['import'],
   rules: {
+    'prettier/prettier': 'off',
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
     // e.g. "@typescript-eslint/explicit-function-return-type": "off",
     'import/newline-after-import': 'error',

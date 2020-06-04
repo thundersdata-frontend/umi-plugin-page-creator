@@ -125,7 +125,7 @@ export default function generateLongFormCode(payload: Payload): string {
                               name,
                               type,
                               required = false,
-                              customRules = [],
+                              customRules = '',
                               ...restProps
                             } = formItem;
                             const rules = generateRules(customRules as string, required as boolean);

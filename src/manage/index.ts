@@ -1,5 +1,6 @@
 import { IApi } from 'umi';
 import { writeFileSync, mkdirSync, existsSync } from 'fs';
+import prettier from 'prettier';
 import {
   generateShortFormCode,
   generateLongFormCode,
@@ -27,8 +28,9 @@ export default function(payload: any, type: string, api: IApi) {
           initialFetch: payload.initialFetch,
           submitFetch: payload.submitFetch,
         });
+        const formattedCode = prettierfy(removeUnusedImport(code));
         generateFile(
-          removeUnusedImport(code),
+          formattedCode,
           {
             path: payload.path,
             menu: payload.menu,
@@ -42,20 +44,30 @@ export default function(payload: any, type: string, api: IApi) {
           initialFetch: payload.initialFetch,
           submitFetch: payload.submitFetch,
         });
-        generateFile(removeUnusedImport(formCode), {
-          path: payload.formPath,
-          menu: payload.formMenu,
-        }, api);
+        const formattedFormCode = prettierfy(removeUnusedImport(formCode));
+        generateFile(
+          formattedFormCode,
+          {
+            path: payload.formPath,
+            menu: payload.formMenu,
+          },
+          api,
+        );
 
         const detailCode = generateShortDetailCode({
           formConfig: payload.formConfig,
           formItems: payload.formItems,
           initialFetch: payload.initialFetch,
         });
-        generateFile(removeUnusedImport(detailCode), {
-          path: payload.detailPath,
-          menu: payload.detailMenu
-        }, api);
+        const formattedDetailCode = prettierfy(removeUnusedImport(detailCode));
+        generateFile(
+          formattedDetailCode,
+          {
+            path: payload.detailPath,
+            menu: payload.detailMenu,
+          },
+          api,
+        );
       }
       return true;
 
@@ -66,29 +78,44 @@ export default function(payload: any, type: string, api: IApi) {
           formItems: payload.formItems,
           submitFetch: payload.submitFetch,
         });
-        generateFile(removeUnusedImport(code), {
-          path: payload.path,
-        dirName: payload.dirName
-        }, api);
+        const formattedCode = prettierfy(removeUnusedImport(code));
+        generateFile(
+          formattedCode,
+          {
+            path: payload.path,
+            dirName: payload.dirName,
+          },
+          api,
+        );
       } else {
         const formCode = generateShortFormModalCode({
           formConfig: payload.formConfig,
           formItems: payload.formItems,
           submitFetch: payload.submitFetch,
         });
-        generateFile(removeUnusedImport(formCode), {
-          path: payload.formPath,
-          dirName: payload.formDirName,
-        }, api);
+        const formattedFormCode = prettierfy(removeUnusedImport(formCode));
+        generateFile(
+          formattedFormCode,
+          {
+            path: payload.formPath,
+            dirName: payload.formDirName,
+          },
+          api,
+        );
 
         const detailCode = generateShortDetailModalCode({
           formConfig: payload.formConfig,
           formItems: payload.formItems,
         });
-        generateFile(removeUnusedImport(detailCode), {
-          path: payload.detailPath,
-          dirName: payload.detailDirName,
-        }, api);
+        const formattedDetailCode = prettierfy(removeUnusedImport(detailCode));
+        generateFile(
+          removeUnusedImport(formattedDetailCode),
+          {
+            path: payload.detailPath,
+            dirName: payload.detailDirName,
+          },
+          api,
+        );
       }
       return true;
 
@@ -99,29 +126,44 @@ export default function(payload: any, type: string, api: IApi) {
           initialFetch: payload.initialFetch,
           submitFetch: payload.submitFetch,
         });
-        generateFile(removeUnusedImport(code), {
-          path: payload.path,
-          menu: payload.menu,
-        }, api);
+        const formattedCode = prettierfy(removeUnusedImport(code));
+        generateFile(
+          formattedCode,
+          {
+            path: payload.path,
+            menu: payload.menu,
+          },
+          api,
+        );
       } else {
         const formCode = generateLongFormCode({
           cards: payload.cards,
           initialFetch: payload.initialFetch,
           submitFetch: payload.submitFetch,
         });
-        generateFile(removeUnusedImport(formCode), {
-          path: payload.formPath,
-          menu: payload.formMenu,
-        }, api);
+        const formattedFormCode = prettierfy(removeUnusedImport(formCode));
+        generateFile(
+          formattedFormCode,
+          {
+            path: payload.formPath,
+            menu: payload.formMenu,
+          },
+          api,
+        );
 
         const detailCode = generateLongDetailCode({
           cards: payload.cards,
           initialFetch: payload.initialFetch,
         });
-        generateFile(removeUnusedImport(detailCode), {
-          path: payload.detailPath,
-          menu: payload.detailMenu,
-        }, api);
+        const formattedDetailCode = prettierfy(removeUnusedImport(detailCode));
+        generateFile(
+          formattedDetailCode,
+          {
+            path: payload.detailPath,
+            menu: payload.detailMenu,
+          },
+          api,
+        );
       }
       return true;
 
@@ -132,29 +174,44 @@ export default function(payload: any, type: string, api: IApi) {
           formItems: payload.formItems,
           submitFetch: payload.submitFetch,
         });
-        generateFile(removeUnusedImport(code), {
-          path: payload.path,
-          dirName: payload.dirName,
-        }, api);
+        const formattedCode = prettierfy(removeUnusedImport(code));
+        generateFile(
+          formattedCode,
+          {
+            path: payload.path,
+            dirName: payload.dirName,
+          },
+          api,
+        );
       } else {
         const formCode = generateLongFormModalCode({
           formConfig: payload.formConfig,
           formItems: payload.formItems,
           submitFetch: payload.submitFetch,
         });
-        generateFile(removeUnusedImport(formCode), {
-          path: payload.formPath,
-          dirName: payload.formDirName,
-        }, api);
+        const formattedFormCode = prettierfy(removeUnusedImport(formCode));
+        generateFile(
+          formattedFormCode,
+          {
+            path: payload.formPath,
+            dirName: payload.formDirName,
+          },
+          api,
+        );
 
         const detailCode = generateLongDetailModalCode({
           formConfig: payload.formConfig,
           formItems: payload.formItems,
         });
-        generateFile(removeUnusedImport(detailCode), {
-          path: payload.detailPath,
-          dirName: payload.detailDirName,
-        }, api);
+        const formattedDetailCode = prettierfy(removeUnusedImport(detailCode))
+        generateFile(
+          removeUnusedImport(formattedDetailCode),
+          {
+            path: payload.detailPath,
+            dirName: payload.detailDirName,
+          },
+          api,
+        );
       }
       return true;
 
@@ -174,10 +231,8 @@ export default function(payload: any, type: string, api: IApi) {
       code = generateTableCode(payload);
       break;
   }
-  const removeUnusedImportCode = removeUnusedImport(code);
-  if (removeUnusedImportCode) {
-    generateFile(removeUnusedImportCode, payload, api);
-  }
+  const prettierfyCode = prettierfy(removeUnusedImport(code));
+  generateFile(prettierfyCode, payload, api);
   return true;
 }
 /**
@@ -250,4 +305,15 @@ function generateComponent(path: string, dirName: string, code: string, api: IAp
     mkdirSync(prefixPath + dirName, { recursive: true });
     writeFileSync(prefixPath + `${dirName}/index.tsx`, code, 'utf-8');
   }
+}
+
+function prettierfy(code: string) {
+  return prettier.format(code, {
+    semi: true,
+    singleQuote: true,
+    trailingComma: 'all',
+    printWidth: 120,
+    tabWidth: 2,
+    parser: 'typescript',
+  });
 }
