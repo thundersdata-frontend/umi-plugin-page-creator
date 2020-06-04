@@ -111,6 +111,7 @@ export default function generateLongFormModalCode(payload: Payload): string {
             getContainer={false}
             maskClosable={false}
             title="${formConfig.title}"
+            okButtonProps={{ htmlType: 'submit' }}
             onOk={() => form.submit()}
             onCancel={handleCancel}
           >

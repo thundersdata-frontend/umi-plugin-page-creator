@@ -105,6 +105,7 @@ export default function generateShortFormModalCode(payload: Payload): string {
             getContainer={false}
             maskClosable={false}
             title="${formConfig.title}"
+            okButtonProps={{ htmlType: 'submit' }}
             onOk={() => form.submit()}
             onCancel={handleCancel}
           >

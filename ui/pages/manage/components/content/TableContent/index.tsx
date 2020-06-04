@@ -65,8 +65,9 @@ export default () => {
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async ({ path, menu }: { path: string; menu?: string }) => {
+  const remoteCall = async ({ path, menu }: { path?: string; menu?: string }) => {
     try {
+      message.loading('正在生成文件，请稍候...');
       const result = await api.callRemote({
         type: 'org.umi-plugin-page-creator.table',
         payload: {

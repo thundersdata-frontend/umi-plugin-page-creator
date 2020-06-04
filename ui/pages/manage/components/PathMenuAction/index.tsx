@@ -39,7 +39,7 @@ export default ({
           menu,
         });
       } else {
-        const {formPath, formMenu, detailPath, detailMenu} = values;
+        const { formPath, formMenu, detailPath, detailMenu } = values;
         onRemoteCall({
           formPath: formPath.startsWith('/') ? formPath : `/${formPath}`,
           formMenu,

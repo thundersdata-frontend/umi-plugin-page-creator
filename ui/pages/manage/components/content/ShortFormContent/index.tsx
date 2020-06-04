@@ -109,6 +109,7 @@ export default () => {
       return;
     }
     try {
+      message.loading('正在生成文件，请稍候...');
       const result = await api.callRemote({
         type: 'org.umi-plugin-page-creator.shortForm',
         payload: {

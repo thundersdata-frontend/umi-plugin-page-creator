@@ -109,6 +109,7 @@ export default () => {
         message.error('你还没有添加Card');
         return;
       }
+      message.loading('正在生成文件，请稍候...');
       const result = await api.callRemote({
         type: 'org.umi-plugin-page-creator.longForm',
         payload: {

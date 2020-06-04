@@ -91,13 +91,14 @@ export default () => {
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async ({ path, dirName }: { path: string; dirName?: string }) => {
+  const remoteCall = async ({ path, dirName }: { path?: string; dirName?: string }) => {
     // 对formItems进行遍历，如果其中有任一项没有配置label/name，则不允许提交
     if (formItems.length === 0) {
       message.error('您还没有添加详情展示项，不能提交！');
       return;
     }
     try {
+      message.loading('正在生成文件，请稍候...');
       const result = await api.callRemote({
         type: 'org.umi-plugin-page-creator.shortDetailModal',
         payload: {
