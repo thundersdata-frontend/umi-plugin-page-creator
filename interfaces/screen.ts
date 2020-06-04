@@ -1,34 +1,34 @@
-import { ColSize } from "antd/lib/col";
+import { ColSize } from 'antd/lib/col';
 
 export interface ScreenConfig {
   title: string;
   titleStyle: string;
   gutter: number;
   left: {
-    xs: number;
-    sm: number;
-    md: number;
-    lg: number;
-    xl: number;
-    xxl: number;
+    xs: ColSize;
+    sm: ColSize;
+    md: ColSize;
+    lg: ColSize;
+    xl: ColSize;
+    xxl: ColSize;
     rows: ScreenRow[];
   };
   center: {
-    xs: number;
-    sm: number;
-    md: number;
-    lg: number;
-    xl: number;
-    xxl: number;
+    xs: ColSize;
+    sm: ColSize;
+    md: ColSize;
+    lg: ColSize;
+    xl: ColSize;
+    xxl: ColSize;
     rows: ScreenRow[];
   };
   right: {
-    xs: number;
-    sm: number;
-    md: number;
-    lg: number;
-    xl: number;
-    xxl: number;
+    xs: ColSize;
+    sm: ColSize;
+    md: ColSize;
+    lg: ColSize;
+    xl: ColSize;
+    xxl: ColSize;
     rows: ScreenRow[];
   };
 }
@@ -50,10 +50,40 @@ export interface ScreenCol {
 }
 
 export type LayoutType = 'left' | 'center' | 'right';
-export type ColType = 'custom' | 'bar' | 'pie' | 'map';
+export type ColType =
+  | 'custom'
+  | 'bar'
+  | 'groupBar'
+  | 'rangeBar'
+  | 'barLine'
+  | 'groupBarLine'
+  | 'column'
+  | 'groupColumn'
+  | 'rangeColumn'
+  | 'circle'
+  | 'rose'
+  | 'line'
+  | 'wave'
+  | 'radar'
+  | 'circleStackBar'
+  | 'scatter'
+  | 'stackArea'
+  | 'stackBar'
+  | 'stackRose'
+  | 'waterfall'
+  | 'map'
+  | 'table'
+  | 'rank';
 
 export interface ChartConfig {
   [key: string]: unknown;
+}
+
+export interface ScreenColConfig {
+  layoutType: LayoutType;
+  rowIndex: number;
+  colIndex: number;
+  config: Partial<ScreenCol>;
 }
 
 export interface ScreenConfigPayload {
@@ -65,7 +95,12 @@ export interface ScreenConfigPayload {
 
 export interface ScreenConfigPayloadLayout {
   name: string;
-  flex: number;
+  xs?: ColSize;
+  sm?: ColSize;
+  md?: ColSize;
+  lg?: ColSize;
+  xl?: ColSize;
+  xxl?: ColSize;
   rows: ScreenConfigPayloadRow[];
 }
 
@@ -77,7 +112,12 @@ export interface ScreenConfigPayloadRow {
 
 export interface ScreenConfigPayloadCol {
   name: string;
-  flex: number;
+  xs?: ColSize;
+  sm?: ColSize;
+  md?: ColSize;
+  lg?: ColSize;
+  xl?: ColSize;
+  xxl?: ColSize;
   type: ColType;
   chartConfig: ChartConfig;
 }

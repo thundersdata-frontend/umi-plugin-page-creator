@@ -3,7 +3,7 @@ import { Button, Card, message, Table } from 'antd';
 import Title from '../../../../../components/Title';
 import { AjaxResponse } from '../../../../../../interfaces/common';
 import Context from '../../../Context';
-import DropdownActions from '../../DropdownActions';
+import PathMenuAction from '../../PathMenuAction';
 import { Store } from 'antd/lib/form/interface';
 import TableConfigDrawer from '../../drawers/TableConfigDrawer';
 import TableColumnConfigDrawer from '../../drawers/TableColumnConfigDrawer';
@@ -21,7 +21,8 @@ export default () => {
   const { api, impConfigJson } = useContext(Context);
   const [tableConfig, setTableConfig] = useState<Store>({
     headerTitle: '表格配置',
-    search: false,
+    rowKey: 'id',
+    search: true,
     bordered: true,
   });
 
@@ -193,7 +194,8 @@ export default () => {
       />
 
       {/**提交时候弹出的输入文件路径 */}
-      <DropdownActions
+      <PathMenuAction
+        type="table"
         onRemoteCall={remoteCall}
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}

@@ -152,7 +152,6 @@ function getNewMenuCode(resource: Resource, mockPath: string) {
     // 根据处理之后的ast生成最终的代码
     const code = generate(ast, {}).code;
     return prettier.format(code, {
-      // format same as ant-design-pro
       singleQuote: true,
       trailingComma: 'es5',
       printWidth: 100,

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { Drawer, Form, InputNumber, Divider, Button, Select, Row, Col } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Drawer, Form, InputNumber, Divider, Button, Select, Row, Col, Input } from 'antd';
 import { Store } from 'antd/lib/form/interface';
-import { SelectValue } from 'antd/lib/select';
 import * as props from './props';
 import renderFormItem from '../../../components/FormItemConfig';
 import { FormItemProps } from '../../../../interfaces/common';
 import { renderPreviewImage } from '../helper';
+import { ScreenColConfig } from '../../../../interfaces/screen';
 
 const formLayout = {
   labelCol: {
@@ -16,20 +16,48 @@ const formLayout = {
   },
 };
 const initialValues = {
-  flex: 1,
+  xs: 1,
+  sm: 1,
+  md: 1,
+  lg: 1,
+  xl: 1,
+  xxl: 1,
+  type: 'custom',
 };
 
 export default ({
   visible,
   toggleVisible,
   onFinish,
+  col,
 }: {
   visible: boolean;
   toggleVisible: () => void;
   onFinish: (values: Store) => void;
+  col: ScreenColConfig;
 }) => {
   const [form] = Form.useForm();
-  const [type, setType] = useState<string>('');
+  const [type, setType] = useState('custom');
+
+  useEffect(() => {
+    if (col) {
+      const {config: { type, chartConfig, xs, sm, md, lg, xl, xxl }} = col;
+      form.setFieldsValue({
+        type,
+        ...chartConfig,
+        xs: xs?.span,
+        sm: sm?.span,
+        md: md?.span,
+        lg: lg?.span,
+        xl: xl?.span,
+        xxl: xxl?.span,
+      });
+      setType(type!);
+    } else {
+      form.setFieldsValue(initialValues);
+      setType('custom');
+    }
+  }, [col])
 
   const renderOtherProps = () => {
     const otherProps = props[`${type}Props`];
@@ -49,10 +77,30 @@ export default ({
       <Row justify="space-between" style={{ flexDirection: 'column' }}>
         <Col flex={3}>
           <Form form={form} onFinish={handleFinish} {...formLayout} initialValues={initialValues}>
-            <Form.Item label="宽度占比" name="flex" required rules={[{ required: true }]}>
+            <Divider plain>宽度</Divider>
+            <Form.Item label="xs" name="xs" required rules={[{ required: true }]}>
               <InputNumber min={1} />
             </Form.Item>
-            <Form.Item label="类型" name="type" required rules={[{ required: true }]}>
+            <Form.Item label="sm" name="sm" required rules={[{ required: true }]}>
+              <InputNumber min={1} />
+            </Form.Item>
+            <Form.Item label="md" name="md" required rules={[{ required: true }]}>
+              <InputNumber min={1} />
+            </Form.Item>
+            <Form.Item label="lg" name="lg" required rules={[{ required: true }]}>
+              <InputNumber min={1} />
+            </Form.Item>
+            <Form.Item label="xl" name="xl" required rules={[{ required: true }]}>
+              <InputNumber min={1} />
+            </Form.Item>
+            <Form.Item label="xxl" name="xxl" required rules={[{ required: true }]}>
+              <InputNumber min={1} />
+            </Form.Item>
+            <Divider plain>图表</Divider>
+            <Form.Item label="标题" name="title" required rules={[{ required: true }]}>
+              <Input />
+            </Form.Item>
+            <Form.Item label="选择类型" name="type" required rules={[{ required: true }]}>
               <Select onChange={value => setType(value as string)}>
                 <Select.Option value="custom">自定义</Select.Option>
                 <Select.Option value="bar">普通柱状图</Select.Option>

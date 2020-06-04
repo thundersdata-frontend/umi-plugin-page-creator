@@ -10,14 +10,15 @@ import React, { useState, useEffect } from 'react'; // -> 暂时先解决报错�
 import { Layout, message } from 'antd';
 import { IUiApi } from '@umijs/ui-types';
 import Context from './Context';
+import './index.module.less';
+import { CascaderOptionType } from 'antd/lib/cascader';
+import { Store } from 'antd/lib/form/interface';
+import { TemplateType } from '../../../interfaces/common';
+import { BaseClass } from '../../../interfaces/api';
 import TemplateList from './components/TemplateList';
 import Dashboard from './components/Dashboard';
-import './index.module.less';
-import { TemplateType } from '../../../interfaces/common';
-import { CascaderOptionType } from 'antd/lib/cascader';
-import { BaseClass } from '../../../interfaces/api';
-import ImportActions from './components/ImportActions';
-import { Store } from 'antd/lib/form/interface';
+import ImportAction from './components/ImportAction';
+import ConstantConfigAction from './components/ConstantConfigAction';
 
 const { Header, Content } = Layout;
 
@@ -27,6 +28,8 @@ export default ({ api }: { api: IUiApi }) => {
   const [templateType, setTemplate] = useState<TemplateType>();
   const [importModalVisible, setImportModalVisible] = useState(false);
   const [impConfigJson, setImpConfigJson] = useState<string>(''); // 导入的json
+  const [constantModalVisible, setConstantModalVisible] = useState(false);
+  const [constantConfig, setConstantConfig] = useState('');
 
   /** 页面加载时调用后端接口，后端从services/api-lock.json读取数据，生成对应的接口以及类型 */
   useEffect(() => {
@@ -36,13 +39,27 @@ export default ({ api }: { api: IUiApi }) => {
         payload: {
           fetchApiJson: true,
         },
-      })) as { databases: CascaderOptionType[]; success: boolean; baseClasses: BaseClass[]; };
+      })) as { databases: CascaderOptionType[]; success: boolean; baseClasses: BaseClass[] };
 
       if (!result.success) {
         message.warning('你的项目没有集成pont');
       } else {
         setDatabases(result.databases);
         setBaseClasses(result.baseClasses);
+      }
+    })();
+  }, []);
+
+  /**
+   * 页面初始化之后，通过服务端读取项目下的constant.ts文件，把文件内容返回回来
+   */
+  useEffect(() => {
+    (async () => {
+      const result = (await api.callRemote({
+        type: 'org.umi-plugin-page-creator.constantLoad',
+      })) as { success: boolean; data: string };
+      if (result.success) {
+        setConstantConfig(result.data);
       }
     })();
   }, []);
@@ -58,7 +75,23 @@ export default ({ api }: { api: IUiApi }) => {
     setImportModalVisible(false);
     const { importConfig } = values;
     setImpConfigJson(importConfig);
-  }
+  };
+
+  /**
+   * 保存常量的配置，调用服务端接口写回数据
+   * @param code
+   */
+  const saveConstantConfig = async (code: string) => {
+    const result = (await api.callRemote({
+      type: 'org.umi-plugin-page-creator.constantSave',
+      payload: {
+        code,
+      }
+    })) as { success: boolean; message: string };
+    if (result.success) {
+      message.success('常量配置保存成功');
+    }
+  };
 
   return (
     <Context.Provider
@@ -70,6 +103,7 @@ export default ({ api }: { api: IUiApi }) => {
         baseClasses,
         impConfigJson,
         setImpConfigJson,
+        constantConfig,
       }}
     >
       <Layout style={{ overflowY: 'auto' }}>
@@ -78,10 +112,15 @@ export default ({ api }: { api: IUiApi }) => {
         </Header>
         <Content>
           {/* 导入 */}
-          <ImportActions
+          <ImportAction
             modalVisible={importModalVisible}
             setModalVisible={setImportModalVisible}
             onSubmit={handleImportSubmit}
+          />
+          <ConstantConfigAction
+            visible={constantModalVisible}
+            setVisible={setConstantModalVisible}
+            onSubmit={saveConstantConfig}
           />
           <Dashboard />
         </Content>

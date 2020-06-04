@@ -50,6 +50,11 @@ export default function generateLongDetailModalCode(payload: Payload): string {
       import isEmpty from 'lodash/isEmpty';
       import DetailValue from '@/components/DetailValue';
 
+      const layout = {
+        labelCol: { span: 8 },
+        wrapperCol: { span: 16 },
+      };
+
       export default ({
         visible,
         toggleVisible,
@@ -75,55 +80,39 @@ export default function generateLongDetailModalCode(payload: Payload): string {
             centered
             visible={visible}
             destroyOnClose
-            forceRender
-            getContainer={false} // -> 如果modal里面装form，这个配置必须，否则会报错
+            forceRender // -> 如果modal里面装form，这个配置必须，否则会报错
+            getContainer={false}
             title="${formConfig.title}"
             onCancel={toggleVisible}
             footer={null}
           >
-            <DetailContent form={form} loading={loading} />
+            <Spin spinning={loading}>
+              <Form form={form} {...layout}>
+                ${formItemLines
+                  .map(line => {
+                    return `
+                      <Row>
+                        ${line
+                          .map(formItem => {
+                            return `
+                              <Col span={12}>
+                                <Form.Item
+                                  label="${formItem.label}"
+                                  name="${formItem.name}"
+                                >
+                                  <DetailValue />
+                                </Form.Item>
+                              </Col>
+                            `;
+                          })
+                          .join('')}
+                      </Row>
+                    `;
+                  })
+                  .join('')}
+              </Form>
+            </Spin>
           </Modal>
-        );
-      };
-
-      const DetailContent = ({
-        form,
-        loading,
-      }: {
-        form: FormInstance;
-        loading: boolean;
-      }) => {
-        const layout = {
-          labelCol: { span: 8 },
-          wrapperCol: { span: 16 },
-        };
-        return (
-          <Spin spinning={loading}>
-            <Form form={form} {...layout}>
-              ${formItemLines
-                .map(line => {
-                  return `
-                    <Row>
-                      ${line
-                        .map(formItem => {
-                          return `
-                            <Col span={12}>
-                              <Form.Item
-                                label="${formItem.label}"
-                                name="${formItem.name}"
-                              >
-                                <DetailValue />
-                              </Form.Item>
-                            </Col>
-                          `;
-                        })
-                        .join('')}
-                    </Row>
-                  `;
-                })
-                .join('')}
-            </Form>
-          </Spin>
         );
       };
     `;

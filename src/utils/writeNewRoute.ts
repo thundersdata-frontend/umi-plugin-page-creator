@@ -173,7 +173,6 @@ export function writeRouteNode(targetNode, newRoute: Route, currentPath = '/') {
 function generateCode(ast) {
   const newCode = generate(ast, {}).code;
   return prettier.format(newCode, {
-    // format same as ant-design-pro
     singleQuote: true,
     trailingComma: 'es5',
     printWidth: 100,

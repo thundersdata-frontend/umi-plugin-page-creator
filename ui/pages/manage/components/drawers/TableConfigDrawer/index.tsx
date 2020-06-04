@@ -31,6 +31,9 @@ export default ({
         <Form.Item label="表格title" name="headerTitle">
           <Input />
         </Form.Item>
+        <Form.Item label="表格rowKey" name="rowKey">
+          <Input />
+        </Form.Item>
         <Form.Item label="是否显示搜索表单" name="search">
           <Radio.Group
             options={[

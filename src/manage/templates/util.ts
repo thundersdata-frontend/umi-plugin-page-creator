@@ -99,7 +99,7 @@ export function generatePropsStr(props: object): string {
       if (typeof value === 'number' || typeof value === 'bigint') {
         return `${key}={${value}}`;
       } else if (typeof value === 'boolean') {
-        return value ? `${key}` : `${key}={false}`;
+        return value ? `${key}` : ``;
       } else if (typeof value === 'string') {
         return `${key}="${value}"`;
       } else if (typeof value === 'function') {

@@ -45,11 +45,17 @@ export default function generateLongFormModalCode(payload: Payload): string {
         TreeSelect,
         Upload,
         Rate,
+        message,
       } from 'antd';
       import { FormInstance } from 'antd/lib/form';
       import { Store } from 'antd/es/form/interface';
       import isEmpty from 'lodash/isEmpty';
-      ${submitFetch ? `import { useRequest } from 'umi';` : ''}
+      import { useRequest } from 'umi';
+
+      const twoColumnsLayout = {
+        labelCol: { span: 8 },
+        wrapperCol: { span: 16 },
+      };
 
       export default ({
         visible,
@@ -74,33 +80,26 @@ export default function generateLongFormModalCode(payload: Payload): string {
           toggleVisible();
         };
 
-        ${
-          submitFetch && submitFetch.length === 3
-            ? `
-          const submit = (values: Store) => {
-            console.log(values);
-            return API.${submitFetch[0]}.${submitFetch[1]}.${submitFetch[2].split('-')[0]}.fetch({ ... values });
+        const submit = (values: Store) => {
+          // 这里可以做一些数据转换
+          const payload = {
+            ...values,
           };
+          return API.${submitFetch && submitFetch.length === 3 ? `${submitFetch[0]}.${submitFetch[1]}.${
+            submitFetch[2].split('-')[0]
+          }` : 'recruitment.person.addPerson'}.fetch(payload);
+        };
 
-          const { run: handleFinish } = useRequest(submit, {
-            manual: true,
-            onSuccess: () => {
-              message.success('保存成功');
-              toggleVisible();
-            },
-            onError: error => {
-              console.error(error.message);
-              message.error('保存失败');
-            }
-          });
-        `
-            : `
-          const handleFinish = (values: Store) => {
-            console.log(values);
-            toggleVisible();
-          }
-        `
-        }
+        const { loading, run: handleFinish } = useRequest(submit, {
+          manual: true,
+          onSuccess: () => {
+            message.success('保存成功');
+          },
+          onError: error => {
+            console.error(error.message);
+            message.error('保存失败');
+          },
+        });
 
         return (
           <Modal
@@ -108,69 +107,51 @@ export default function generateLongFormModalCode(payload: Payload): string {
             centered
             visible={visible}
             destroyOnClose
-            forceRender
-            getContainer={false} // -> 如果modal里面装form，这个配置必须，否则会报错
+            forceRender // -> 如果modal里面装form，这个配置必须，否则会报错
+            getContainer={false}
             maskClosable={false}
             title="${formConfig.title}"
             onOk={() => form.submit()}
             onCancel={handleCancel}
           >
-            <ModalForm form={form} onFinish={handleFinish} loading={loading} />
+            <Spin spinning={loading}>
+              <Form form={form} onFinish={handleFinish} {...twoColumnsLayout}>
+                ${formItemLines
+                  .map(line => {
+                    return `
+                      <Row justify="space-between">
+                        ${line
+                          .map(formItem => {
+                            const {
+                              label,
+                              name,
+                              type,
+                              required = false,
+                              customRules = [],
+                              ...restProps
+                            } = formItem;
+                            const rules = generateRules(customRules as string, required as boolean);
+                            return `
+                              <Col span={12}>
+                                <Form.Item
+                                  label="${label}"
+                                  name="${name}"
+                                  ${required ? `required` : ``}
+                                  ${rules !== '[]' ? `rules={${rules}}` : ''}
+                                >
+                                  ${createFormComponentsByType(type, restProps)}
+                                </Form.Item>
+                              </Col>
+                            `;
+                          })
+                          .join('')}
+                      </Row>
+                    `;
+                  })
+                  .join('')}
+              </Form>
+            </Spin>
           </Modal>
-        );
-      };
-
-      const ModalForm = ({
-        form,
-        onFinish,
-        loading,
-      }: {
-        form: FormInstance;
-        onFinish: (values: Store) => void;
-        loading: boolean;
-      }) => {
-        const twoColumnsLayout = {
-          labelCol: { span: 8 },
-          wrapperCol: { span: 16 },
-        };
-        return (
-          <Spin spinning={loading}>
-            <Form form={form} onFinish={onFinish} {...twoColumnsLayout}>
-              ${formItemLines
-                .map(line => {
-                  return `
-                    <Row justify="space-between">
-                      ${line
-                        .map(formItem => {
-                          const {
-                            label,
-                            name,
-                            type,
-                            required = false,
-                            customRules = [],
-                            ...restProps
-                          } = formItem;
-                          const rules = generateRules(customRules as string, required as boolean);
-                          return `
-                            <Col span={12}>
-                              <Form.Item
-                                label="${label}"
-                                name="${name}"
-                                ${required ? `required` : `required={false}`}
-                                ${rules !== '[]' ? `rules={${rules}}` : ''}
-                              >
-                                ${createFormComponentsByType(type, restProps)}
-                              </Form.Item>
-                            </Col>
-                          `;
-                        })
-                        .join('')}
-                    </Row>
-                  `;
-                })
-                .join('')}
-            </Form>
-          </Spin>
         );
       };
     `;

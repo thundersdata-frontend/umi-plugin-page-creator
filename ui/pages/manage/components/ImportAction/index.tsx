@@ -60,7 +60,7 @@ export default ({
             required
             rules={[{ required: true, message: '请输入你要导入的配置参数' }]}
           >
-            <Input.TextArea autoSize placeholder="请输入你要导入的配置参数" />
+            <Input.TextArea cols={10} placeholder="请输入你要导入的配置参数" />
           </Form.Item>
         </Form>
       </Modal>

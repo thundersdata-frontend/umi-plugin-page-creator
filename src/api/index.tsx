@@ -35,9 +35,16 @@ export default function(api: IApi) {
             responseName = response.typeName;
           }
         }
+        let value = `${name}`;
+        if (paramsName) {
+          value += `-${paramsName}`;
+        }
+        if (responseName) {
+          value += `-${responseName}`;
+        }
         return {
           label: `${description}(${method})`,
-          value: `${name}-${paramsName}-${responseName}`,
+          value,
         };
       }),
     })),

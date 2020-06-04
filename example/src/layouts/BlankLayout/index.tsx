@@ -1,6 +1,6 @@
 import React from 'react';
 
-const BlankLayout: React.FC = props => (
+const BlankLayout: React.FC = (props) => (
   <div>
     <div>layout header</div>
     {props.children}

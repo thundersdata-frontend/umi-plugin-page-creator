@@ -54,17 +54,17 @@ export function transformConfig(screenConfig: ScreenConfig): ScreenConfigPayload
   };
 
   function generateConfig(type: LayoutType, config: ScreenConfig) {
+    const layout = config[type];
+    const { rows, ...restProps } = layout;
     return {
+      ...restProps,
       name: type.charAt(0).toUpperCase() + type.substr(1, type.length),
-      flex: config[type].flex,
-      rows: config[type].rows.map((row, rowIndex) => ({
+      rows: rows.map((row, rowIndex) => ({
         name: `Row${rowIndex}`,
         height: row.height,
         cols: row.cols.map((col, colIndex) => ({
           name: `Row${rowIndex}Col${colIndex}`,
-          flex: col.flex,
-          type: col.type,
-          chartConfig: col.chartConfig,
+          ...col,
         })),
       })),
     };
