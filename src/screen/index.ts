@@ -5,7 +5,6 @@ import generateScreen from './templates/generateScreen';
 import generateLayout from './templates/generateLayout';
 import generateRow from './templates/generateRow';
 import generateCol from './templates/generateCol';
-import { execSync } from 'child_process';
 
 /**
  * 生成大屏的一系列文件
@@ -56,7 +55,6 @@ export default function(payload: ScreenConfigPayload, api: IApi) {
       });
     });
   });
-  execSync(`cd ${api.paths.cwd} && npm run eslint:fix --scripts-prepend-node-path`);
 
   return true;
 }

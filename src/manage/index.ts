@@ -14,7 +14,6 @@ import {
 import { removeUnusedImport } from '../utils/removeUnusedImport';
 import { writeNewRoute } from '../utils/writeNewRoute';
 import { writeNewMenu } from '../utils/writeNewMenu';
-import { execSync } from 'child_process';
 
 export default function(payload: any, type: string, api: IApi) {
   let code = '';
@@ -58,7 +57,6 @@ export default function(payload: any, type: string, api: IApi) {
           menu: payload.detailMenu
         }, api);
       }
-      execSync(`cd ${api.paths.cwd} && npm run eslint:fix --scripts-prepend-node-path`);
       return true;
 
     case 'org.umi-plugin-page-creator.shortFormModal':
@@ -92,7 +90,6 @@ export default function(payload: any, type: string, api: IApi) {
           dirName: payload.detailDirName,
         }, api);
       }
-      execSync(`cd ${api.paths.cwd} && npm run eslint:fix --scripts-prepend-node-path`);
       return true;
 
     case 'org.umi-plugin-page-creator.longForm':
@@ -126,7 +123,6 @@ export default function(payload: any, type: string, api: IApi) {
           menu: payload.detailMenu,
         }, api);
       }
-      execSync(`cd ${api.paths.cwd} && npm run eslint:fix --scripts-prepend-node-path`);
       return true;
 
     case 'org.umi-plugin-page-creator.longFormModal':
@@ -160,7 +156,6 @@ export default function(payload: any, type: string, api: IApi) {
           dirName: payload.detailDirName,
         }, api);
       }
-      execSync(`cd ${api.paths.cwd} && npm run eslint:fix --scripts-prepend-node-path`);
       return true;
 
     case 'org.umi-plugin-page-creator.shortDetail':
@@ -183,7 +178,6 @@ export default function(payload: any, type: string, api: IApi) {
   if (removeUnusedImportCode) {
     generateFile(removeUnusedImportCode, payload, api);
   }
-  execSync(`cd ${api.paths.cwd} && npm run eslint:fix --scripts-prepend-node-path`);
   return true;
 }
 /**
