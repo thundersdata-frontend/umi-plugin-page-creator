@@ -86,16 +86,13 @@ export default function generateShortDetailModalCode(payload: Payload): string {
                     const {
                       label,
                       name,
-                      type,
-                      required = false,
-                      customRules = [],
-                      ...restProps
+                      detailItemType,
                     } = item;
                     return `<Form.Item
                       label="${label}"
                       name="${name}"
                     >
-                      <DetailValue />
+                      <DetailValue ${detailItemType && detailItemType !== 'default' ? `type="${detailItemType}"` : ''} />
                     </Form.Item>`;
                   })
                   .join('')}

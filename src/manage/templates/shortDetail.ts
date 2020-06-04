@@ -67,13 +67,13 @@ export default function generateShortDetail(payload: Payload): string {
               <Card title={<Title text="${formConfig.title}" />} style={{ marginBottom: 16 }}>
                 ${formItems
                   .map(item => {
-                    const { label, name } = item;
+                    const { label, name, detailItemType } = item;
                     return `<Form.Item
                       {...formItemLayout}
                       label="${label}"
                       name="${name}"
                     >
-                      <DetailValue />
+                      <DetailValue ${detailItemType && detailItemType !== 'default' ? `type="${detailItemType}"` : ''} />
                     </Form.Item>`;
                   })
                   .join('')}

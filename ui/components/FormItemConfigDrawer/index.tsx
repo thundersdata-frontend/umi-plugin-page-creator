@@ -128,7 +128,7 @@ export default ({
         >
           <Input />
         </Form.Item>
-        {from === 'form' && (
+        {from === 'form' ? (
           <>
             <Form.Item
               label="是否必填"
@@ -171,6 +171,13 @@ export default ({
             </Form.Item>
             {renderOtherProps(type)}
           </>
+        ) : (
+          <Form.Item label="详情字段类型" name="detailItemType">
+            <Select>
+              <Select.Option value="default">默认</Select.Option>
+              <Select.Option value="file">文件</Select.Option>
+            </Select>
+          </Form.Item>
         )}
         <Form.Item>
           <Button type="primary" htmlType="submit">

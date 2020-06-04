@@ -100,7 +100,7 @@ export default function generateLongDetailModalCode(payload: Payload): string {
                                   label="${formItem.label}"
                                   name="${formItem.name}"
                                 >
-                                  <DetailValue />
+                                  <DetailValue ${formItem.detailItemType && formItem.detailItemType !== 'default' ? `type="${formItem.detailItemType}"` : ''} />
                                 </Form.Item>
                               </Col>
                             `;
