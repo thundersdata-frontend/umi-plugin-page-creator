@@ -24,7 +24,7 @@ export default function generateShortDetail(payload: Payload): string {
       import { Card, Form, Spin } from 'antd';
       import Title from '@/components/Title';
       import DetailValue from '@/components/DetailValue';
-      import { useRequest } from 'umi';
+      import { useRequest, history } from 'umi';
 
       const formItemLayout = {
         labelCol: {
