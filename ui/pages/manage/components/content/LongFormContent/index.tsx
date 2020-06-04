@@ -104,12 +104,13 @@ export default () => {
     detailPath?: string;
     detailMenu?: string;
   }) => {
+    const key = 'message';
     try {
       if (cards.length === 0) {
         message.error('你还没有添加Card');
         return;
       }
-      message.loading('正在生成文件，请稍候...');
+      message.loading({ content: '正在生成文件，请稍候...', key });
       const result = await api.callRemote({
         type: 'org.umi-plugin-page-creator.longForm',
         payload: {
@@ -125,10 +126,10 @@ export default () => {
           generateDetail: checked,
         },
       });
-      message.success((result as AjaxResponse<string>).message);
+      message.success({ content: (result as AjaxResponse<string>).message , key });
       setPathModalVisible(false);
     } catch (error) {
-      message.error(error.message);
+      message.error({ content: error.message, key });
     }
   };
 

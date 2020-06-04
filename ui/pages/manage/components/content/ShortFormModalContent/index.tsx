@@ -107,8 +107,9 @@ export default () => {
       message.error('您还没有添加表单项，不能提交！');
       return;
     }
+    const key = 'message';
     try {
-      message.loading('正在生成文件，请稍候...');
+      message.loading({ content: '正在生成文件，请稍候...', key });
       const result = await api.callRemote({
         type: 'org.umi-plugin-page-creator.shortFormModal',
         payload: {
@@ -124,10 +125,10 @@ export default () => {
           generateDetail: checked,
         },
       });
-      message.success((result as AjaxResponse<string>).message);
+      message.success({ content: (result as AjaxResponse<string>).message , key });
       setPathModalVisible(false);
     } catch (error) {
-      message.error(error.message);
+      message.error({ content: error.message, key });
     }
   };
 

@@ -50,6 +50,7 @@ export default () => {
    * 提交配置信息到后台生成页面和组件
    */
   const remoteCall = async () => {
+    const key = 'message';
     if (!title) {
       message.error('您还没有做任何配置，不能提交');
       return;
@@ -62,14 +63,14 @@ export default () => {
     };
 
     try {
-      message.loading('正在生成文件，请稍候...');
+      message.loading({ content: '正在生成文件，请稍候...', key });
       const result = await api.callRemote({
         type: 'org.umi-plugin-page-creator.screen',
         payload,
       });
-      message.success((result as AjaxResponse<string>).message);
+      message.success({ content: (result as AjaxResponse<string>).message, key });
     } catch (error) {
-      message.error(error.message);
+      message.error({ content: error.message, key });
     }
   };
 

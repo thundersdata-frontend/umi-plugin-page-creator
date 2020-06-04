@@ -82,18 +82,15 @@ export default ({ api }: { api: IUiApi }) => {
    * @param code
    */
   const saveConstantConfig = async (code: string) => {
-    message.loading('正在保存，请稍候...');
-    const result = (await api.callRemote({
+    const key = 'message';
+    message.loading({ content: '正在保存，请稍候...', key });
+    await api.callRemote({
       type: 'org.umi-plugin-page-creator.constantSave',
       payload: {
         code,
       }
-    })) as { success: boolean; message: string };
-    if (result.success) {
-      message.success('常量配置保存成功');
-    } else {
-      message.error('保存失败');
-    }
+    });
+    message.success({ content: '常量配置保存成功', key });
   };
 
   return (
