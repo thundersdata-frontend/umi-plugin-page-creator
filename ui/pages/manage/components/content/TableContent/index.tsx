@@ -189,6 +189,7 @@ export default () => {
           setColumnConfigDrawerVisible(false);
         }}
         current={currentColumn}
+        columns={columns}
         initialFetch={initialFetch}
       />
 
