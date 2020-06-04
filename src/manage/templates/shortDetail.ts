@@ -10,25 +10,21 @@ import { Store } from 'antd/lib/form/interface';
 import { FormItemProps } from '../../../interfaces/common';
 
 export interface Payload {
-  cardConfig: Store;
+  formConfig: Store;
   formItems: FormItemProps[];
   initialFetch?: string[];
 }
 
 export default function generateShortDetail(payload: Payload): string {
-  if (payload && payload.cardConfig && payload.formItems) {
-    const { cardConfig, formItems, initialFetch } = payload;
+  if (payload && payload.formConfig && payload.formItems) {
+    const { formConfig, formItems, initialFetch } = payload;
 
     const code = `
-      import React from 'react';
+      import React, { useCallback } from 'react';
       import { Card, Form, Spin } from 'antd';
       import Title from '@/components/Title';
       import DetailValue from '@/components/DetailValue';
-      ${
-        !initialFetch
-          ? `import { useToggle } from '@umijs/hooks';`
-          : `import { useRequest } from 'umi';`
-      }
+      import { useRequest } from 'umi';
 
       const formItemLayout = {
         labelCol: {
@@ -44,27 +40,31 @@ export default function generateShortDetail(payload: Payload): string {
 
       export default () => {
         const [form] = Form.useForm();
-        ${
-          initialFetch && initialFetch.length === 3
-            ? `
-          const { loading } = useRequest(() => API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2].split('-')[0]}.fetch({}), {
-            onSuccess: data => {
-              form.setFieldsValue(data);
-            },
-            onError: error => {
-              message.error(error.message);
+        const { id } = history.location.query;
+
+        const fetchDetail = useCallback(async () => {
+          if (id) {
+            const result = await API.${initialFetch && initialFetch.length === 3 ? `${initialFetch[0]}.${initialFetch[1]}.${
+              initialFetch[2].split('-')[0]
+            }` : 'recruitment.person.getPerson'}.fetch(
+              { id },
+            );
+            // 这里可以做数据转换操作
+            const values = {
+              ...result
             }
-          })
-        `
-            : `
-          const toggle = useToggle(false);
-        `
-        }
+            form.setFieldsValue(values);
+          }
+        }, [id]);
+
+        const { loading } = useRequest(fetchDetail, {
+          refreshDeps: [fetchDetail],
+        });
 
         return (
-          <Spin spinning={${initialFetch ? 'loading' : 'toggle.state'}}>
+          <Spin spinning={loading}>
             <Form form={form}>
-              <Card title={<Title text="${cardConfig.title}" />} style={{ marginBottom: 16 }}>
+              <Card title={<Title text="${formConfig.title}" />} style={{ marginBottom: 16 }}>
                 ${formItems
                   .map(item => {
                     const { label, name } = item;

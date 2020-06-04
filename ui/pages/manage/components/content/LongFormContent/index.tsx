@@ -1,11 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Form, Button, Card, message, Row, Col } from 'antd';
+import { Form, Button, Card, message, Row, Col, Switch } from 'antd';
 import Title from '../../../../../components/Title';
 import renderFormItem from '../../../../../components/FormItemConfig';
 import FormItemsDrawer from '../../../../../components/FormItemsDrawer';
 import { AjaxResponse } from '../../../../../../interfaces/common';
 import Context from '../../../Context';
-import DropDownAction from '../../DropdownAction';
+import PathMenuAction from '../../PathMenuAction';
 import CardConfigDrawer from '../../drawers/CardConfigDrawer';
 import { transformFormItemLines } from '../../../../../utils';
 import useConfigVisible from '../../../../../hooks/useConfigVisible';
@@ -43,13 +43,9 @@ const colLayout = {
 
 export default () => {
   const { api, impConfigJson } = useContext(Context);
+  const [checked, setChecked] = useState(true);
 
-  const {
-    initialFetch,
-    setInitialFetch,
-    submitFetch,
-    setSubmitFetch,
-  } = useConfig();
+  const { initialFetch, setInitialFetch, submitFetch, setSubmitFetch } = useConfig();
 
   const {
     formItemsDrawerVisible,
@@ -93,7 +89,21 @@ export default () => {
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async ({ path, menu }: { path: string; menu?: string }) => {
+  const remoteCall = async ({
+    path,
+    menu,
+    formPath,
+    formMenu,
+    detailPath,
+    detailMenu,
+  }: {
+    path?: string;
+    menu?: string;
+    formPath?: string;
+    formMenu?: string;
+    detailPath?: string;
+    detailMenu?: string;
+  }) => {
     try {
       if (cards.length === 0) {
         message.error('你还没有添加Card');
@@ -105,8 +115,13 @@ export default () => {
           cards,
           path,
           menu,
+          formPath,
+          formMenu,
+          detailPath,
+          detailMenu,
           initialFetch,
           submitFetch,
+          generateDetail: checked,
         },
       });
       message.success((result as AjaxResponse<string>).message);
@@ -119,7 +134,11 @@ export default () => {
   /** 把导入的配置信息进行解析 */
   useEffect(() => {
     if (impConfigJson) {
-      const { cards = [{ title: '自定义Card0', formItems: [] }], initialFetch = [], submitFetch = [] } = JSON.parse(impConfigJson);
+      const {
+        cards = [{ title: '自定义Card0', formItems: [] }],
+        initialFetch = [],
+        submitFetch = [],
+      } = JSON.parse(impConfigJson);
       setCards(cards);
       setInitialFetch(initialFetch);
       setSubmitFetch(submitFetch);
@@ -128,11 +147,17 @@ export default () => {
 
   /** 导出 */
   const handleExport = () => {
-    copy(JSON.stringify({
-      cards,
-      initialFetch,
-      submitFetch
-    }, null, 2));
+    copy(
+      JSON.stringify(
+        {
+          cards,
+          initialFetch,
+          submitFetch,
+        },
+        null,
+        2,
+      ),
+    );
     message.success('配置已复制到剪贴板');
   };
 
@@ -198,6 +223,9 @@ export default () => {
           );
         })}
       </Form>
+      <Form.Item label="默认生成详情页面" style={{ marginLeft: 24, marginBottom: 0 }}>
+        <Switch checked={checked} onChange={setChecked} />
+      </Form.Item>
       <Button
         type="primary"
         onClick={() =>
@@ -246,7 +274,8 @@ export default () => {
           submitFetch={submitFetch}
         />
       )}
-      <DropDownAction
+      <PathMenuAction
+        type={checked ? 'formWithDetail' : 'form'}
         onRemoteCall={remoteCall}
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}

@@ -1,5 +1,6 @@
 import React, { useContext, useMemo, useEffect, useState } from 'react';
-import { Drawer, Form, Input, Button, Radio, Select, InputNumber } from 'antd';
+import { Drawer, Form, Input, Button, Radio, Select, InputNumber, Tooltip } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { Store } from 'antd/lib/form/interface';
 import { ColumnType } from 'antd/lib/table';
 import Context from '../../../Context';
@@ -28,7 +29,7 @@ export default function<T>({
     dataIndex: '',
     align: 'left',
     ellipsis: true,
-    copyable: true,
+    copyable: false,
     valueType: 'text',
     hideInSearch: false,
     order: undefined,
@@ -37,7 +38,7 @@ export default function<T>({
     if (current) {
       form.setFieldsValue(current);
     } else {
-      form.setFieldsValue(initialValues)
+      form.setFieldsValue(initialValues);
     }
   }, [current]);
 
@@ -139,11 +140,12 @@ export default function<T>({
             ]}
           />
         </Form.Item>
-        <Form.Item label="枚举值" name="valueEnum">
-          <Input.TextArea
-            rows={5}
-            autoSize
-            placeholder={`{
+        <Form.Item
+          label={
+            <label>
+              <span style={{ paddingRight: 5 }}>枚举值</span>
+              <Tooltip
+                overlay={`{
   open: {
     text: '未解决',
     status: 'Error',
@@ -153,7 +155,14 @@ export default function<T>({
     status: 'Success',
   },
 }`}
-          />
+              >
+                <QuestionCircleOutlined />
+              </Tooltip>
+            </label>
+          }
+          name="valueEnum"
+        >
+          <Input.TextArea rows={5} autoSize placeholder="此处可以输入常量配置里面的变量" />
         </Form.Item>
         <Form.Item label="值类型" name="valueType">
           <Select>

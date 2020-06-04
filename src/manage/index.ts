@@ -21,17 +21,148 @@ export default function(payload: any, type: string, api: IApi) {
   switch (type) {
     case 'org.umi-plugin-page-creator.shortForm':
     default:
-      code = generateShortFormCode(payload);
-      break;
+      if (!payload.generateDetail) {
+        code = generateShortFormCode({
+          formConfig: payload.formConfig,
+          formItems: payload.formItems,
+          initialFetch: payload.initialFetch,
+          submitFetch: payload.submitFetch,
+        });
+        generateFile(
+          removeUnusedImport(code),
+          {
+            path: payload.path,
+            menu: payload.menu,
+          },
+          api,
+        );
+      } else {
+        const formCode = generateShortFormCode({
+          formConfig: payload.formConfig,
+          formItems: payload.formItems,
+          initialFetch: payload.initialFetch,
+          submitFetch: payload.submitFetch,
+        });
+        generateFile(removeUnusedImport(formCode), {
+          path: payload.formPath,
+          menu: payload.formMenu,
+        }, api);
+
+        const detailCode = generateShortDetailCode({
+          formConfig: payload.formConfig,
+          formItems: payload.formItems,
+          initialFetch: payload.initialFetch,
+        });
+        generateFile(removeUnusedImport(detailCode), {
+          path: payload.detailPath,
+          menu: payload.detailMenu
+        }, api);
+      }
+      execSync(`cd ${api.paths.cwd} && npm run eslint:fix`);
+      return true;
+
     case 'org.umi-plugin-page-creator.shortFormModal':
-      code = generateShortFormModalCode(payload);
-      break;
+      if (!payload.generateDetail) {
+        code = generateShortFormModalCode({
+          formConfig: payload.formConfig,
+          formItems: payload.formItems,
+          submitFetch: payload.submitFetch,
+        });
+        generateFile(removeUnusedImport(code), {
+          path: payload.path,
+        dirName: payload.dirName
+        }, api);
+      } else {
+        const formCode = generateShortFormModalCode({
+          formConfig: payload.formConfig,
+          formItems: payload.formItems,
+          submitFetch: payload.submitFetch,
+        });
+        generateFile(removeUnusedImport(formCode), {
+          path: payload.formPath,
+          dirName: payload.formDirName,
+        }, api);
+
+        const detailCode = generateShortDetailModalCode({
+          formConfig: payload.formConfig,
+          formItems: payload.formItems,
+        });
+        generateFile(removeUnusedImport(detailCode), {
+          path: payload.detailPath,
+          dirName: payload.detailDirName,
+        }, api);
+      }
+      execSync(`cd ${api.paths.cwd} && npm run eslint:fix`);
+      return true;
+
     case 'org.umi-plugin-page-creator.longForm':
-      code = generateLongFormCode(payload);
-      break;
+      if (!payload.generateDetail) {
+        code = generateLongFormCode({
+          cards: payload.cards,
+          initialFetch: payload.initialFetch,
+          submitFetch: payload.submitFetch,
+        });
+        generateFile(removeUnusedImport(code), {
+          path: payload.path,
+          menu: payload.menu,
+        }, api);
+      } else {
+        const formCode = generateLongFormCode({
+          cards: payload.cards,
+          initialFetch: payload.initialFetch,
+          submitFetch: payload.submitFetch,
+        });
+        generateFile(removeUnusedImport(formCode), {
+          path: payload.formPath,
+          menu: payload.formMenu,
+        }, api);
+
+        const detailCode = generateLongDetailCode({
+          cards: payload.cards,
+          initialFetch: payload.initialFetch,
+        });
+        generateFile(removeUnusedImport(detailCode), {
+          path: payload.detailPath,
+          menu: payload.detailMenu,
+        }, api);
+      }
+      execSync(`cd ${api.paths.cwd} && npm run eslint:fix`);
+      return true;
+
     case 'org.umi-plugin-page-creator.longFormModal':
-      code = generateLongFormModalCode(payload);
-      break;
+      if (!payload.generateDetail) {
+        code = generateLongFormModalCode({
+          formConfig: payload.formConfig,
+          formItems: payload.formItems,
+          submitFetch: payload.submitFetch,
+        });
+        generateFile(removeUnusedImport(code), {
+          path: payload.path,
+          dirName: payload.dirName,
+        }, api);
+      } else {
+        const formCode = generateLongFormModalCode({
+          formConfig: payload.formConfig,
+          formItems: payload.formItems,
+          submitFetch: payload.submitFetch,
+        });
+        generateFile(removeUnusedImport(formCode), {
+          path: payload.formPath,
+          dirName: payload.formDirName,
+        }, api);
+
+        const detailCode = generateLongDetailModalCode({
+          formConfig: payload.formConfig,
+          formItems: payload.formItems,
+        });
+        generateFile(removeUnusedImport(detailCode), {
+          path: payload.detailPath,
+          dirName: payload.detailDirName,
+        }, api);
+      }
+      execSync(`cd ${api.paths.cwd} && npm run eslint:fix`);
+      return true;
+
     case 'org.umi-plugin-page-creator.shortDetail':
       code = generateShortDetailCode(payload);
       break;
@@ -50,25 +181,30 @@ export default function(payload: any, type: string, api: IApi) {
   }
   const removeUnusedImportCode = removeUnusedImport(code);
   if (removeUnusedImportCode) {
-    return generateFile(removeUnusedImportCode, payload, api);
+    generateFile(removeUnusedImportCode, payload, api);
   }
-  return false;
+  execSync(`cd ${api.paths.cwd} && npm run eslint:fix`);
+  return true;
 }
 /**
  * 生成文件
  * @param code
  * @param payload
  */
-function generateFile(code: string, payload: { path: string; menu?: string; dirName?: string }, api: IApi) {
+function generateFile(
+  code: string,
+  payload: { path: string; menu?: string; dirName?: string },
+  api: IApi,
+) {
   if (payload && payload.path && code) {
     const { path, dirName, menu } = payload;
 
     if (dirName) {
-      return generateComponent(path, dirName, code, api);
+      generateComponent(path, dirName, code, api);
+    } else {
+      generatePage(path, menu!, code, api);
     }
-    return generatePage(path, menu!, code, api);
   }
-  return false;
 }
 
 /**
@@ -83,7 +219,6 @@ function generatePage(path: string, menu: string, code: string, api: IApi) {
     // 根据传入的路径，创建对应的文件夹以及index.tsx文件
     mkdirSync(absPagesPath + path, { recursive: true });
     writeFileSync(absPagesPath + `${path}/index.tsx`, code, 'utf-8');
-    execSync(`cd ${api.paths.cwd} && npm run eslint:fix`);
 
     // 更新路由
     writeNewRoute(
@@ -100,9 +235,7 @@ function generatePage(path: string, menu: string, code: string, api: IApi) {
       mkdirSync(api.paths.cwd + '/mock');
     }
     writeNewMenu({ path, menu }, api.paths.cwd + '/mock/route.ts');
-    return true;
   }
-  return false;
 }
 
 /**
@@ -122,9 +255,5 @@ function generateComponent(path: string, dirName: string, code: string, api: IAp
   if (!existsSync(prefixPath + dirName)) {
     mkdirSync(prefixPath + dirName, { recursive: true });
     writeFileSync(prefixPath + `${dirName}/index.tsx`, code, 'utf-8');
-
-    execSync(`cd ${api.paths.cwd} && npm run eslint:fix`);
-    return true;
   }
-  return false;
 }

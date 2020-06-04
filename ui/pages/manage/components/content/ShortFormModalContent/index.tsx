@@ -1,12 +1,12 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Form, Button, Card, message } from 'antd';
+import { Form, Button, Card, message, Switch } from 'antd';
 import Title from '../../../../../components/Title';
 import renderFormItem from '../../../../../components/FormItemConfig';
 import FormItemsDrawer from '../../../../../components/FormItemsDrawer';
 import { FormItemType, AjaxResponse } from '../../../../../../interfaces/common';
 import FormItemConfigDrawer from '../../../../../components/FormItemConfigDrawer';
 import Context from '../../../Context';
-import DropDownAction from '../../DropdownAction';
+import PathMenuAction from '../../PathMenuAction';
 import { Store } from 'antd/lib/form/interface';
 import ShortFormConfigDrawer from '../../drawers/ShortFormConfigDrawer';
 import useConfigVisible from '../../../../../hooks/useConfigVisible';
@@ -35,13 +35,9 @@ export default () => {
   const [formConfig, setFormConfig] = useState<Store>({
     title: '单列表单',
   });
+  const [checked, setChecked] = useState(true);
 
-  const {
-    initialFetch,
-    setInitialFetch,
-    submitFetch,
-    setSubmitFetch,
-  } = useConfig();
+  const { submitFetch, setSubmitFetch } = useConfig();
 
   const {
     formItemsDrawerVisible,
@@ -69,8 +65,7 @@ export default () => {
     onConfirm,
   } = useFormItem();
 
-  const handleApiSubmit = (initialFetch?: string[], submitFetch?: string[]) => {
-    setInitialFetch(initialFetch);
+  const handleApiSubmit = (submitFetch?: string[]) => {
     setSubmitFetch(submitFetch);
   };
 
@@ -92,7 +87,21 @@ export default () => {
   /**
    * 把配置的表单信息和添加的表单项配置传到服务端
    */
-  const remoteCall = async ({ path, dirName }: { path: string; dirName?: string }) => {
+  const remoteCall = async ({
+    path,
+    dirName,
+    formPath,
+    formDirName,
+    detailPath,
+    detailDirName,
+  }: {
+    path?: string;
+    dirName?: string;
+    formPath?: string;
+    formDirName?: string;
+    detailPath?: string;
+    detailDirName?: string;
+  }) => {
     // 对formItems进行遍历，如果其中有任一项没有配置label/name，则不允许提交
     if (formItems.length === 0) {
       message.error('您还没有添加表单项，不能提交！');
@@ -106,8 +115,12 @@ export default () => {
           formItems,
           path,
           dirName,
-          initialFetch,
+          formPath,
+          formDirName,
+          detailPath,
+          detailDirName,
           submitFetch,
+          generateDetail: checked,
         },
       });
       message.success((result as AjaxResponse<string>).message);
@@ -120,22 +133,28 @@ export default () => {
   /** 把导入的配置信息进行解析 */
   useEffect(() => {
     if (impConfigJson) {
-      const { formConfig = { title: '单列表单', }, formItems = [], initialFetch = [], submitFetch = [] } = JSON.parse(impConfigJson);
+      const { formConfig = { title: '单列表单' }, formItems = [], submitFetch = [] } = JSON.parse(
+        impConfigJson,
+      );
       setFormConfig(formConfig);
       setFormItems(formItems);
-      setInitialFetch(initialFetch);
       setSubmitFetch(submitFetch);
     }
   }, [impConfigJson]);
 
   /** 导出 */
   const handleExport = () => {
-    copy(JSON.stringify({
-      formConfig,
-      formItems,
-      initialFetch,
-      submitFetch
-    }, null, 2));
+    copy(
+      JSON.stringify(
+        {
+          formConfig,
+          formItems,
+          submitFetch,
+        },
+        null,
+        2,
+      ),
+    );
     message.success('配置已复制到剪贴板');
   };
 
@@ -171,10 +190,10 @@ export default () => {
           >
             添加表单元素
           </Button>
-          <Button type="primary" onClick={() => setApiConfigDrawerVisible(true)}>
-            页面接口配置
-          </Button>
         </Form>
+        <Form.Item label="默认生成详情弹窗" style={{ marginBottom: 0 }}>
+          <Switch checked={checked} onChange={setChecked} />
+        </Form.Item>
       </Card>
 
       {/**页面接口配置 */}
@@ -182,7 +201,6 @@ export default () => {
         visible={apiConfigDrawerVisible}
         setVisible={setApiConfigDrawerVisible}
         onSubmit={handleApiSubmit}
-        initialFetch={initialFetch}
         submitFetch={submitFetch}
       />
 
@@ -209,12 +227,12 @@ export default () => {
           index={index}
           formItem={currentItem}
           onConfirm={onConfirm}
-          submitFetch={submitFetch}
         />
       )}
 
       {/**提交时候弹出的输入文件路径 */}
-      <DropDownAction
+      <PathMenuAction
+        type="formWithDetail"
         onRemoteCall={remoteCall}
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}

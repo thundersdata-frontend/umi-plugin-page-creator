@@ -19,7 +19,7 @@ export default function generateLongFormCode(payload: Payload): string {
     const { cards = [], initialFetch } = payload;
 
     const code = `
-      import React from 'react';
+      import React, { useCallback } from 'react';
       import {
         Form,
         Card,
@@ -29,11 +29,7 @@ export default function generateLongFormCode(payload: Payload): string {
       } from 'antd';
       import Title from '@/components/Title';
       import DetailValue from '@/components/DetailValue';
-      ${
-        !initialFetch
-          ? `import { useToggle } from '@umijs/hooks';`
-          : `import { useRequest } from 'umi';`
-      }
+      import { useRequest } from 'umi';
 
       const colLayout = {
         lg: {
@@ -49,27 +45,29 @@ export default function generateLongFormCode(payload: Payload): string {
 
       export default () => {
         const [form] = Form.useForm();
-        ${
-          initialFetch && initialFetch.length === 3
-            ? `
-          const { loading } = useRequest(() => API.${initialFetch[0]}.${initialFetch[1]}.${
-                initialFetch[2].split('-')[0]
-              }.fetch({}), {
-            onSuccess: data => {
-              form.setFieldsValue(data);
-            },
-            onError: error => {
-              message.error(error.message);
+        const { id } = history.location.query;
+
+        const fetchDetail = useCallback(async () => {
+          if (id) {
+            const result = await API.${initialFetch && initialFetch.length === 3 ? `${initialFetch[0]}.${initialFetch[1]}.${
+              initialFetch[2].split('-')[0]
+            }` : 'recruitment.person.getPerson'}.fetch(
+              { id },
+            );
+            // 这里可以做数据转换操作
+            const values = {
+              ...result
             }
-          })
-        `
-            : `
-          const toggle = useToggle(false);
-        `
-        }
+            form.setFieldsValue(values);
+          }
+        }, [id]);
+
+        const { loading } = useRequest(fetchDetail, {
+          refreshDeps: [fetchDetail],
+        });
 
         return (
-          <Spin spinning={${initialFetch ? 'loading' : 'toggle.state'}}>
+          <Spin spinning={loading}>
             <Form form={form} layout="vertical">
               ${cards
                 .map(card => {

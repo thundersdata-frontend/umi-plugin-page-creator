@@ -20,9 +20,8 @@ export interface Payload {
 export default function generateShortFormCode(payload: Payload): string {
   if (payload && payload.formConfig && payload.formItems) {
     const { formConfig, formItems, initialFetch, submitFetch } = payload;
-
     const code = `
-      import React from 'react';
+      import React, { useCallback } from 'react';
       import {
         Form,
         Button,
@@ -43,8 +42,7 @@ export default function generateShortFormCode(payload: Payload): string {
         message,
       } from 'antd';
       import { Store } from 'antd/es/form/interface';
-      ${initialFetch || submitFetch ? `import { useRequest } from 'umi';` : ''}
-      ${!submitFetch ? `import { useToggle } from '@umijs/hooks';` : ''}
+      import { useRequest, history } from 'umi';
       import Title from '@/components/Title';
 
       const formItemLayout = {
@@ -68,49 +66,47 @@ export default function generateShortFormCode(payload: Payload): string {
 
       export default () => {
         const [form] = Form.useForm();
-        ${!submitFetch ? `const submitBtn = useToggle(false);` : ''}
+        const { id } = history.location.query;
 
-        ${
-          initialFetch && initialFetch.length === 3
-            ? `
-          useRequest(() => API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2].split('-')[0]}.fetch({}), {
-            onSuccess: data => {
-              form.setFieldsValue(data);
-            },
-            onError: error => {
-              message.error(error.message);
+        const fetchDetail = useCallback(async () => {
+          if (id) {
+            const result = await API.${initialFetch && initialFetch.length === 3 ? `${initialFetch[0]}.${initialFetch[1]}.${
+              initialFetch[2].split('-')[0]
+            }` : 'recruitment.person.getPerson'}.fetch(
+              { id },
+            );
+            // 这里可以做数据转换操作
+            const values = {
+              ...result
             }
-          })
-        `
-            : ''
-        }
-
-        ${
-          submitFetch && submitFetch.length === 3
-            ? `
-          const submit = (values: Store) => {
-            console.log(values);
-            return API.${submitFetch[0]}.${submitFetch[1]}.${submitFetch[2].split('-')[0]}.fetch({ ... values });
-          };
-
-          const { loading, run: handleFinish } = useRequest(submit, {
-            manual: true,
-            onSuccess: () => {
-              message.success('保存成功');
-            },
-            onError: error => {
-              console.error(error.message);
-              message.error('保存失败');
-            }
-          });
-        `
-            : `
-          const handleFinish = (values: Store) => {
-            console.log(values);
-            submitBtn.toggle();
+            form.setFieldsValue(values);
           }
-        `
-        }
+        }, [id]);
+
+        useRequest(fetchDetail, {
+          refreshDeps: [fetchDetail],
+        });
+
+        const submit = (values: Store) => {
+          // 这里可以做一些数据转换
+          const payload = {
+            ...values,
+          };
+          return API.${submitFetch && submitFetch.length === 3 ? `${submitFetch[0]}.${submitFetch[1]}.${
+            submitFetch[2].split('-')[0]
+          }` : 'recruitment.person.addPerson'}.fetch(payload);
+        };
+
+        const { loading, run: handleFinish } = useRequest(submit, {
+          manual: true,
+          onSuccess: () => {
+            message.success('保存成功');
+          },
+          onError: error => {
+            console.error(error.message);
+            message.error('保存失败');
+          },
+        });
 
         return (
           <Card title={<Title text="${formConfig.title}" />}>
@@ -130,7 +126,7 @@ export default function generateShortFormCode(payload: Payload): string {
                     {...formItemLayout}
                     label="${label}"
                     name="${name}"
-                    ${required ? `required` : `required={false}`}
+                    ${required ? `required` : ``}
                     ${rules !== '[]' ? `rules={${rules}}` : ''}
                   >
                     ${createFormComponentsByType(type, restProps)}
@@ -138,9 +134,7 @@ export default function generateShortFormCode(payload: Payload): string {
                 })
                 .join('')}
               <Form.Item {...submitFormLayout} style={{ marginTop: 32 }}>
-                <Button type="primary" htmlType="submit" loading={${
-                  submitFetch ? 'loading' : 'submitBtn.state'
-                }}>
+                <Button type="primary" htmlType="submit" loading={loading}>
                   提交
                 </Button>
                 <Button style={{ marginLeft: 10 }}>取消</Button>

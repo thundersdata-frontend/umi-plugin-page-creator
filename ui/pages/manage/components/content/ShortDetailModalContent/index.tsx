@@ -4,7 +4,7 @@ import Title from '../../../../../components/Title';
 import { AjaxResponse } from '../../../../../../interfaces/common';
 import FormItemConfigDrawer from '../../../../../components/FormItemConfigDrawer';
 import Context from '../../../Context';
-import DropDownAction from '../../DropdownAction';
+import PathMenuAction from '../../PathMenuAction';
 import { Store } from 'antd/lib/form/interface';
 import ShortFormConfigDrawer from '../../drawers/ShortFormConfigDrawer';
 import useFormItem from '../../../../../hooks/useFormItem';
@@ -206,7 +206,8 @@ export default () => {
       )}
 
       {/**提交时候弹出的输入文件路径 */}
-      <DropDownAction
+      <PathMenuAction
+        type="detail"
         onRemoteCall={remoteCall}
         modalVisible={pathModalVisible}
         setModalVisible={setPathModalVisible}

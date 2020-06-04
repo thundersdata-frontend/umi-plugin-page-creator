@@ -44,6 +44,11 @@ export default function generateShortDetailModalCode(payload: Payload): string {
       import { Store } from 'antd/es/form/interface';
       import DetailValue from '@/components/DetailValue';
 
+      const layout = {
+        labelCol: { span: 5 },
+        wrapperCol: { span: 18 },
+      };
+
       export default ({
         visible,
         toggleVisible,
@@ -68,51 +73,35 @@ export default function generateShortDetailModalCode(payload: Payload): string {
             centered
             visible={visible}
             destroyOnClose
-            forceRender
-            getContainer={false} // -> 如果modal里面装form，这个配置必须，否则会报错
+            forceRender // -> 如果modal里面装form，这个配置必须，否则会报错
+            getContainer={false}
             title="${formConfig.title}"
             onCancel={toggleVisible}
             footer={null}
           >
-            <DetailContent form={form} loading={loading} />
+            <Spin spinning={loading}>
+              <Form form={form} {...layout}>
+                ${formItems
+                  .map(item => {
+                    const {
+                      label,
+                      name,
+                      type,
+                      required = false,
+                      customRules = [],
+                      ...restProps
+                    } = item;
+                    return `<Form.Item
+                      label="${label}"
+                      name="${name}"
+                    >
+                      <DetailValue />
+                    </Form.Item>`;
+                  })
+                  .join('')}
+              </Form>
+            </Spin>
           </Modal>
-        );
-      };
-
-      const DetailContent = ({
-        form,
-        loading,
-      }: {
-        form: FormInstance;
-        loading: boolean;
-      }) => {
-        const layout = {
-          labelCol: { span: 5 },
-          wrapperCol: { span: 18 },
-        };
-        return (
-          <Spin spinning={loading}>
-            <Form form={form} {...layout}>
-              ${formItems
-                .map(item => {
-                  const {
-                    label,
-                    name,
-                    type,
-                    required = false,
-                    customRules = [],
-                    ...restProps
-                  } = item;
-                  return `<Form.Item
-                    label="${label}"
-                    name="${name}"
-                  >
-                    <DetailValue />
-                  </Form.Item>`;
-                })
-                .join('')}
-            </Form>
-          </Spin>
         );
       };
     `;
