@@ -23,11 +23,13 @@ export default function generateLongFormModalCode(payload: Payload): string {
     const cols = 2;
     // 把formItems分成2列
     const formItemLines = transformFormItemLines(formItems, cols);
+    const item = formItems.find(item => item.type === 'upload');
 
     const code = `
-      import React, { useEffect } from 'react';
+      import React, { useEffect ${item ? ', useState' : ''} } from 'react';
       import {
         Modal,
+        Button,
         Form,
         Row,
         Col,
@@ -51,6 +53,7 @@ export default function generateLongFormModalCode(payload: Payload): string {
       import { Store } from 'antd/es/form/interface';
       import isEmpty from 'lodash/isEmpty';
       import { useRequest } from 'umi';
+      import useSpinning from '@/hooks/useSpinning';
 
       const twoColumnsLayout = {
         labelCol: { span: 8 },
@@ -69,6 +72,12 @@ export default function generateLongFormModalCode(payload: Payload): string {
         loading: boolean;
       }) => {
         const [form] = Form.useForm();
+        const { spinning, tip, setSpinning, setTip } = useSpinning(loading);
+        ${item ? `const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false);` : ''}
+
+        useEffect(() => {
+          setSpinning(loading);
+        }, [loading]);
 
         useEffect(() => {
           if (!isEmpty(formData)) {
@@ -81,6 +90,9 @@ export default function generateLongFormModalCode(payload: Payload): string {
         };
 
         const submit = (values: Store) => {
+          setSpinning(true);
+          setTip('数据保存中，请稍候...');
+
           // 这里可以做一些数据转换
           const payload = {
             ...values,
@@ -90,14 +102,16 @@ export default function generateLongFormModalCode(payload: Payload): string {
           }` : 'recruitment.person.addPerson'}.fetch(payload);
         };
 
-        const { submitting, run: handleFinish } = useRequest(submit, {
+        const { run: handleFinish } = useRequest(submit, {
           manual: true,
           onSuccess: () => {
             message.success('保存成功');
+            setSpinning(false);
           },
           onError: error => {
             console.error(error.message);
             message.error('保存失败');
+            setSpinning(false);
           },
         });
 
@@ -111,11 +125,11 @@ export default function generateLongFormModalCode(payload: Payload): string {
             getContainer={false}
             maskClosable={false}
             title="${formConfig.title}"
-            okButtonProps={{ htmlType: 'submit', loading: submitting }}
+            okButtonProps={{ htmlType: 'submit', ${item ? 'disabled: submitBtnDisabled' : ''} }}
             onOk={() => form.submit()}
             onCancel={handleCancel}
           >
-            <Spin spinning={loading}>
+            <Spin spinning={spinning} tip={tip}>
               <Form form={form} onFinish={handleFinish} {...twoColumnsLayout}>
                 ${formItemLines
                   .map(line => {
@@ -139,6 +153,14 @@ export default function generateLongFormModalCode(payload: Payload): string {
                                   name="${name}"
                                   ${required ? `required` : ``}
                                   ${rules !== '[]' ? `rules={${rules}}` : ''}
+                                  ${type === 'upload' ? `
+                                  valuePropName="fileList"
+                                  getValueFromEvent={e => {
+                                    if (Array.isArray(e)) {
+                                      return e;
+                                    }
+                                    return e && e.fileList;
+                                  }}` : ''}
                                 >
                                   ${createFormComponentsByType(type, restProps)}
                                 </Form.Item>

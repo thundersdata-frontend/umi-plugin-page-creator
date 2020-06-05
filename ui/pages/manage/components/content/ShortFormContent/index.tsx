@@ -103,7 +103,6 @@ export default () => {
     detailPath?: string;
     detailMenu?: string;
   }) => {
-    // 对formItems进行遍历，如果其中有任一项没有配置label/name，则不允许提交
     if (formItems.length === 0) {
       message.error('您还没有添加表单项，不能提交！');
       return;

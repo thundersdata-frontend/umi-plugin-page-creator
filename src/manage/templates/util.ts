@@ -85,7 +85,13 @@ export function createFormComponentsByType(
       return `<TreeSelect ${propsStr} />`;
 
     case 'upload':
-      return `<Upload ${propsStr}><Button>上传</Button></Upload>`;
+      return `<Upload onChange={info => {
+        if (info.file.status === 'uploading') {
+          setSubmitBtnDisabled(true);
+        } else {
+          setSubmitBtnDisabled(false);
+        }
+      }} ${propsStr}><Button>上传</Button></Upload>`;
   }
 }
 

@@ -20,8 +20,10 @@ export interface Payload {
 export default function generateShortFormCode(payload: Payload): string {
   if (payload && payload.formConfig && payload.formItems) {
     const { formConfig, formItems, initialFetch, submitFetch } = payload;
+    const item = formItems.find(item => item.type === 'upload');
+
     const code = `
-      import React, { useCallback } from 'react';
+      import React, { useCallback ${item ? ', useState' : ''} } from 'react';
       import {
         Form,
         Button,
@@ -40,10 +42,12 @@ export default function generateShortFormCode(payload: Payload): string {
         Upload,
         Rate,
         message,
+        Spin,
       } from 'antd';
       import { Store } from 'antd/es/form/interface';
       import { useRequest, history } from 'umi';
       import Title from '@/components/Title';
+      import useSpinning from '@/hooks/useSpinning';
 
       const formItemLayout = {
         labelCol: {
@@ -66,10 +70,13 @@ export default function generateShortFormCode(payload: Payload): string {
 
       export default () => {
         const [form] = Form.useForm();
-        const { id } = history.location.query;
+        const { spinning, tip, setSpinning, setTip } = useSpinning(loading);
+        ${item ? `const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false);` : ''}
 
+        const { id } = history.location.query;
         const fetchDetail = useCallback(async () => {
           if (id) {
+            setTip('加载详情中，请稍候...');
             const result = await API.${initialFetch && initialFetch.length === 3 ? `${initialFetch[0]}.${initialFetch[1]}.${
               initialFetch[2].split('-')[0]
             }` : 'recruitment.person.getPerson'}.fetch(
@@ -83,11 +90,21 @@ export default function generateShortFormCode(payload: Payload): string {
           }
         }, [id]);
 
+
         useRequest(fetchDetail, {
           refreshDeps: [fetchDetail],
+          onSuccess: () => {
+            setSpinning(false);
+          },
+          onError: () => {
+            setSpinning(false);
+          }
         });
 
         const submit = (values: Store) => {
+          setSpinning(true);
+          setTip('数据保存中，请稍候...');
+
           // 这里可以做一些数据转换
           const payload = {
             ...values,
@@ -97,50 +114,62 @@ export default function generateShortFormCode(payload: Payload): string {
           }` : 'recruitment.person.addPerson'}.fetch(payload);
         };
 
-        const { loading, run: handleFinish } = useRequest(submit, {
+        const { run: handleFinish } = useRequest(submit, {
           manual: true,
           onSuccess: () => {
             message.success('保存成功');
+            setSpinning(false);
           },
           onError: error => {
             console.error(error.message);
             message.error('保存失败');
+            setSpinning(false);
           },
         });
 
         return (
-          <Card title={<Title text="${formConfig.title}" />}>
-            <Form form={form} onFinish={handleFinish}>
-              ${formItems
-                .map(item => {
-                  const {
-                    label,
-                    name,
-                    type,
-                    required = false,
-                    customRules = '',
-                    ...restProps
-                  } = item;
-                  const rules = generateRules(customRules as string, required as boolean);
-                  return `<Form.Item
-                    {...formItemLayout}
-                    label="${label}"
-                    name="${name}"
-                    ${required ? `required` : ``}
-                    ${rules !== '[]' ? `rules={${rules}}` : ''}
-                  >
-                    ${createFormComponentsByType(type, restProps)}
-                  </Form.Item>`;
-                })
-                .join('')}
-              <Form.Item {...submitFormLayout} style={{ marginTop: 32 }}>
-                <Button type="primary" htmlType="submit" loading={loading}>
-                  提交
-                </Button>
-                <Button style={{ marginLeft: 10 }}>取消</Button>
-              </Form.Item>
-            </Form>
-          </Card>
+          <Spin spinning={spinning} tip={tip}>
+            <Card title={<Title text="${formConfig.title}" />}>
+              <Form form={form} onFinish={handleFinish}>
+                ${formItems
+                  .map(item => {
+                    const {
+                      label,
+                      name,
+                      type,
+                      required = false,
+                      customRules = '',
+                      ...restProps
+                    } = item;
+                    const rules = generateRules(customRules as string, required as boolean);
+                    return `<Form.Item
+                      {...formItemLayout}
+                      label="${label}"
+                      name="${name}"
+                      ${required ? `required` : ``}
+                      ${rules !== '[]' ? `rules={${rules}}` : ''}
+                      ${item.type === 'upload' ? `
+                      valuePropName="fileList"
+                      getValueFromEvent={e => {
+                        if (Array.isArray(e)) {
+                          return e;
+                        }
+                        return e && e.fileList;
+                      }}` : ''}
+                    >
+                      ${createFormComponentsByType(type, restProps)}
+                    </Form.Item>`;
+                  })
+                  .join('')}
+                <Form.Item {...submitFormLayout} style={{ marginTop: 32 }}>
+                  <Button type="primary" htmlType="submit" ${item ? 'disabled={submitBtnDisabled}' : ''}>
+                    提交
+                  </Button>
+                  <Button style={{ marginLeft: 10 }}>取消</Button>
+                </Form.Item>
+              </Form>
+            </Card>
+          </Spin>
         );
       };
     `;

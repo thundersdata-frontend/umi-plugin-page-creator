@@ -19,9 +19,10 @@ export interface Payload {
 export default function generateShortFormModalCode(payload: Payload): string {
   if (payload && payload.formConfig && payload.formItems) {
     const { formConfig, formItems, submitFetch } = payload;
+    const item = formItems.find(item => item.type === 'upload');
 
     const code = `
-      import React, { useEffect } from 'react';
+      import React, { useEffect ${item ? ', useState' : ''} } from 'react';
       import {
         Button,
         Modal,
@@ -46,6 +47,7 @@ export default function generateShortFormModalCode(payload: Payload): string {
       import { FormInstance } from 'antd/lib/form';
       import { Store } from 'antd/es/form/interface';
       import { useRequest } from 'umi';
+      import useSpinning from '@/hooks/useSpinning';
 
       const formLayout = {
         labelCol: { span: 6 },
@@ -64,6 +66,12 @@ export default function generateShortFormModalCode(payload: Payload): string {
         loading: boolean;
       }) => {
         const [form] = Form.useForm();
+        const { spinning, tip, setSpinning, setTip } = useSpinning(loading);
+        ${item ? `const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false);` : ''}
+
+        useEffect(() => {
+          setSpinning(loading);
+        }, [loading]);
 
         useEffect(() => {
           if (!isEmpty(formData)) {
@@ -76,6 +84,9 @@ export default function generateShortFormModalCode(payload: Payload): string {
         }
 
         const submit = (values: Store) => {
+          setSpinning(true);
+          setTip('数据保存中，请稍候...');
+
           // 这里可以做一些数据转换
           const payload = {
             ...values,
@@ -85,14 +96,16 @@ export default function generateShortFormModalCode(payload: Payload): string {
           }` : 'recruitment.person.addPerson'}.fetch(payload);
         };
 
-        const { submitting, run: handleFinish } = useRequest(submit, {
+        const { run: handleFinish } = useRequest(submit, {
           manual: true,
           onSuccess: () => {
             message.success('保存成功');
+            setSpinning(false);
           },
           onError: error => {
             console.error(error.message);
             message.error('保存失败');
+            setSpinning(false);
           },
         });
 
@@ -105,11 +118,11 @@ export default function generateShortFormModalCode(payload: Payload): string {
             getContainer={false}
             maskClosable={false}
             title="${formConfig.title}"
-            okButtonProps={{ htmlType: 'submit', loading: submitting }}
+            okButtonProps={{ htmlType: 'submit', ${item ? 'disabled: submitBtnDisabled' : ''} }}
             onOk={() => form.submit()}
             onCancel={handleCancel}
           >
-            <Spin spinning={loading}>
+            <Spin spinning={spinning} tip={tip}>
               <Form form={form} onFinish={handleFinish} {...formLayout}>
                 ${formItems
                   .map(item => {
@@ -127,6 +140,14 @@ export default function generateShortFormModalCode(payload: Payload): string {
                       name="${name}"
                       ${required ? `required` : ``}
                       ${rules !== '[]' ? `rules={${rules}}` : ''}
+                      ${type === 'upload' ? `
+                      valuePropName="fileList"
+                      getValueFromEvent={e => {
+                        if (Array.isArray(e)) {
+                          return e;
+                        }
+                        return e && e.fileList;
+                      }}` : ''}
                     >
                       ${createFormComponentsByType(type, restProps)}
                     </Form.Item>`;
