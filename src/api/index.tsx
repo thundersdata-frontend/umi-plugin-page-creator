@@ -11,7 +11,7 @@ export default function(api: IApi) {
   if (!existsSync(jsonPath)) {
     return {
       databases: null,
-      mods: null,
+      // mods: null,
       baseClasses: null,
     };
   }
@@ -35,13 +35,7 @@ export default function(api: IApi) {
             responseName = response.typeName;
           }
         }
-        let value = `${name}`;
-        if (paramsName) {
-          value += `-${paramsName}`;
-        }
-        if (responseName) {
-          value += `-${responseName}`;
-        }
+        const value = `${name}-${paramsName}-${responseName}`;
         return {
           label: `${description}(${method})`,
           value,
@@ -81,7 +75,7 @@ export default function(api: IApi) {
 
   return {
     databases,
-    mods,
+    // mods,
     baseClasses,
   };
 }

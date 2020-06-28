@@ -33,8 +33,8 @@ export default function(api: IApi) {
         failure({ success: false, message: '对不起，文件创建失败' });
       }
     } else if (type.includes('apiGenerator')) {
-      const { databases, mods, baseClasses } = generateApi(api);
-      if (databases === null || mods === null) {
+      const { databases, baseClasses } = generateApi(api);
+      if (databases === null) {
         failure({
           success: false,
           databases: null,
@@ -44,7 +44,6 @@ export default function(api: IApi) {
           success: true,
           databases,
           baseClasses,
-          apiMods: mods,
         });
       }
     } else if (type.includes('constant')) {

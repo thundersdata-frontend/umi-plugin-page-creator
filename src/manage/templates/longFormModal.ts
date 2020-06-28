@@ -76,12 +76,8 @@ export default function generateLongFormModalCode(payload: Payload): string {
         ${fromTable && `tableRef: ActionType;`}
       }) => {
         const [form] = Form.useForm();
-        const { spinning, tip, setSpinning, setTip } = useSpinning(loading);
+        const { tip, setTip } = useSpinning();
         ${item ? `const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false);` : ''}
-
-        useEffect(() => {
-          setSpinning(loading);
-        }, [loading]);
 
         useEffect(() => {
           if (!isEmpty(formData)) {
@@ -95,7 +91,6 @@ export default function generateLongFormModalCode(payload: Payload): string {
         };
 
         const submit = (values: Store) => {
-          setSpinning(true);
           setTip('数据保存中，请稍候...');
 
           const payload = {
@@ -107,18 +102,16 @@ export default function generateLongFormModalCode(payload: Payload): string {
           }` : 'recruitment.person.addPerson'}.fetch(payload);
         };
 
-        const { run: handleFinish } = useRequest(submit, {
+        const { run: handleFinish, loading: submitting } = useRequest(submit, {
           manual: true,
           onSuccess: () => {
             message.success('保存成功');
-            setSpinning(false);
             form.resetFields();
             ${fromTable && `tableRef.reload();`}
           },
           onError: error => {
             console.error(error.message);
             message.error('保存失败');
-            setSpinning(false);
           },
         });
 
@@ -136,7 +129,7 @@ export default function generateLongFormModalCode(payload: Payload): string {
             onOk={() => form.submit()}
             onCancel={handleCancel}
           >
-            <Spin spinning={spinning} tip={tip}>
+            <Spin spinning={loading && submitting} tip={tip}>
               <Form form={form} onFinish={handleFinish} {...twoColumnsLayout}>
                 ${formItemLines
                   .map(line => {

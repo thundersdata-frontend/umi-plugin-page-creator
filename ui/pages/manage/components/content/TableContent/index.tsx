@@ -41,6 +41,7 @@ export default () => {
 
   const {
     columns,
+    index,
     moveUp,
     moveDown,
     copyColumn,
@@ -201,11 +202,16 @@ export default () => {
         visible={columnConfigDrawerVisible}
         setVisible={setColumnConfigDrawerVisible}
         onSubmit={values => {
+          const findIndex = columns.findIndex(item => item.dataIndex === values.dataIndex);
+          // 如果index不存在，或者findIndex和index相同，表示新增或者修改没有改到dataIndex
+          if ((!index && findIndex > -1) || (index && index === findIndex)) {
+            message.error('这个dataIndex已存在，请修改后重新提交');
+            return;
+          }
           onConfirm(filterEmpty(values));
           setColumnConfigDrawerVisible(false);
         }}
         current={currentColumn}
-        columns={columns}
         initialFetch={initialFetch}
       />
 

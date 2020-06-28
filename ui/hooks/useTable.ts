@@ -56,7 +56,8 @@ export default function useTable<T extends any>() {
   /** 配置完成 */
   const handleConfirm = (columnProps: ColumnType<T>) => {
     setColumns(draft => {
-      if (!currentColumn) {
+      const column = draft.find(item => item.dataIndex === columnProps.dataIndex);
+      if (!currentColumn && !column) {
         draft.push(columnProps);
       } else {
         draft[index] = columnProps;

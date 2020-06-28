@@ -11,14 +11,12 @@ export default function <T>({
   setVisible,
   visible,
   onSubmit,
-  columns,
   current,
   initialFetch,
 }: {
   visible: boolean;
   setVisible: (visible: boolean) => void;
   onSubmit: (values: Store) => void;
-  columns: ColumnType<T>[];
   current?: ColumnType<T>;
   initialFetch?: string[];
 }) {
@@ -66,17 +64,6 @@ export default function <T>({
     });
   };
 
-  const handleFinish = (values: Store) => {
-    const { prop, ...restValues } = values;
-    const repeatDataIndex = columns.find(column => column.dataIndex === values.dataIndex);
-    if (repeatDataIndex) {
-      message.error('此表格列的dataIndex已存在，请修改后重新提交');
-    } else {
-      onSubmit(restValues);
-      form.resetFields();
-    }
-  };
-
   return (
     <Drawer
       title="表格列配置"
@@ -92,7 +79,7 @@ export default function <T>({
         labelCol={{ span: 10 }}
         wrapperCol={{ span: 14 }}
         labelAlign="right"
-        onFinish={handleFinish}
+        onFinish={onSubmit}
         initialValues={initialValues}
       >
         {initialFetch && initialFetch.length > 0 && (
