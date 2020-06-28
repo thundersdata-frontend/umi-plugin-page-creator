@@ -94,7 +94,7 @@ export default ({
         label={
           <label>
             <span style={{ paddingRight: 10 }}>菜单</span>
-            <Tooltip overlay="多级菜单以/分隔，目前只支持两级菜单。如果不填，则不生成菜单">
+            <Tooltip overlay="多级菜单以/分隔">
               <QuestionCircleOutlined />
             </Tooltip>
           </label>
@@ -153,7 +153,7 @@ export default ({
         label={
           <label>
             <span style={{ paddingRight: 10 }}>菜单</span>
-            <Tooltip overlay="多级菜单以/分隔，目前只支持两级菜单">
+            <Tooltip overlay="多级菜单以/分隔">
               <QuestionCircleOutlined />
             </Tooltip>
           </label>
@@ -184,7 +184,7 @@ export default ({
         label={
           <label>
             <span style={{ paddingRight: 10 }}>菜单</span>
-            <Tooltip overlay="多级菜单以/分隔，目前只支持两级菜单">
+            <Tooltip overlay="多级菜单以/分隔">
               <QuestionCircleOutlined />
             </Tooltip>
           </label>

@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-05-25 09:48:39
  */
 import { Store } from 'antd/lib/form/interface';
-import { createFormComponentsByType, generateRules } from './util';
+import { createFormComponentsByType, generateRules, generateBreadcrumbs } from './util';
 import { FormItemProps } from '../../../interfaces/common';
 
 export interface Payload {
@@ -15,12 +15,15 @@ export interface Payload {
   formItems: FormItemProps[];
   initialFetch?: string[];
   submitFetch?: string[];
+  menu: string;
 }
 
 export default function generateShortFormCode(payload: Payload): string {
   if (payload && payload.formConfig && payload.formItems) {
-    const { formConfig, formItems, initialFetch, submitFetch } = payload;
+    const { formConfig, formItems, initialFetch, submitFetch, menu, } = payload;
     const item = formItems.find(item => item.type === 'upload');
+
+    const breadcrumbs = generateBreadcrumbs(menu);
 
     const code = `
       import React, { useCallback ${item ? ', useState' : ''} } from 'react';
@@ -48,6 +51,7 @@ export default function generateShortFormCode(payload: Payload): string {
       import { useRequest, history } from 'umi';
       import Title from '@/components/Title';
       import useSpinning from '@/hooks/useSpinning';
+      ${breadcrumbs.length > 1 && `import CustomBreadcrumb from '@/components/CustomBreadcrumb';`}
 
       const formItemLayout = {
         labelCol: {
@@ -130,6 +134,7 @@ export default function generateShortFormCode(payload: Payload): string {
 
         return (
           <Spin spinning={spinning} tip={tip}>
+            <CustomBreadcrumb list={${breadcrumbs}} />
             <Card title={<Title text="${formConfig.title}" />}>
               <Form form={form} onFinish={handleFinish}>
                 ${formItems

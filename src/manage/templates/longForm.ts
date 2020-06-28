@@ -6,20 +6,23 @@
  * @LastEditors: 黄姗姗
  * @LastEditTime: 2020-05-25 09:48:07
  */
-import { createFormComponentsByType, transformFormItemLines, generateRules } from './util';
+import { createFormComponentsByType, transformFormItemLines, generateRules, generateBreadcrumbs } from './util';
 import { CardItemProps, FormItemProps } from '../../../interfaces/common';
 
 export interface Payload {
   cards: CardItemProps[];
   initialFetch?: string[];
   submitFetch?: string[];
+  menu: string;
 }
 
 export default function generateLongFormCode(payload: Payload): string {
   if (payload && payload.cards) {
-    const { cards = [], initialFetch, submitFetch } = payload;
+    const { cards = [], initialFetch, submitFetch, menu } = payload;
     const formItems = cards.reduce((acc, curr) => acc.concat(curr.formItems), [] as FormItemProps[]);
     const item = formItems.find(item => item.type === 'upload');
+
+    const breadcrumbs = generateBreadcrumbs(menu);
 
     const code = `
       import React, { useCallback ${item ? ', useState' : ''} } from 'react';
@@ -50,6 +53,7 @@ export default function generateLongFormCode(payload: Payload): string {
       import Title from '@/components/Title';
       import FooterToolbar from '@/components/FooterToolbar';
       import useSpinning from '@/hooks/useSpinning';
+      ${breadcrumbs.length > 1 && `import CustomBreadcrumb from '@/components/CustomBreadcrumb';`}
 
       const colLayout = {
         lg: {
@@ -124,6 +128,7 @@ export default function generateLongFormCode(payload: Payload): string {
 
         return (
           <Spin spinning={spinning} tip={tip}>
+            <CustomBreadcrumb list={${breadcrumbs}} />
             <Form form={form} onFinish={handleFinish} layout="vertical">
               ${cards
                 .map(card => {

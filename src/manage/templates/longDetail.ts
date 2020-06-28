@@ -6,17 +6,20 @@
  * @LastEditors: 黄姗姗
  * @LastEditTime: 2020-05-25 09:47:49
  */
-import { transformFormItemLines } from './util';
+import { transformFormItemLines, generateBreadcrumbs } from './util';
 import { CardItemProps } from '../../../interfaces/common';
 
 export interface Payload {
   cards: CardItemProps[];
   initialFetch?: string[];
+  menu: string;
 }
 
 export default function generateLongFormCode(payload: Payload): string {
   if (payload && payload.cards) {
-    const { cards = [], initialFetch } = payload;
+    const { cards = [], initialFetch, menu } = payload;
+
+    const breadcrumbs = generateBreadcrumbs(menu);
 
     const code = `
       import React, { useCallback } from 'react';
@@ -27,9 +30,10 @@ export default function generateLongFormCode(payload: Payload): string {
         Col,
         Spin,
       } from 'antd';
+      import { useRequest, history } from 'umi';
       import Title from '@/components/Title';
       import DetailValue from '@/components/DetailValue';
-      import { useRequest, history } from 'umi';
+      ${breadcrumbs.length > 1 && `import CustomBreadcrumb from '@/components/CustomBreadcrumb';`}
 
       const colLayout = {
         lg: {
@@ -68,6 +72,7 @@ export default function generateLongFormCode(payload: Payload): string {
 
         return (
           <Spin spinning={loading}>
+            <CustomBreadcrumb list={${breadcrumbs}} />
             <Form form={form} layout="vertical">
               ${cards
                 .map(card => {

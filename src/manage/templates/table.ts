@@ -8,64 +8,73 @@
  */
 import { Store } from 'antd/lib/form/interface';
 import { ColumnType } from 'antd/lib/table';
+import { generateBreadcrumbs } from './util';
 
 export interface Payload<T> {
   tableConfig: Store;
   columns: ColumnType<T>[];
   initialFetch?: string[];
+  menu: string;
 }
 
 export default function generateTable<T>(payload: Payload<T>): string {
   if (payload && payload.tableConfig && payload.columns) {
-    const { tableConfig, columns, initialFetch } = payload;
+    const { tableConfig, columns, initialFetch, menu } = payload;
+
+    const breadcrumbs = generateBreadcrumbs(menu);
+
     const code = `
       import React, { useRef } from 'react';
       import { message } from 'antd';
       import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
-      import { initialPagination } from '@/constant';
       import json from '@/utils/json';
+      import { initialPagination } from '@/constant';
+      ${breadcrumbs.length > 1 && `import CustomBreadcrumb from '@/components/CustomBreadcrumb';`}
 
       export default () => {
         const actionRef = useRef<ActionType>();
         const columns: ProColumns<${initialFetch && initialFetch.length === 3 ? `defs.${initialFetch[0]}.${initialFetch[2].split('-')[2]}` : 'defs.recruitment.PersonResultDTO'}>[] = ${JSON.stringify(columns)};
 
         return (
-          <ProTable
-            actionRef={actionRef}
-            request={async params => {
-              const {
-                list,
-                page,
-                total,
-              } = await ${initialFetch && initialFetch.length === 3 ? `API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2].split('-')[0]}` : 'API.recruitment.person.queryPerson'}.fetch(
-                removeEmpty({
-                  ...params,
-                  page: params?.current || initialPagination.page,
-                  pageSize: params?.pageSize || initialPagination.pageSize,
-                })
-              );
-              return {
-                success: true,
-                data: list || [],
-                page,
-                total,
-              };
-            }}
-            onRequestError={error => {
-              console.error(error.message);
-              message.error('数据加载失败');
-            }}
-            columns={columns}
-            bordered={${!!tableConfig.bordered}}
-            search={${!!tableConfig.search}}
-            rowKey="${tableConfig.rowKey}"
-            pagination={{
-              size: 'default'
-            }}
-            dateFormatter="string"
-            headerTitle="${tableConfig.headerTitle}"
-            tableAlertRender={false}
-          />
+          <>
+            <CustomBreadcrumb list={${breadcrumbs}} />
+            <ProTable
+              actionRef={actionRef}
+              request={async params => {
+                const {
+                  list,
+                  page,
+                  total,
+                } = await ${initialFetch && initialFetch.length === 3 ? `API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2].split('-')[0]}` : 'API.recruitment.person.queryPerson'}.fetch(
+                  removeEmpty({
+                    ...params,
+                    page: params?.current || initialPagination.page,
+                    pageSize: params?.pageSize || initialPagination.pageSize,
+                  })
+                );
+                return {
+                  success: true,
+                  data: list || [],
+                  page,
+                  total,
+                };
+              }}
+              onRequestError={error => {
+                console.error(error.message);
+                message.error('数据加载失败');
+              }}
+              columns={columns}
+              bordered={${!!tableConfig.bordered}}
+              search={${!!tableConfig.search}}
+              rowKey="${tableConfig.rowKey}"
+              pagination={{
+                size: 'default'
+              }}
+              dateFormatter="string"
+              headerTitle="${tableConfig.headerTitle}"
+              tableAlertRender={false}
+            />
+          </>
         );
       }
     `;

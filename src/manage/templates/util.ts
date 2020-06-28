@@ -163,3 +163,21 @@ export function generateRules(customRules?: string, required?: boolean) {
 
   return JSON.stringify(rules);
 }
+
+/**
+ * 生成面包屑
+ * @param menu
+ * @param path
+ */
+export function generateBreadcrumbs(menu: string) {
+  const menus = menu ? menu.split('/') : [];
+  const breadcrumbs = [];
+
+  for (let _menu of menus) {
+    breadcrumbs.push({
+      breadcrumbName: _menu,
+    });
+  }
+
+  return JSON.stringify(breadcrumbs);
+}

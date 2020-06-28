@@ -8,23 +8,28 @@
  */
 import { Store } from 'antd/lib/form/interface';
 import { FormItemProps } from '../../../interfaces/common';
+import { generateBreadcrumbs } from './util';
 
 export interface Payload {
   formConfig: Store;
   formItems: FormItemProps[];
   initialFetch?: string[];
+  menu: string;
 }
 
 export default function generateShortDetail(payload: Payload): string {
   if (payload && payload.formConfig && payload.formItems) {
-    const { formConfig, formItems, initialFetch } = payload;
+    const { formConfig, formItems, initialFetch, menu } = payload;
+
+    const breadcrumbs = generateBreadcrumbs(menu);
 
     const code = `
       import React, { useCallback } from 'react';
       import { Card, Form, Spin } from 'antd';
+      import { useRequest, history } from 'umi';
       import Title from '@/components/Title';
       import DetailValue from '@/components/DetailValue';
-      import { useRequest, history } from 'umi';
+      ${breadcrumbs.length > 1 && `import CustomBreadcrumb from '@/components/CustomBreadcrumb';`}
 
       const formItemLayout = {
         labelCol: {
@@ -63,6 +68,7 @@ export default function generateShortDetail(payload: Payload): string {
 
         return (
           <Spin spinning={loading}>
+            <CustomBreadcrumb list={${breadcrumbs}} />
             <Form form={form}>
               <Card title={<Title text="${formConfig.title}" />} style={{ marginBottom: 16 }}>
                 ${formItems

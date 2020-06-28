@@ -27,8 +27,9 @@ export default function(payload: any, type: string, api: IApi) {
           formItems: payload.formItems,
           initialFetch: payload.initialFetch,
           submitFetch: payload.submitFetch,
+          menu: payload.menu,
         });
-        const formattedCode = prettierfy(removeUnusedImport(code));
+        const formattedCode = prettify(removeUnusedImport(code));
         generateFile(
           formattedCode,
           {
@@ -43,8 +44,9 @@ export default function(payload: any, type: string, api: IApi) {
           formItems: payload.formItems,
           initialFetch: payload.initialFetch,
           submitFetch: payload.submitFetch,
+          menu: payload.formMenu,
         });
-        const formattedFormCode = prettierfy(removeUnusedImport(formCode));
+        const formattedFormCode = prettify(removeUnusedImport(formCode));
         generateFile(
           formattedFormCode,
           {
@@ -58,8 +60,9 @@ export default function(payload: any, type: string, api: IApi) {
           formConfig: payload.formConfig,
           formItems: payload.formItems,
           initialFetch: payload.initialFetch,
+          menu: payload.detailMenu,
         });
-        const formattedDetailCode = prettierfy(removeUnusedImport(detailCode));
+        const formattedDetailCode = prettify(removeUnusedImport(detailCode));
         generateFile(
           formattedDetailCode,
           {
@@ -67,6 +70,7 @@ export default function(payload: any, type: string, api: IApi) {
             menu: payload.detailMenu,
           },
           api,
+          false,
         );
       }
       return true;
@@ -77,8 +81,9 @@ export default function(payload: any, type: string, api: IApi) {
           formConfig: payload.formConfig,
           formItems: payload.formItems,
           submitFetch: payload.submitFetch,
+          fromTable: payload.fromTable,
         });
-        const formattedCode = prettierfy(removeUnusedImport(code));
+        const formattedCode = prettify(removeUnusedImport(code));
         generateFile(
           formattedCode,
           {
@@ -92,8 +97,9 @@ export default function(payload: any, type: string, api: IApi) {
           formConfig: payload.formConfig,
           formItems: payload.formItems,
           submitFetch: payload.submitFetch,
+          fromTable: payload.fromTable,
         });
-        const formattedFormCode = prettierfy(removeUnusedImport(formCode));
+        const formattedFormCode = prettify(removeUnusedImport(formCode));
         generateFile(
           formattedFormCode,
           {
@@ -107,7 +113,7 @@ export default function(payload: any, type: string, api: IApi) {
           formConfig: payload.formConfig,
           formItems: payload.formItems,
         });
-        const formattedDetailCode = prettierfy(removeUnusedImport(detailCode));
+        const formattedDetailCode = prettify(removeUnusedImport(detailCode));
         generateFile(
           formattedDetailCode,
           {
@@ -125,8 +131,9 @@ export default function(payload: any, type: string, api: IApi) {
           cards: payload.cards,
           initialFetch: payload.initialFetch,
           submitFetch: payload.submitFetch,
+          menu: payload.menu,
         });
-        const formattedCode = prettierfy(removeUnusedImport(code));
+        const formattedCode = prettify(removeUnusedImport(code));
         generateFile(
           formattedCode,
           {
@@ -140,8 +147,9 @@ export default function(payload: any, type: string, api: IApi) {
           cards: payload.cards,
           initialFetch: payload.initialFetch,
           submitFetch: payload.submitFetch,
+          menu: payload.formMenu,
         });
-        const formattedFormCode = prettierfy(removeUnusedImport(formCode));
+        const formattedFormCode = prettify(removeUnusedImport(formCode));
         generateFile(
           formattedFormCode,
           {
@@ -154,8 +162,9 @@ export default function(payload: any, type: string, api: IApi) {
         const detailCode = generateLongDetailCode({
           cards: payload.cards,
           initialFetch: payload.initialFetch,
+          menu: payload.detailMenu,
         });
-        const formattedDetailCode = prettierfy(removeUnusedImport(detailCode));
+        const formattedDetailCode = prettify(removeUnusedImport(detailCode));
         generateFile(
           formattedDetailCode,
           {
@@ -163,6 +172,7 @@ export default function(payload: any, type: string, api: IApi) {
             menu: payload.detailMenu,
           },
           api,
+          false,
         );
       }
       return true;
@@ -173,8 +183,9 @@ export default function(payload: any, type: string, api: IApi) {
           formConfig: payload.formConfig,
           formItems: payload.formItems,
           submitFetch: payload.submitFetch,
+          fromTable: payload.fromTable,
         });
-        const formattedCode = prettierfy(removeUnusedImport(code));
+        const formattedCode = prettify(removeUnusedImport(code));
         generateFile(
           formattedCode,
           {
@@ -188,8 +199,9 @@ export default function(payload: any, type: string, api: IApi) {
           formConfig: payload.formConfig,
           formItems: payload.formItems,
           submitFetch: payload.submitFetch,
+          fromTable: payload.fromTable,
         });
-        const formattedFormCode = prettierfy(removeUnusedImport(formCode));
+        const formattedFormCode = prettify(removeUnusedImport(formCode));
         generateFile(
           formattedFormCode,
           {
@@ -203,7 +215,7 @@ export default function(payload: any, type: string, api: IApi) {
           formConfig: payload.formConfig,
           formItems: payload.formItems,
         });
-        const formattedDetailCode = prettierfy(removeUnusedImport(detailCode))
+        const formattedDetailCode = prettify(removeUnusedImport(detailCode))
         generateFile(
           formattedDetailCode,
           {
@@ -217,13 +229,15 @@ export default function(payload: any, type: string, api: IApi) {
 
     case 'org.umi-plugin-page-creator.shortDetail':
       code = generateShortDetailCode(payload);
-      break;
+      generateFile(code, payload, api, false);
+      return true;
     case 'org.umi-plugin-page-creator.shortDetailModal':
       code = generateShortDetailModalCode(payload);
       break;
     case 'org.umi-plugin-page-creator.longDetail':
       code = generateLongDetailCode(payload);
-      break;
+      generateFile(code, payload, api, false);
+      return true;
     case 'org.umi-plugin-page-creator.longDetailModal':
       code = generateLongDetailModalCode(payload);
       break;
@@ -231,8 +245,8 @@ export default function(payload: any, type: string, api: IApi) {
       code = generateTableCode(payload);
       break;
   }
-  const prettierfyCode = prettierfy(removeUnusedImport(code));
-  generateFile(prettierfyCode, payload, api);
+  const prettifyCode = prettify(removeUnusedImport(code));
+  generateFile(prettifyCode, payload, api);
   return true;
 }
 /**
@@ -244,6 +258,7 @@ function generateFile(
   code: string,
   payload: { path: string; menu?: string; dirName?: string },
   api: IApi,
+  createMenu = true,
 ) {
   if (payload && payload.path && code) {
     const { path, dirName, menu } = payload;
@@ -251,7 +266,7 @@ function generateFile(
     if (dirName) {
       generateComponent(path, dirName, code, api);
     } else {
-      generatePage(path, code, api, menu);
+      generatePage(path, code, api, menu, createMenu);
     }
   }
 }
@@ -262,7 +277,7 @@ function generateFile(
  * @param path
  * @param code
  */
-function generatePage(path: string, code: string, api: IApi, menu?: string) {
+function generatePage(path: string, code: string, api: IApi, menu?: string, createMenu = true) {
   const absPagesPath = api.paths.absPagesPath;
   if (!existsSync(absPagesPath + path)) {
     // 根据传入的路径，创建对应的文件夹以及index.tsx文件
@@ -279,7 +294,7 @@ function generatePage(path: string, code: string, api: IApi, menu?: string) {
       api.paths.absSrcPath!,
     );
 
-    if (menu) {
+    if (createMenu && menu) {
       if (!existsSync(api.paths.cwd + '/mock')) {
         mkdirSync(api.paths.cwd + '/mock');
       }
@@ -308,7 +323,7 @@ function generateComponent(path: string, dirName: string, code: string, api: IAp
   }
 }
 
-function prettierfy(code: string) {
+function prettify(code: string) {
   return prettier.format(code, {
     semi: true,
     singleQuote: true,
