@@ -23,6 +23,7 @@ export default function generateTable<T>(payload: Payload<T>): string {
       import { message } from 'antd';
       import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
       import { initialPagination } from '@/constant';
+      import json from '@/utils/json';
 
       export default () => {
         const actionRef = useRef<ActionType>();
@@ -36,11 +37,13 @@ export default function generateTable<T>(payload: Payload<T>): string {
                 list,
                 page,
                 total,
-              } = await ${initialFetch && initialFetch.length === 3 ? `API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2].split('-')[0]}` : 'API.recruitment.person.queryPerson'}.fetch({
-                ...params,
-                page: '' + (params?.current || initialPagination.page),
-                pageSize: '' + (params?.pageSize || initialPagination.pageSize),
-              });
+              } = await ${initialFetch && initialFetch.length === 3 ? `API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2].split('-')[0]}` : 'API.recruitment.person.queryPerson'}.fetch(
+                removeEmpty({
+                  ...params,
+                  page: params?.current || initialPagination.page,
+                  pageSize: params?.pageSize || initialPagination.pageSize,
+                })
+              );
               return {
                 success: true,
                 data: list || [],

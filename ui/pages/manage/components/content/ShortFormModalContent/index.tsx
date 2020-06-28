@@ -36,6 +36,7 @@ export default () => {
     title: '单列表单',
   });
   const [checked, setChecked] = useState(true);
+  const [fromTable, setFromTable] = useState(true);
 
   const { submitFetch, setSubmitFetch } = useConfig();
 
@@ -123,6 +124,7 @@ export default () => {
           detailDirName,
           submitFetch,
           generateDetail: checked,
+          fromTable,
         },
       });
       message.success({ content: (result as AjaxResponse<string>).message, key });
@@ -195,6 +197,9 @@ export default () => {
         </Form>
         <Form.Item label="默认生成详情弹窗" style={{ marginBottom: 0 }}>
           <Switch checked={checked} onChange={setChecked} />
+        </Form.Item>
+        <Form.Item label="从Table页打开弹窗" style={{ marginBottom: 0 }}>
+          <Switch checked={fromTable} onChange={setFromTable} />
         </Form.Item>
       </Card>
       <Button

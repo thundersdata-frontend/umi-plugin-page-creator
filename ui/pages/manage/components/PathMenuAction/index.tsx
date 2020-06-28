@@ -1,17 +1,19 @@
 import React, { useContext } from 'react';
-import { Button, Modal, Form, Input, Tooltip, Divider } from 'antd';
+import { Button, Modal, Form, Input, Tooltip, Divider, Checkbox, Radio } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 import styles from './index.module.less';
 import { Store } from 'antd/lib/form/interface';
 
 export default ({
+  showCreatePatchCheckbox = false,
   onRemoteCall,
   modalVisible,
   setModalVisible,
   modal = false,
   type,
 }: {
+  showCreatePatchCheckbox?: boolean;
   type: 'detail' | 'form' | 'table' | 'formWithDetail';
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
@@ -92,14 +94,12 @@ export default ({
         label={
           <label>
             <span style={{ paddingRight: 10 }}>菜单</span>
-            <Tooltip overlay="多级菜单以/分隔，目前只支持两级菜单">
+            <Tooltip overlay="多级菜单以/分隔，目前只支持两级菜单。如果不填，则不生成菜单">
               <QuestionCircleOutlined />
             </Tooltip>
           </label>
         }
         name="menu"
-        required
-        rules={[{ required: true, message: '请输入你要添加的菜单' }]}
       >
         <Input />
       </Form.Item>

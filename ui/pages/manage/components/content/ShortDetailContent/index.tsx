@@ -209,6 +209,7 @@ export default () => {
 
       {/**提交时候弹出的输入文件路径 */}
       <PathMenuAction
+        showCreatePatchCheckbox
         type="detail"
         onRemoteCall={remoteCall}
         modalVisible={pathModalVisible}

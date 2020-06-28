@@ -251,7 +251,7 @@ function generateFile(
     if (dirName) {
       generateComponent(path, dirName, code, api);
     } else {
-      generatePage(path, menu!, code, api);
+      generatePage(path, code, api, menu);
     }
   }
 }
@@ -262,14 +262,13 @@ function generateFile(
  * @param path
  * @param code
  */
-function generatePage(path: string, menu: string, code: string, api: IApi) {
+function generatePage(path: string, code: string, api: IApi, menu?: string) {
   const absPagesPath = api.paths.absPagesPath;
   if (!existsSync(absPagesPath + path)) {
     // 根据传入的路径，创建对应的文件夹以及index.tsx文件
     mkdirSync(absPagesPath + path, { recursive: true });
     writeFileSync(absPagesPath + `${path}/index.tsx`, code, 'utf-8');
 
-    // 更新路由
     writeNewRoute(
       {
         path,
@@ -279,11 +278,13 @@ function generatePage(path: string, menu: string, code: string, api: IApi) {
       api.paths.cwd + '/config/config.ts',
       api.paths.absSrcPath!,
     );
-    // 更新菜单
-    if (!existsSync(api.paths.cwd + '/mock')) {
-      mkdirSync(api.paths.cwd + '/mock');
+
+    if (menu) {
+      if (!existsSync(api.paths.cwd + '/mock')) {
+        mkdirSync(api.paths.cwd + '/mock');
+      }
+      writeNewMenu({ path, menu }, api.paths.cwd + '/mock/route.ts');
     }
-    writeNewMenu({ path, menu }, api.paths.cwd + '/mock/route.ts');
   }
 }
 

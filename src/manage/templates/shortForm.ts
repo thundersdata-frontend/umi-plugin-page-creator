@@ -82,10 +82,11 @@ export default function generateShortFormCode(payload: Payload): string {
             }` : 'recruitment.person.getPerson'}.fetch(
               { personCode: id },
             );
-            // 这里可以做数据转换操作
+
             const values = {
               ...result
-            }
+            }; // TODO 这里可以做数据转换操作
+
             form.setFieldsValue(values);
           }
         }, [id]);
@@ -105,10 +106,10 @@ export default function generateShortFormCode(payload: Payload): string {
           setSpinning(true);
           setTip('数据保存中，请稍候...');
 
-          // 这里可以做一些数据转换
           const payload = {
             ...values,
-          };
+          }; // TODO 这里可以做一些数据转换
+
           return API.${submitFetch && submitFetch.length === 3 ? `${submitFetch[0]}.${submitFetch[1]}.${
             submitFetch[2].split('-')[0]
           }` : 'recruitment.person.addPerson'}.fetch(payload);

@@ -258,6 +258,7 @@ export default () => {
       )}
 
       <PathMenuAction
+        showCreatePatchCheckbox
         type="detail"
         onRemoteCall={remoteCall}
         modalVisible={pathModalVisible}

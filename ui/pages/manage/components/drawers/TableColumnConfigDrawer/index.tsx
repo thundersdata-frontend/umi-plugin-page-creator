@@ -34,6 +34,7 @@ export default function <T>({
     copyable: false,
     valueType: 'text',
     hideInSearch: false,
+    hideInTable: false,
     order: undefined,
   };
   useEffect(() => {
@@ -199,6 +200,14 @@ export default function <T>({
           </Select>
         </Form.Item>
         <Form.Item label="不在查询里显示" name="hideInSearch">
+          <Radio.Group
+            options={[
+              { label: '是', value: true },
+              { label: '否', value: false },
+            ]}
+          />
+        </Form.Item>
+        <Form.Item label="不在查询里显示" name="hideInTable">
           <Radio.Group
             options={[
               { label: '是', value: true },

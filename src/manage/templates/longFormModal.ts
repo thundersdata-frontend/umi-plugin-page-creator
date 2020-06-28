@@ -14,11 +14,12 @@ export interface Payload {
   formConfig: Store;
   formItems: FormItemProps[];
   submitFetch?: string[];
+  fromTable: boolean;
 }
 
 export default function generateLongFormModalCode(payload: Payload): string {
   if (payload && payload.formConfig && payload.formItems) {
-    const { formConfig, formItems = [], submitFetch } = payload;
+    const { formConfig, formItems = [], submitFetch, fromTable } = payload;
 
     const cols = 2;
     // 把formItems分成2列
@@ -54,6 +55,7 @@ export default function generateLongFormModalCode(payload: Payload): string {
       import isEmpty from 'lodash/isEmpty';
       import { useRequest } from 'umi';
       import useSpinning from '@/hooks/useSpinning';
+      ${fromTable && `import { ActionType } from '@ant-design/pro-table';`}
 
       const twoColumnsLayout = {
         labelCol: { span: 8 },
@@ -65,11 +67,13 @@ export default function generateLongFormModalCode(payload: Payload): string {
         toggleVisible,
         formData,
         loading,
+        ${fromTable && `tableRef,`}
       }: {
         visible: boolean;
         toggleVisible: () => void;
         formData: Store;
         loading: boolean;
+        ${fromTable && `tableRef: ActionType;`}
       }) => {
         const [form] = Form.useForm();
         const { spinning, tip, setSpinning, setTip } = useSpinning(loading);
@@ -87,16 +91,17 @@ export default function generateLongFormModalCode(payload: Payload): string {
 
         const handleCancel = () => {
           toggleVisible();
+          form.resetFields();
         };
 
         const submit = (values: Store) => {
           setSpinning(true);
           setTip('数据保存中，请稍候...');
 
-          // 这里可以做一些数据转换
           const payload = {
             ...values,
-          };
+          }; // TODO 这里可以做一些数据转换
+
           return API.${submitFetch && submitFetch.length === 3 ? `${submitFetch[0]}.${submitFetch[1]}.${
             submitFetch[2].split('-')[0]
           }` : 'recruitment.person.addPerson'}.fetch(payload);
@@ -107,6 +112,8 @@ export default function generateLongFormModalCode(payload: Payload): string {
           onSuccess: () => {
             message.success('保存成功');
             setSpinning(false);
+            form.resetFields();
+            ${fromTable && `tableRef.reload();`}
           },
           onError: error => {
             console.error(error.message);
