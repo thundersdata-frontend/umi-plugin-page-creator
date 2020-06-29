@@ -48,7 +48,8 @@ export default function generateLongFormCode(payload: Payload): string {
         message,
         Spin,
       } from 'antd';
-      import { useRequest, history } from 'umi';
+      import { history } from 'umi';
+      import { useRequest } from 'ahooks';
       import { Store } from 'antd/es/form/interface';
       import Title from '@/components/Title';
       import FooterToolbar from '@/components/FooterToolbar';
@@ -69,34 +70,32 @@ export default function generateLongFormCode(payload: Payload): string {
 
       export default () => {
         const [form] = Form.useForm();
-        const { spinning, tip, setSpinning, setTip } = useSpinning(loading);
+        const { tip, setTip } = useSpinning();
         ${item ? `const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false);` : ''}
 
         const { id } = history.location.query;
-        const fetchDetail = useCallback(async () => {
-          if (id) {
-            setTip('加载详情中，请稍候...');
-            const result = await API.${initialFetch && initialFetch.length === 3 ? `${initialFetch[0]}.${initialFetch[1]}.${
-              initialFetch[2].split('-')[0]
-            }` : 'recruitment.person.getPerson'}.fetch(
-              { personCode: id },
-            );
 
+        const fetchDetail = () => {
+          setTip('加载详情中，请稍候...');
+          return API.${initialFetch && initialFetch.length === 3 ? `${initialFetch[0]}.${initialFetch[1]}.${
+            initialFetch[2].split('-')[0]
+          }` : 'recruitment.person.getPerson'}.fetch(
+            { personCode: id },
+          );
+        };
+
+        const { loading } = useRequest(fetchDetail, {
+          ready: !!id,
+          onSuccess: data => {
+            // TODO 这里可以做数据转换操作
             const values = {
-              ...result
-            }; // TODO 这里可以做数据转换操作
-
+              ...data
+            };
             form.setFieldsValue(values);
-          }
-        }, [id]);
-
-        useRequest(fetchDetail, {
-          refreshDeps: [fetchDetail],
-          onSuccess: () => {
-            setSpinning(false);
           },
-          onError: () => {
-            setSpinning(false);
+          onError: error => {
+            console.error(error.message);
+            message.error('数据加载失败');
           }
         });
 
@@ -113,21 +112,19 @@ export default function generateLongFormCode(payload: Payload): string {
           }` : 'recruitment.person.addPerson'}.fetch(payload);
         };
 
-        const { run: handleFinish } = useRequest(submit, {
+        const { run: handleFinish, loading: submitting } = useRequest(submit, {
           manual: true,
           onSuccess: () => {
             message.success('保存成功');
-            setSpinning(false);
           },
           onError: error => {
             console.error(error.message);
             message.error('保存失败');
-            setSpinning(false);
           },
         });
 
         return (
-          <Spin spinning={spinning} tip={tip}>
+          <Spin spinning={loading && submitting} tip={tip}>
             <CustomBreadcrumb list={${breadcrumbs}} />
             <Form form={form} onFinish={handleFinish} layout="vertical">
               ${cards

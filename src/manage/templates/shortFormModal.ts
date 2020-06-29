@@ -44,10 +44,10 @@ export default function generateShortFormModalCode(payload: Payload): string {
         Rate,
         message,
       } from 'antd';
-      import isEmpty from 'lodash/isEmpty';
+      import { isEmpty } from 'lodash-es';
       import { FormInstance } from 'antd/lib/form';
       import { Store } from 'antd/es/form/interface';
-      import { useRequest } from 'umi';
+      import { useRequest } from 'ahooks';
       import useSpinning from '@/hooks/useSpinning';
       ${fromTable && `import { ActionType } from '@ant-design/pro-table';`}
 

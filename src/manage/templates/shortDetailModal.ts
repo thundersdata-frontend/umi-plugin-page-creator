@@ -39,7 +39,7 @@ export default function generateShortDetailModalCode(payload: Payload): string {
         Upload,
         Rate,
       } from 'antd';
-      import isEmpty from 'lodash/isEmpty';
+      import { isEmpty } from 'lodash-es';
       import { FormInstance } from 'antd/lib/form';
       import { Store } from 'antd/es/form/interface';
       import DetailValue from '@/components/DetailValue';

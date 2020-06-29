@@ -52,8 +52,8 @@ export default function generateLongFormModalCode(payload: Payload): string {
       } from 'antd';
       import { FormInstance } from 'antd/lib/form';
       import { Store } from 'antd/es/form/interface';
-      import isEmpty from 'lodash/isEmpty';
-      import { useRequest } from 'umi';
+      import { isEmpty } from 'lodash-es';
+      import { useRequest } from 'ahooks';
       import useSpinning from '@/hooks/useSpinning';
       ${fromTable && `import { ActionType } from '@ant-design/pro-table';`}
 

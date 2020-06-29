@@ -47,7 +47,7 @@ export default function generateLongDetailModalCode(payload: Payload): string {
       } from 'antd';
       import { FormInstance } from 'antd/lib/form';
       import { Store } from 'antd/es/form/interface';
-      import isEmpty from 'lodash/isEmpty';
+      import { isEmpty } from 'lodash-es';
       import DetailValue from '@/components/DetailValue';
 
       const layout = {

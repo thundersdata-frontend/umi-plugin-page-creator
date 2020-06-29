@@ -48,7 +48,8 @@ export default function generateShortFormCode(payload: Payload): string {
         Spin,
       } from 'antd';
       import { Store } from 'antd/es/form/interface';
-      import { useRequest, history } from 'umi';
+      import { history } from 'umi';
+      import { useRequest } from 'ahooks';
       import Title from '@/components/Title';
       import useSpinning from '@/hooks/useSpinning';
       ${breadcrumbs.length > 1 && `import CustomBreadcrumb from '@/components/CustomBreadcrumb';`}
@@ -74,40 +75,37 @@ export default function generateShortFormCode(payload: Payload): string {
 
       export default () => {
         const [form] = Form.useForm();
-        const { spinning, tip, setSpinning, setTip } = useSpinning(loading);
+        const { tip, setTip } = useSpinning(loading);
         ${item ? `const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false);` : ''}
 
         const { id } = history.location.query;
-        const fetchDetail = useCallback(async () => {
-          if (id) {
+
+        const fetchDetail = () => {
             setTip('加载详情中，请稍候...');
-            const result = await API.${initialFetch && initialFetch.length === 3 ? `${initialFetch[0]}.${initialFetch[1]}.${
+            return API.${initialFetch && initialFetch.length === 3 ? `${initialFetch[0]}.${initialFetch[1]}.${
               initialFetch[2].split('-')[0]
             }` : 'recruitment.person.getPerson'}.fetch(
               { personCode: id },
             );
+        };
 
+
+        const { loading } = useRequest(fetchDetail, {
+          ready: !!id,
+          onSuccess: data => {
+            // TODO 这里可以做数据转换操作
             const values = {
-              ...result
-            }; // TODO 这里可以做数据转换操作
-
+              ...data
+            };
             form.setFieldsValue(values);
-          }
-        }, [id]);
-
-
-        useRequest(fetchDetail, {
-          refreshDeps: [fetchDetail],
-          onSuccess: () => {
-            setSpinning(false);
           },
-          onError: () => {
-            setSpinning(false);
-          }
+          onError: error => {
+            console.error(error.message);
+            message.error('保存失败');
+          },
         });
 
         const submit = (values: Store) => {
-          setSpinning(true);
           setTip('数据保存中，请稍候...');
 
           const payload = {
@@ -119,21 +117,19 @@ export default function generateShortFormCode(payload: Payload): string {
           }` : 'recruitment.person.addPerson'}.fetch(payload);
         };
 
-        const { run: handleFinish } = useRequest(submit, {
+        const { run: handleFinish, loading: submitting } = useRequest(submit, {
           manual: true,
           onSuccess: () => {
             message.success('保存成功');
-            setSpinning(false);
           },
           onError: error => {
             console.error(error.message);
             message.error('保存失败');
-            setSpinning(false);
           },
         });
 
         return (
-          <Spin spinning={spinning} tip={tip}>
+          <Spin spinning={loading && submitting} tip={tip}>
             <CustomBreadcrumb list={${breadcrumbs}} />
             <Card title={<Title text="${formConfig.title}" />}>
               <Form form={form} onFinish={handleFinish}>

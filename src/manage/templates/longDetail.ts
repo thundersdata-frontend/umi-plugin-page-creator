@@ -30,7 +30,8 @@ export default function generateLongFormCode(payload: Payload): string {
         Col,
         Spin,
       } from 'antd';
-      import { useRequest, history } from 'umi';
+      import { history } from 'umi';
+      import { useRequest } from 'ahooks';
       import Title from '@/components/Title';
       import DetailValue from '@/components/DetailValue';
       ${breadcrumbs.length > 1 && `import CustomBreadcrumb from '@/components/CustomBreadcrumb';`}
@@ -51,23 +52,19 @@ export default function generateLongFormCode(payload: Payload): string {
         const [form] = Form.useForm();
         const { id } = history.location.query;
 
-        const fetchDetail = useCallback(async () => {
-          if (id) {
-            const result = await API.${initialFetch && initialFetch.length === 3 ? `${initialFetch[0]}.${initialFetch[1]}.${
-              initialFetch[2].split('-')[0]
-            }` : 'recruitment.person.getPerson'}.fetch(
-              { personCode: id },
-            );
-            // 这里可以做数据转换操作
+        const { loading } = useRequest(API.${initialFetch && initialFetch.length === 3 ? `${initialFetch[0]}.${initialFetch[1]}.${
+          initialFetch[2].split('-')[0]
+        }` : 'recruitment.person.getPerson'}.fetch(
+          { personCode: id },
+        ), {
+          ready: !!id,
+          onSuccess: data => {
+            // TODO 这里可以做数据转换操作
             const values = {
-              ...result
-            }
+              ...data
+            };
             form.setFieldsValue(values);
           }
-        }, [id]);
-
-        const { loading } = useRequest(fetchDetail, {
-          refreshDeps: [fetchDetail],
         });
 
         return (
