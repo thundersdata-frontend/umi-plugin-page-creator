@@ -28,7 +28,7 @@ export default function <T>({
     title: '',
     dataIndex: '',
     align: 'left',
-    ellipsis: true,
+    ellipsis: false,
     copyable: false,
     valueType: 'text',
     hideInSearch: false,
