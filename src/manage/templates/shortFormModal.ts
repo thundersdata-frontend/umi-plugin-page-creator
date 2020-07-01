@@ -103,10 +103,6 @@ export default function generateShortFormModalCode(payload: Payload): string {
             form.resetFields();
             ${fromTable && `tableRef.reload();`}
           },
-          onError: error => {
-            console.error(error.message);
-            message.error('保存失败');
-          },
         });
 
         return (

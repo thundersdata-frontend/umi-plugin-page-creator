@@ -34,22 +34,6 @@ export default ({
         <Form.Item label="表格rowKey" name="rowKey">
           <Input />
         </Form.Item>
-        <Form.Item label="是否显示搜索表单" name="search">
-          <Radio.Group
-            options={[
-              { label: '是', value: true },
-              { label: '否', value: false },
-            ]}
-          />
-        </Form.Item>
-        <Form.Item label="是否显示边框" name="bordered">
-          <Radio.Group
-            options={[
-              { label: '是', value: true },
-              { label: '否', value: false },
-            ]}
-          />
-        </Form.Item>
         <Button type="primary" htmlType="submit">
           确定
         </Button>

@@ -29,6 +29,7 @@ export default function generateTable<T>(payload: Payload<T>): string {
       import ProTable, { ProColumns, ActionType } from '@ant-design/pro-table';
       import json from '@/utils/json';
       import { initialPagination } from '@/constant';
+      import { defaultTableProps } from '@/common';
       ${breadcrumbs.length > 1 && `import CustomBreadcrumb from '@/components/CustomBreadcrumb';`}
 
       export default () => {
@@ -39,6 +40,7 @@ export default function generateTable<T>(payload: Payload<T>): string {
           <>
             <CustomBreadcrumb list={${breadcrumbs}} />
             <ProTable
+              {...defaultTableProps}
               actionRef={actionRef}
               request={async params => {
                 const {
@@ -59,20 +61,9 @@ export default function generateTable<T>(payload: Payload<T>): string {
                   total,
                 };
               }}
-              onRequestError={error => {
-                console.error(error.message);
-                message.error('数据加载失败');
-              }}
               columns={columns}
-              bordered={${!!tableConfig.bordered}}
-              search={${!!tableConfig.search}}
               rowKey="${tableConfig.rowKey}"
-              pagination={{
-                size: 'default'
-              }}
-              dateFormatter="string"
               headerTitle="${tableConfig.headerTitle}"
-              tableAlertRender={false}
             />
           </>
         );

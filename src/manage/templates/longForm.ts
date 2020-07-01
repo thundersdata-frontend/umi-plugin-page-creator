@@ -92,10 +92,6 @@ export default function generateLongFormCode(payload: Payload): string {
               ...data
             };
             form.setFieldsValue(values);
-          },
-          onError: error => {
-            console.error(error.message);
-            message.error('数据加载失败');
           }
         });
 
@@ -116,10 +112,6 @@ export default function generateLongFormCode(payload: Payload): string {
           manual: true,
           onSuccess: () => {
             message.success('保存成功');
-          },
-          onError: error => {
-            console.error(error.message);
-            message.error('保存失败');
           },
         });
 

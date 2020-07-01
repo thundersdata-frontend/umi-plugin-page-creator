@@ -99,10 +99,6 @@ export default function generateShortFormCode(payload: Payload): string {
             };
             form.setFieldsValue(values);
           },
-          onError: error => {
-            console.error(error.message);
-            message.error('保存失败');
-          },
         });
 
         const submit = (values: Store) => {
@@ -121,10 +117,6 @@ export default function generateShortFormCode(payload: Payload): string {
           manual: true,
           onSuccess: () => {
             message.success('保存成功');
-          },
-          onError: error => {
-            console.error(error.message);
-            message.error('保存失败');
           },
         });
 

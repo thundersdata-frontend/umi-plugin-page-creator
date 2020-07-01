@@ -108,11 +108,7 @@ export default function generateLongFormModalCode(payload: Payload): string {
             message.success('保存成功');
             form.resetFields();
             ${fromTable && `tableRef.reload();`}
-          },
-          onError: error => {
-            console.error(error.message);
-            message.error('保存失败');
-          },
+          }
         });
 
         return (
