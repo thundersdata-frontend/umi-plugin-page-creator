@@ -76,16 +76,19 @@ export default function generateLongFormCode(payload: Payload): string {
         const { id } = history.location.query;
 
         const fetchDetail = () => {
-          setTip('加载详情中，请稍候...');
-          return API.${initialFetch && initialFetch.length === 3 ? `${initialFetch[0]}.${initialFetch[1]}.${
-            initialFetch[2].split('-')[0]
-          }` : 'recruitment.person.getPerson'}.fetch(
-            { personCode: id },
-          );
+          if (id) {
+            setTip('加载详情中，请稍候...');
+            return API.${initialFetch && initialFetch.length === 3 ? `${initialFetch[0]}.${initialFetch[1]}.${
+              initialFetch[2].split('-')[0]
+            }` : 'recruitment.person.getPerson'}.fetch(
+              { personCode: id },
+            );
+          }
+          return false;
         };
 
         const { loading } = useRequest(fetchDetail, {
-          ready: !!id,
+          refreshDeps: [id],
           onSuccess: data => {
             // TODO 这里可以做数据转换操作
             const values = {

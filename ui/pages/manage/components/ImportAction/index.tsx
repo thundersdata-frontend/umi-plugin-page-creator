@@ -44,10 +44,8 @@ export default ({
       </Button>
       <Modal
         title="导入页面"
-        destroyOnClose
         forceRender
         width={650}
-        getContainer={false}
         visible={modalVisible}
         onOk={() => form.submit()}
         onCancel={() => setModalVisible(false)}

@@ -72,9 +72,7 @@ export default function generateShortDetailModalCode(payload: Payload): string {
           <Modal
             centered
             visible={visible}
-            destroyOnClose
-            forceRender // -> 如果modal里面装form，这个配置必须，否则会报错
-            getContainer={false}
+            forceRender
             title="${formConfig.title}"
             onCancel={toggleVisible}
             footer={null}

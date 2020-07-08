@@ -273,10 +273,8 @@ export default ({
       </Button>
       <Modal
         title="添加路由和菜单配置"
-        destroyOnClose
         forceRender
         width={650}
-        getContainer={false}
         visible={modalVisible}
         onOk={() => form.submit()}
         onCancel={() => setModalVisible(false)}

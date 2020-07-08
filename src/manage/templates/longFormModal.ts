@@ -116,9 +116,7 @@ export default function generateLongFormModalCode(payload: Payload): string {
             width={650}
             centered
             visible={visible}
-            destroyOnClose
-            forceRender // -> 如果modal里面装form，这个配置必须，否则会报错
-            getContainer={false}
+            forceRender
             maskClosable={false}
             title="${formConfig.title}"
             okButtonProps={{ htmlType: 'submit', ${item ? 'disabled: submitBtnDisabled' : ''} }}

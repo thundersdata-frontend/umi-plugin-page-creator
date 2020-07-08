@@ -31,10 +31,8 @@ export default ({
       </Button>
       <Modal
         title="常量编辑"
-        destroyOnClose
         forceRender
         width={990}
-        getContainer={false}
         visible={visible}
         onOk={() => onSubmit(editorValue)}
         onCancel={() => setVisible(false)}
