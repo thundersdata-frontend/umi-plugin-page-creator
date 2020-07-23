@@ -277,18 +277,21 @@ function generateFile(
  * @param path
  * @param code
  */
-function generatePage(path: string, code: string, api: IApi, menu?: string, createMenu = true) {
+function generatePage(path: string, code: string, api: IApi, menu = '', createMenu = true) {
   const absPagesPath = api.paths.absPagesPath;
   if (!existsSync(absPagesPath + path)) {
     // 根据传入的路径，创建对应的文件夹以及index.tsx文件
     mkdirSync(absPagesPath + path, { recursive: true });
     writeFileSync(absPagesPath + `${path}/index.tsx`, code, 'utf-8');
 
+    const menus = menu.includes('/') ? menu.split('/') : [];
+    const title = menus.length > 0 ? menus.pop() : '';
     writeNewRoute(
       {
         path,
         component: `.${path}`,
         exact: true,
+        title,
       },
       api.paths.cwd + '/config/config.ts',
       api.paths.absSrcPath!,

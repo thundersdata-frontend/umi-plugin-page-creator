@@ -13,6 +13,7 @@ type Route = {
   path: string;
   component: string;
   exact?: boolean;
+  title?: string;
 };
 
 /**
