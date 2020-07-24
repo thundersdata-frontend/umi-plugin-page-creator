@@ -180,6 +180,7 @@ export default function generateLongFormCode(payload: Payload): string {
                 <Button
                   type="primary"
                   onClick={() => form.submit()}
+                  loading={submitting}
                   ${item ? 'disabled={submitBtnDisabled}' : ''}
                 >
                   提交

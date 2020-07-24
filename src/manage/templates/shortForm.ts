@@ -159,7 +159,7 @@ export default function generateShortFormCode(payload: Payload): string {
                   })
                   .join('')}
                 <Form.Item {...submitFormLayout} style={{ marginTop: 32 }}>
-                  <Button type="primary" htmlType="submit" ${item ? 'disabled={submitBtnDisabled}' : ''}>
+                  <Button type="primary" htmlType="submit" loading={submitting} ${item ? 'disabled={submitBtnDisabled}' : ''}>
                     提交
                   </Button>
                   <Button style={{ marginLeft: 10 }}>取消</Button>

@@ -122,6 +122,7 @@ export default function generateLongFormModalCode(payload: Payload): string {
             okButtonProps={{ htmlType: 'submit', ${item ? 'disabled: submitBtnDisabled' : ''} }}
             onOk={() => form.submit()}
             onCancel={handleCancel}
+            confirmLoading={submitting}
           >
             <Spin spinning={loading && submitting} tip={tip}>
               <Form form={form} onFinish={handleFinish} {...twoColumnsLayout}>
