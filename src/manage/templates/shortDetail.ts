@@ -55,7 +55,6 @@ export default function generateShortDetail(payload: Payload): string {
         ), {
           ready: !!id,
           onSuccess: data => {
-            // TODO 这里可以做数据转换操作
             const values = {
               ...data
             }

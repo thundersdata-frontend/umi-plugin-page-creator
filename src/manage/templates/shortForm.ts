@@ -96,7 +96,6 @@ export default function generateShortFormCode(payload: Payload): string {
         const { loading } = useRequest(fetchDetail, {
           refreshDeps: [id],
           onSuccess: data => {
-            // TODO 这里可以做数据转换操作
             const values = {
               ...data
             };
@@ -109,7 +108,7 @@ export default function generateShortFormCode(payload: Payload): string {
 
           const payload = {
             ...values,
-          }; // TODO 这里可以做一些数据转换
+          };
 
           return API.${submitFetch && submitFetch.length === 3 ? `${submitFetch[0]}.${submitFetch[1]}.${
             submitFetch[2].split('-')[0]

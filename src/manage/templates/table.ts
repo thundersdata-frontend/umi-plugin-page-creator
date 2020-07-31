@@ -48,7 +48,7 @@ export default function generateTable<T>(payload: Payload<T>): string {
                   page,
                   total,
                 } = await ${initialFetch && initialFetch.length === 3 ? `API.${initialFetch[0]}.${initialFetch[1]}.${initialFetch[2].split('-')[0]}` : 'API.recruitment.person.queryPerson'}.fetch(
-                  removeEmpty({
+                  json.removeEmpty({
                     ...params,
                     page: params?.current || initialPagination.page,
                     pageSize: params?.pageSize || initialPagination.pageSize,

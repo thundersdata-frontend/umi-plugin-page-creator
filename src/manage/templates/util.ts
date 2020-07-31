@@ -8,6 +8,7 @@
  */
 import { LabeledValue } from 'antd/lib/select';
 import { FormItemType, FormItemProps } from '../../../interfaces/common';
+import { Rule } from 'antd/lib/form';
 
 export function createFormComponentsByType(
   type: FormItemType,
@@ -140,7 +141,9 @@ export function transformFormItemLines(formItems: FormItemProps[], cols = 3) {
 }
 
 export function generateRules(customRules?: string, required?: boolean) {
-  const rules = [];
+  const rules: Rule[] = [{
+    whitespace: true,
+  }];
   try {
     if (customRules) {
       const _rules = eval((customRules as string).replace(/\u21b5/g, ''));
