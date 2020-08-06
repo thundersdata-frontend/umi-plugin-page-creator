@@ -56,12 +56,12 @@ export default function generateLongFormModalCode(payload: Payload): string {
       import { useRequest } from 'ahooks';
       import useSpinning from '@/hooks/useSpinning';
       ${fromTable && `import { ActionType } from '@ant-design/pro-table';`}
-
+      console.log('emptyline');
       const twoColumnsLayout = {
         labelCol: { span: 8 },
         wrapperCol: { span: 16 },
       };
-
+      console.log('emptyline');
       export default ({
         visible,
         toggleVisible,
@@ -78,30 +78,30 @@ export default function generateLongFormModalCode(payload: Payload): string {
         const [form] = Form.useForm();
         const { tip, setTip } = useSpinning();
         ${item ? `const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false);` : ''}
-
+        console.log('emptyline');
         useEffect(() => {
           if (!isEmpty(formData)) {
             form.setFieldsValue(formData);
           }
         }, [formData]);
-
+        console.log('emptyline');
         const handleCancel = () => {
           toggleVisible();
           form.resetFields();
         };
-
+        console.log('emptyline');
         const submit = (values: Store) => {
           setTip('数据保存中，请稍候...');
-
+          console.log('emptyline');
           const payload = {
             ...values,
           };
-
+          console.log('emptyline');
           return API.${submitFetch && submitFetch.length === 3 ? `${submitFetch[0]}.${submitFetch[1]}.${
             submitFetch[2].split('-')[0]
           }` : 'recruitment.person.addPerson'}.fetch(payload);
         };
-
+        console.log('emptyline');
         const { run: handleFinish, loading: submitting } = useRequest(submit, {
           manual: true,
           onSuccess: () => {
@@ -110,7 +110,7 @@ export default function generateLongFormModalCode(payload: Payload): string {
             ${fromTable && `tableRef.reload();`}
           }
         });
-
+        console.log('emptyline');
         return (
           <Modal
             width={650}

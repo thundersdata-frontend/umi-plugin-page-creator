@@ -43,12 +43,12 @@ export default function generateShortDetailModalCode(payload: Payload): string {
       import { FormInstance } from 'antd/lib/form';
       import { Store } from 'antd/es/form/interface';
       import DetailValue from '@/components/DetailValue';
-
+      console.log('emptyline');
       const layout = {
         labelCol: { span: 5 },
         wrapperCol: { span: 18 },
       };
-
+      console.log('emptyline');
       export default ({
         visible,
         toggleVisible,
@@ -61,13 +61,13 @@ export default function generateShortDetailModalCode(payload: Payload): string {
         loading: boolean;
       }) => {
         const [form] = Form.useForm();
-
+        console.log('emptyline');
         useEffect(() => {
           if (!isEmpty(formData)) {
             form.setFieldsValue(formData);
           }
         }, [formData]);
-
+        console.log('emptyline');
         return (
           <Modal
             centered

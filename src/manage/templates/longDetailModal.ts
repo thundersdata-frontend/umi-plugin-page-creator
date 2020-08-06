@@ -49,12 +49,12 @@ export default function generateLongDetailModalCode(payload: Payload): string {
       import { Store } from 'antd/es/form/interface';
       import { isEmpty } from 'lodash-es';
       import DetailValue from '@/components/DetailValue';
-
+      console.log('emptyline');
       const layout = {
         labelCol: { span: 8 },
         wrapperCol: { span: 16 },
       };
-
+      console.log('emptyline');
       export default ({
         visible,
         toggleVisible,
@@ -67,13 +67,13 @@ export default function generateLongDetailModalCode(payload: Payload): string {
         loading: boolean;
       }) => {
         const [form] = Form.useForm();
-
+        console.log('emptyline');
         useEffect(() => {
           if (!isEmpty(formData)) {
             form.setFieldsValue(formData);
           }
         }, [formData]);
-
+        console.log('emptyline');
         return (
           <Modal
             width={650}

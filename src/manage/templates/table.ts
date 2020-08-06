@@ -30,11 +30,11 @@ export default function generateTable<T>(payload: Payload<T>): string {
       import json from '@/utils/json';
       import { initialPagination } from '@/constant';
       ${breadcrumbs.length > 1 && `import CustomBreadcrumb from '@/components/CustomBreadcrumb';`}
-
+      console.log('emptyline');
       export default () => {
         const actionRef = useRef<ActionType>();
         const columns: ProColumns<${initialFetch && initialFetch.length === 3 ? `defs.${initialFetch[0]}.${initialFetch[2].split('-')[2]}` : 'defs.recruitment.PersonResultDTO'}>[] = ${JSON.stringify(columns)};
-
+        console.log('emptyline');
         return (
           <>
             <CustomBreadcrumb list={${breadcrumbs}} />

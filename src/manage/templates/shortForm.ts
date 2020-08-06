@@ -53,7 +53,7 @@ export default function generateShortFormCode(payload: Payload): string {
       import Title from '@/components/Title';
       import useSpinning from '@/hooks/useSpinning';
       ${breadcrumbs.length > 1 && `import CustomBreadcrumb from '@/components/CustomBreadcrumb';`}
-
+      console.log('emptyline');
       const formItemLayout = {
         labelCol: {
           xs: { span: 24 },
@@ -65,21 +65,21 @@ export default function generateShortFormCode(payload: Payload): string {
           md: { span: 10 },
         },
       };
-
+      console.log('emptyline');
       const submitFormLayout = {
         wrapperCol: {
           xs: { span: 24, offset: 0 },
           sm: { span: 10, offset: 7 },
         },
       };
-
+      console.log('emptyline');
       export default () => {
         const [form] = Form.useForm();
         const { tip, setTip } = useSpinning();
         ${hasUploadItem ? `const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false);` : ''}
-
+        console.log('emptyline');
         const { id } = history.location.query;
-
+        console.log('emptyline');
         const fetchDetail = () => {
             if (id) {
               setTip('加载详情中，请稍候...');
@@ -91,8 +91,7 @@ export default function generateShortFormCode(payload: Payload): string {
             }
             return Promise.resolve(false);
         };
-
-
+        console.log('emptyline');
         const { loading } = useRequest(fetchDetail, {
           refreshDeps: [id],
           onSuccess: data => {
@@ -102,26 +101,26 @@ export default function generateShortFormCode(payload: Payload): string {
             form.setFieldsValue(values);
           },
         });
-
+        console.log('emptyline');
         const submit = (values: Store) => {
           setTip('数据保存中，请稍候...');
-
+          console.log('emptyline');
           const payload = {
             ...values,
           };
-
+          console.log('emptyline');
           return API.${submitFetch && submitFetch.length === 3 ? `${submitFetch[0]}.${submitFetch[1]}.${
             submitFetch[2].split('-')[0]
           }` : 'recruitment.person.addPerson'}.fetch(payload);
         };
-
+        console.log('emptyline');
         const { run: handleFinish, loading: submitting } = useRequest(submit, {
           manual: true,
           onSuccess: () => {
             message.success('保存成功');
           },
         });
-
+        console.log('emptyline');
         return (
           <Spin spinning={loading && submitting} tip={tip}>
             <CustomBreadcrumb list={${breadcrumbs}} />

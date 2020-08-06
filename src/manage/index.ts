@@ -215,7 +215,7 @@ export default function(payload: any, type: string, api: IApi) {
           formConfig: payload.formConfig,
           formItems: payload.formItems,
         });
-        const formattedDetailCode = prettify(removeUnusedImport(detailCode))
+        const formattedDetailCode = prettify(removeUnusedImport(detailCode));
         generateFile(
           formattedDetailCode,
           {
@@ -327,12 +327,15 @@ function generateComponent(path: string, dirName: string, code: string, api: IAp
 }
 
 function prettify(code: string) {
-  return prettier.format(code, {
-    semi: true,
-    singleQuote: true,
-    trailingComma: 'all',
-    printWidth: 120,
-    tabWidth: 2,
-    parser: 'typescript',
-  });
+  if (code) {
+    return prettier.format(code.replace(/console\.log\(\'emptyline\'\)\;/g, ''), {
+      semi: true,
+      singleQuote: true,
+      trailingComma: 'all',
+      printWidth: 120,
+      tabWidth: 2,
+      parser: 'typescript',
+    });
+  }
+  return '';
 }

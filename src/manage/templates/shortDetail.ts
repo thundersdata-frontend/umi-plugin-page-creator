@@ -31,7 +31,7 @@ export default function generateShortDetail(payload: Payload): string {
       import Title from '@/components/Title';
       import DetailValue from '@/components/DetailValue';
       ${breadcrumbs.length > 1 && `import CustomBreadcrumb from '@/components/CustomBreadcrumb';`}
-
+      console.log('emptyline');
       const formItemLayout = {
         labelCol: {
           xs: { span: 24 },
@@ -43,11 +43,11 @@ export default function generateShortDetail(payload: Payload): string {
           md: { span: 10 },
         },
       };
-
+      console.log('emptyline');
       export default () => {
         const [form] = Form.useForm();
         const { id } = history.location.query;
-
+        console.log('emptyline');
         const { loading } = useRequest(API.${initialFetch && initialFetch.length === 3 ? `${initialFetch[0]}.${initialFetch[1]}.${
           initialFetch[2].split('-')[0]
         }` : 'recruitment.person.getPerson'}.fetch(
@@ -61,7 +61,7 @@ export default function generateShortDetail(payload: Payload): string {
             form.setFieldsValue(values);
           }
         });
-
+        console.log('emptyline');
         return (
           <Spin spinning={loading}>
             <CustomBreadcrumb list={${breadcrumbs}} />
