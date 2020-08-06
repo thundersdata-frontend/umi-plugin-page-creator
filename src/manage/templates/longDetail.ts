@@ -22,7 +22,7 @@ export default function generateLongFormCode(payload: Payload): string {
     const breadcrumbs = generateBreadcrumbs(menu);
 
     const code = `
-      import React, { useCallback } from 'react';
+      import React from 'react';
       import {
         Form,
         Card,

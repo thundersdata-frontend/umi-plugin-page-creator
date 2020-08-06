@@ -19,7 +19,7 @@ export function createFormComponentsByType(
     case 'input':
     default:
       return `
-        <Input placeholder="请输入" ${propsStr} />
+        <Input ${props.placeholder ? '' : `placeholder="请输入"`} ${propsStr} />
       `;
     case 'cascader':
       return `<Cascader ${propsStr} />`;

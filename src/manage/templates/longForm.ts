@@ -20,12 +20,12 @@ export default function generateLongFormCode(payload: Payload): string {
   if (payload && payload.cards) {
     const { cards = [], initialFetch, submitFetch, menu } = payload;
     const formItems = cards.reduce((acc, curr) => acc.concat(curr.formItems), [] as FormItemProps[]);
-    const item = formItems.find(item => item.type === 'upload');
+    const hasUploadItem = formItems.find(item => item.type === 'upload');
 
     const breadcrumbs = generateBreadcrumbs(menu);
 
     const code = `
-      import React, { useCallback ${item ? ', useState' : ''} } from 'react';
+      import React ${hasUploadItem ? ', { useState }' : ''} from 'react';
       import {
         Form,
         Button,
@@ -52,8 +52,8 @@ export default function generateLongFormCode(payload: Payload): string {
       import { useRequest } from 'ahooks';
       import { Store } from 'antd/es/form/interface';
       import Title from '@/components/Title';
-      import FooterToolbar from '@/components/FooterToolbar';
       import useSpinning from '@/hooks/useSpinning';
+      import FooterToolbar from '@/components/FooterToolbar';
       ${breadcrumbs.length > 1 && `import CustomBreadcrumb from '@/components/CustomBreadcrumb';`}
 
       const colLayout = {
@@ -71,7 +71,7 @@ export default function generateLongFormCode(payload: Payload): string {
       export default () => {
         const [form] = Form.useForm();
         const { tip, setTip } = useSpinning();
-        ${item ? `const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false);` : ''}
+        ${hasUploadItem ? `const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false);` : ''}
 
         const { id } = history.location.query;
 
@@ -84,7 +84,7 @@ export default function generateLongFormCode(payload: Payload): string {
               { personCode: id },
             );
           }
-          return false;
+          return Promise.resolve(false);
         };
 
         const { loading } = useRequest(fetchDetail, {
@@ -175,12 +175,12 @@ export default function generateLongFormCode(payload: Payload): string {
                 `;
                 })
                 .join('')}
-              <FooterToolbar>
+              <FooterToolbar style={{ zIndex: 9 }}>
                 <Button
                   type="primary"
                   onClick={() => form.submit()}
                   loading={submitting}
-                  ${item ? 'disabled={submitBtnDisabled}' : ''}
+                  ${hasUploadItem ? 'disabled={submitBtnDisabled}' : ''}
                 >
                   提交
                 </Button>

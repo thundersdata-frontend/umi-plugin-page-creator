@@ -21,12 +21,12 @@ export interface Payload {
 export default function generateShortFormCode(payload: Payload): string {
   if (payload && payload.formConfig && payload.formItems) {
     const { formConfig, formItems, initialFetch, submitFetch, menu, } = payload;
-    const item = formItems.find(item => item.type === 'upload');
+    const hasUploadItem = formItems.find(item => item.type === 'upload');
 
     const breadcrumbs = generateBreadcrumbs(menu);
 
     const code = `
-      import React, { useCallback ${item ? ', useState' : ''} } from 'react';
+      import React ${hasUploadItem ? ', { useState }' : ''} from 'react';
       import {
         Form,
         Button,
@@ -75,8 +75,8 @@ export default function generateShortFormCode(payload: Payload): string {
 
       export default () => {
         const [form] = Form.useForm();
-        const { tip, setTip } = useSpinning(loading);
-        ${item ? `const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false);` : ''}
+        const { tip, setTip } = useSpinning();
+        ${hasUploadItem ? `const [submitBtnDisabled, setSubmitBtnDisabled] = useState(false);` : ''}
 
         const { id } = history.location.query;
 
@@ -89,7 +89,7 @@ export default function generateShortFormCode(payload: Payload): string {
                 { personCode: id },
               );
             }
-            return false;
+            return Promise.resolve(false);
         };
 
 
@@ -158,10 +158,9 @@ export default function generateShortFormCode(payload: Payload): string {
                   })
                   .join('')}
                 <Form.Item {...submitFormLayout} style={{ marginTop: 32 }}>
-                  <Button type="primary" htmlType="submit" loading={submitting} ${item ? 'disabled={submitBtnDisabled}' : ''}>
+                  <Button type="primary" htmlType="submit" loading={submitting} ${hasUploadItem ? 'disabled={submitBtnDisabled}' : ''}>
                     提交
                   </Button>
-                  <Button style={{ marginLeft: 10 }}>取消</Button>
                 </Form.Item>
               </Form>
             </Card>

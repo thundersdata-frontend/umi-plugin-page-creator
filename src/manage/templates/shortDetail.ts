@@ -24,7 +24,7 @@ export default function generateShortDetail(payload: Payload): string {
     const breadcrumbs = generateBreadcrumbs(menu);
 
     const code = `
-      import React, { useCallback } from 'react';
+      import React from 'react';
       import { Card, Form, Spin } from 'antd';
       import { history } from 'umi';
       import { useRequest } from 'ahooks';
