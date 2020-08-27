@@ -194,7 +194,7 @@ export default function <T>({
             ]}
           />
         </Form.Item>
-        <Form.Item label="不在查询里显示" name="hideInTable">
+        <Form.Item label="不在table里显示" name="hideInTable">
           <Radio.Group
             options={[
               { label: '是', value: true },

@@ -284,8 +284,7 @@ function generatePage(path: string, code: string, api: IApi, menu = '', createMe
     mkdirSync(absPagesPath + path, { recursive: true });
     writeFileSync(absPagesPath + `${path}/index.tsx`, code, 'utf-8');
 
-    const menus = menu.includes('/') ? menu.split('/') : [];
-    const title = menus.length > 0 ? menus.pop() : '';
+    const title = menu.includes('/') ? menu.split('/').pop() : menu;
     writeNewRoute(
       {
         path,

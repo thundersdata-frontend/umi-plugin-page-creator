@@ -22,7 +22,6 @@ export default () => {
   const [tableConfig, setTableConfig] = useState<Store>({
     headerTitle: '表格配置',
     rowKey: 'id',
-    search: true,
     bordered: false,
   });
 
@@ -93,7 +92,6 @@ export default () => {
       const {
         tableConfig = {
           headerTitle: '表格配置',
-          search: false,
           bordered: true,
         },
         columns = [],
