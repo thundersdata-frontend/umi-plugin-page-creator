@@ -3,18 +3,20 @@
  * @公司: thundersdata
  * @作者: 陈杰
  * @Date: 2020-05-07 14:04:41
- * @LastEditors: 黄姗姗
- * @LastEditTime: 2020-05-22 17:05:04
+ * @LastEditors: 廖军
+ * @LastEditTime: 2020-10-10 10:15:51
  */
 import { Store } from 'antd/lib/form/interface';
 import { createFormComponentsByType, generateRules } from './util';
 import { FormItemProps } from '../../../interfaces/common';
+import { getPageNameByPath } from '..';
 
 export interface Payload {
   formConfig: Store;
   formItems: FormItemProps[];
   submitFetch?: string[];
   fromTable: boolean;
+  path: string;
 }
 
 export default function generateShortFormModalCode(payload: Payload): string {
@@ -50,6 +52,7 @@ export default function generateShortFormModalCode(payload: Payload): string {
       import { useRequest } from 'ahooks';
       import useSpinning from '@/hooks/useSpinning';
       ${fromTable && `import { ActionType } from '@ant-design/pro-table';`}
+      import { getVerificationRules } from '@/pages/${getPageNameByPath(payload.path)}/validators';
       console.log('emptyline');
       const formLayout = {
         labelCol: { span: 6 },
@@ -134,7 +137,7 @@ export default function generateShortFormModalCode(payload: Payload): string {
                       label="${label}"
                       name="${name}"
                       ${required ? `required` : ``}
-                      ${rules !== '[]' ? `rules={${rules}}` : ''}
+                      ${`rules={[...${rules}, ...getVerificationRules('${name}').rules]}`}
                       ${type === 'upload' ? `
                       valuePropName="fileList"
                       getValueFromEvent={e => {

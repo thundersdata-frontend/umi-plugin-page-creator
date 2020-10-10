@@ -3,17 +3,19 @@
  * @公司: thundersdata
  * @作者: 陈杰
  * @Date: 2020-05-08 16:05:30
- * @LastEditors: 黄姗姗
- * @LastEditTime: 2020-05-25 09:48:07
+ * @LastEditors: 廖军
+ * @LastEditTime: 2020-10-10 10:15:36
  */
 import { createFormComponentsByType, transformFormItemLines, generateRules, generateBreadcrumbs } from './util';
 import { CardItemProps, FormItemProps } from '../../../interfaces/common';
+import { getPageNameByPath } from '..';
 
 export interface Payload {
   cards: CardItemProps[];
   initialFetch?: string[];
   submitFetch?: string[];
   menu: string;
+  path: string;
 }
 
 export default function generateLongFormCode(payload: Payload): string {
@@ -55,6 +57,7 @@ export default function generateLongFormCode(payload: Payload): string {
       import useSpinning from '@/hooks/useSpinning';
       import FooterToolbar from '@/components/FooterToolbar';
       ${breadcrumbs.length > 1 && `import CustomBreadcrumb from '@/components/CustomBreadcrumb';`}
+      import { getVerificationRules } from '@/pages/${getPageNameByPath(payload.path)}/validators';
       console.log('emptyline');
       const colLayout = {
         lg: {
@@ -80,9 +83,9 @@ export default function generateLongFormCode(payload: Payload): string {
             setTip('加载详情中，请稍候...');
             return API.${initialFetch && initialFetch.length === 3 ? `${initialFetch[0]}.${initialFetch[1]}.${
               initialFetch[2].split('-')[0]
-            }` : 'recruitment.person.getPerson'}.fetch(
+            }.fetch({ id })` : `recruitment.person.getPerson.fetch(
               { personCode: id },
-            );
+            )`};
           }
           return Promise.resolve(false);
         };
@@ -151,7 +154,7 @@ export default function generateLongFormCode(payload: Payload): string {
                                     label="${label}"
                                     name="${name}"
                                     ${required ? `required` : ``}
-                                    ${rules !== '[]' ? `rules={${rules}}` : ''}
+                                    ${`rules={[...${rules}, ...getVerificationRules('${name}').rules]}`}
                                     ${type === 'upload' ? `
                                     valuePropName="fileList"
                                     getValueFromEvent={e => {

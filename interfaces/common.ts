@@ -3,10 +3,10 @@
  * @公司: thundersdata
  * @作者: 陈杰
  * @Date: 2020-04-29 21:58:39
- * @LastEditors: 黄姗姗
- * @LastEditTime: 2020-05-28 18:53:47
+ * @LastEditors: 廖军
+ * @LastEditTime: 2020-10-09 17:03:40
  */
-import { Store } from "antd/lib/form/interface";
+import { Store } from 'antd/lib/form/interface';
 import { ColumnType } from 'antd/lib/table';
 
 export type FormItemType =
@@ -78,3 +78,19 @@ export type ConfigProps = {
   tableConfig?: Store;
   columns?: ColumnType<any>[];
 };
+
+/**
+ * 表字段验证配置
+ */
+export interface TableVerificationRuleList {
+  appVerificationRuleCode: string;
+  tableCode: string;
+  tableName: string;
+  tableFieldCode: string;
+  isRequired: boolean;
+  requiredMaxLength: number;
+  requiredMinLength: number;
+  fieldName: string;
+  fieldType: string;
+  pattern: string;
+}
