@@ -3,8 +3,8 @@
  * @公司: thundersdata
  * @作者: 陈杰
  * @Date: 2020-05-07 14:06:48
- * @LastEditors: 陈杰
- * @LastEditTime: 2020-05-15 19:34:37
+ * @LastEditors: 廖军
+ * @LastEditTime: 2020-10-10 16:50:07
  */
 import generateShortFormCode from './shortForm';
 import generateLongFormCode from './longForm';
@@ -15,6 +15,8 @@ import generateShortFormModalCode from './shortFormModal';
 import generateLongFormModalCode from './longFormModal';
 import generateShortDetailModalCode from './shortDetailModal';
 import generateLongDetailModalCode from './longDetailModal';
+import generateFormActionMethodsCode from './formActionMethods';
+import generateFormActionMethodsModalCode from './formActionMethodsModal';
 
 export {
   generateShortFormCode,
@@ -26,4 +28,6 @@ export {
   generateLongFormModalCode,
   generateShortDetailModalCode,
   generateLongDetailModalCode,
+  generateFormActionMethodsCode,
+  generateFormActionMethodsModalCode,
 };

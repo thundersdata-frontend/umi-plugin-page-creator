@@ -11,6 +11,8 @@ import {
   generateLongFormModalCode,
   generateShortDetailModalCode,
   generateLongDetailModalCode,
+  generateFormActionMethodsCode,
+  generateFormActionMethodsModalCode,
 } from './templates';
 import { removeUnusedImport } from '../utils/removeUnusedImport';
 import { writeNewRoute } from '../utils/writeNewRoute';
@@ -19,6 +21,7 @@ import { TableVerificationRuleList } from '../../interfaces/common';
 
 export default function(payload: any, type: string, api: IApi) {
   let code = '';
+  const pageName = getPageNameByPath(payload.path || payload.formPath);
   switch (type) {
     case 'org.umi-plugin-page-creator.shortForm':
     default:
@@ -77,6 +80,20 @@ export default function(payload: any, type: string, api: IApi) {
           false,
         );
       }
+      // 生成供table使用的中间组件
+      pageName &&
+        generateComponent(
+          `/${pageName}`,
+          'FormActionMethods',
+          prettify(
+            generateFormActionMethodsCode({
+              pageName,
+              initialFetch: payload.initialFetch,
+              generateDetail: payload.generateDetail,
+            }),
+          ),
+          api,
+        );
       return true;
 
     case 'org.umi-plugin-page-creator.shortFormModal':
@@ -130,6 +147,19 @@ export default function(payload: any, type: string, api: IApi) {
           api,
         );
       }
+      // 生成供table使用的中间组件
+      pageName &&
+        generateComponent(
+          `/${pageName}`,
+          'FormActionMethodsModal',
+          prettify(
+            generateFormActionMethodsModalCode({
+              initialFetch: payload.initialFetch,
+              generateDetail: payload.generateDetail,
+            }),
+          ),
+          api,
+        );
       return true;
 
     case 'org.umi-plugin-page-creator.longForm':
@@ -185,6 +215,20 @@ export default function(payload: any, type: string, api: IApi) {
           false,
         );
       }
+      // 生成供table使用的中间组件
+      pageName &&
+        generateComponent(
+          `/${pageName}`,
+          'FormActionMethods',
+          prettify(
+            generateFormActionMethodsCode({
+              pageName,
+              initialFetch: payload.initialFetch,
+              generateDetail: payload.generateDetail,
+            }),
+          ),
+          api,
+        );
       return true;
 
     case 'org.umi-plugin-page-creator.longFormModal':
@@ -238,6 +282,19 @@ export default function(payload: any, type: string, api: IApi) {
           api,
         );
       }
+      // 生成供table使用的中间组件
+      pageName &&
+        generateComponent(
+          `/${pageName}`,
+          'FormActionMethodsModal',
+          prettify(
+            generateFormActionMethodsModalCode({
+              initialFetch: payload.initialFetch,
+              generateDetail: payload.generateDetail,
+            }),
+          ),
+          api,
+        );
       return true;
 
     case 'org.umi-plugin-page-creator.shortDetail':

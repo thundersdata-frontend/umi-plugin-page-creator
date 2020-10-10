@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-05-08 16:05:30
  * @LastEditors: 廖军
- * @LastEditTime: 2020-10-10 10:15:44
+ * @LastEditTime: 2020-10-10 17:40:45
  */
 import { createFormComponentsByType, transformFormItemLines, generateRules } from './util';
 import { FormItemProps } from '../../../interfaces/common';
@@ -57,7 +57,6 @@ export default function generateLongFormModalCode(payload: Payload): string {
       import { isEmpty } from 'lodash-es';
       import { useRequest } from 'ahooks';
       import useSpinning from '@/hooks/useSpinning';
-      ${fromTable && `import { ActionType } from '@ant-design/pro-table';`}
       import { getVerificationRules } from '@/pages/${getPageNameByPath(payload.path)}/validators';
       console.log('emptyline');
       const twoColumnsLayout = {
@@ -70,13 +69,13 @@ export default function generateLongFormModalCode(payload: Payload): string {
         toggleVisible,
         formData,
         loading,
-        ${fromTable && `tableRef,`}
+        ${fromTable && `reload,`}
       }: {
         visible: boolean;
         toggleVisible: () => void;
         formData: Store;
         loading: boolean;
-        ${fromTable && `tableRef: ActionType;`}
+        ${fromTable && `reload?: () => void;`}
       }) => {
         const [form] = Form.useForm();
         const { tip, setTip } = useSpinning();
@@ -110,7 +109,7 @@ export default function generateLongFormModalCode(payload: Payload): string {
           onSuccess: () => {
             message.success('保存成功');
             form.resetFields();
-            ${fromTable && `tableRef.reload();`}
+            ${fromTable && `reload && reload();`}
           }
         });
         console.log('emptyline');
