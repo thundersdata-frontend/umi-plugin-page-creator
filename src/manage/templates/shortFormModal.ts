@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-05-07 14:04:41
  * @LastEditors: 廖军
- * @LastEditTime: 2020-10-10 10:15:51
+ * @LastEditTime: 2020-10-10 17:41:18
  */
 import { Store } from 'antd/lib/form/interface';
 import { createFormComponentsByType, generateRules } from './util';
@@ -51,7 +51,6 @@ export default function generateShortFormModalCode(payload: Payload): string {
       import { Store } from 'antd/es/form/interface';
       import { useRequest } from 'ahooks';
       import useSpinning from '@/hooks/useSpinning';
-      ${fromTable && `import { ActionType } from '@ant-design/pro-table';`}
       import { getVerificationRules } from '@/pages/${getPageNameByPath(payload.path)}/validators';
       console.log('emptyline');
       const formLayout = {
@@ -64,13 +63,13 @@ export default function generateShortFormModalCode(payload: Payload): string {
         toggleVisible,
         formData,
         loading,
-        ${fromTable && `tableRef,`}
+        ${fromTable && `reload,`}
       }: {
         visible: boolean;
         toggleVisible: () => void;
         formData: Store;
         loading: boolean;
-        ${fromTable && `tableRef: ActionType;`}
+        ${fromTable && `reload?: () => void;`}
       }) => {
         const [form] = Form.useForm();
         const { tip, setTip } = useSpinning();
@@ -104,7 +103,7 @@ export default function generateShortFormModalCode(payload: Payload): string {
           onSuccess: () => {
             message.success('保存成功');
             form.resetFields();
-            ${fromTable && `tableRef.reload();`}
+            ${fromTable && `reload && reload();`}
           },
         });
         console.log('emptyline');
