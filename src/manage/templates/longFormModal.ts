@@ -3,18 +3,20 @@
  * @公司: thundersdata
  * @作者: 陈杰
  * @Date: 2020-05-08 16:05:30
- * @LastEditors: 黄姗姗
- * @LastEditTime: 2020-05-25 09:48:26
+ * @LastEditors: 廖军
+ * @LastEditTime: 2020-10-10 10:15:44
  */
 import { createFormComponentsByType, transformFormItemLines, generateRules } from './util';
 import { FormItemProps } from '../../../interfaces/common';
 import { Store } from 'antd/lib/form/interface';
+import { getPageNameByPath } from '..';
 
 export interface Payload {
   formConfig: Store;
   formItems: FormItemProps[];
   submitFetch?: string[];
   fromTable: boolean;
+  path: string;
 }
 
 export default function generateLongFormModalCode(payload: Payload): string {
@@ -56,6 +58,7 @@ export default function generateLongFormModalCode(payload: Payload): string {
       import { useRequest } from 'ahooks';
       import useSpinning from '@/hooks/useSpinning';
       ${fromTable && `import { ActionType } from '@ant-design/pro-table';`}
+      import { getVerificationRules } from '@/pages/${getPageNameByPath(payload.path)}/validators';
       console.log('emptyline');
       const twoColumnsLayout = {
         labelCol: { span: 8 },
@@ -147,7 +150,7 @@ export default function generateLongFormModalCode(payload: Payload): string {
                                   label="${label}"
                                   name="${name}"
                                   ${required ? `required` : ``}
-                                  ${rules !== '[]' ? `rules={${rules}}` : ''}
+                                  ${`rules={[...${rules}, ...getVerificationRules('${name}').rules]}`}
                                   ${type === 'upload' ? `
                                   valuePropName="fileList"
                                   getValueFromEvent={e => {

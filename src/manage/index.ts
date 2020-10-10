@@ -1,5 +1,5 @@
 import { IApi } from 'umi';
-import { writeFileSync, mkdirSync, existsSync } from 'fs';
+import { writeFileSync, mkdirSync, existsSync, appendFileSync } from 'fs';
 import prettier from 'prettier';
 import {
   generateShortFormCode,
@@ -15,12 +15,14 @@ import {
 import { removeUnusedImport } from '../utils/removeUnusedImport';
 import { writeNewRoute } from '../utils/writeNewRoute';
 import { writeNewMenu } from '../utils/writeNewMenu';
+import { TableVerificationRuleList } from '../../interfaces/common';
 
 export default function(payload: any, type: string, api: IApi) {
   let code = '';
   switch (type) {
     case 'org.umi-plugin-page-creator.shortForm':
     default:
+      generateValidatorFile(api, getPageNameByPath(payload.path), []);
       if (!payload.generateDetail) {
         code = generateShortFormCode({
           formConfig: payload.formConfig,
@@ -28,6 +30,7 @@ export default function(payload: any, type: string, api: IApi) {
           initialFetch: payload.initialFetch,
           submitFetch: payload.submitFetch,
           menu: payload.menu,
+          path: payload.path,
         });
         const formattedCode = prettify(removeUnusedImport(code));
         generateFile(
@@ -45,6 +48,7 @@ export default function(payload: any, type: string, api: IApi) {
           initialFetch: payload.initialFetch,
           submitFetch: payload.submitFetch,
           menu: payload.formMenu,
+          path: payload.formPath,
         });
         const formattedFormCode = prettify(removeUnusedImport(formCode));
         generateFile(
@@ -76,12 +80,14 @@ export default function(payload: any, type: string, api: IApi) {
       return true;
 
     case 'org.umi-plugin-page-creator.shortFormModal':
+      generateValidatorFile(api, getPageNameByPath(payload.path), []);
       if (!payload.generateDetail) {
         code = generateShortFormModalCode({
           formConfig: payload.formConfig,
           formItems: payload.formItems,
           submitFetch: payload.submitFetch,
           fromTable: payload.fromTable,
+          path: payload.path,
         });
         const formattedCode = prettify(removeUnusedImport(code));
         generateFile(
@@ -98,6 +104,7 @@ export default function(payload: any, type: string, api: IApi) {
           formItems: payload.formItems,
           submitFetch: payload.submitFetch,
           fromTable: payload.fromTable,
+          path: payload.formPath,
         });
         const formattedFormCode = prettify(removeUnusedImport(formCode));
         generateFile(
@@ -126,12 +133,14 @@ export default function(payload: any, type: string, api: IApi) {
       return true;
 
     case 'org.umi-plugin-page-creator.longForm':
+      generateValidatorFile(api, getPageNameByPath(payload.path), []);
       if (!payload.generateDetail) {
         code = generateLongFormCode({
           cards: payload.cards,
           initialFetch: payload.initialFetch,
           submitFetch: payload.submitFetch,
           menu: payload.menu,
+          path: payload.path,
         });
         const formattedCode = prettify(removeUnusedImport(code));
         generateFile(
@@ -148,6 +157,7 @@ export default function(payload: any, type: string, api: IApi) {
           initialFetch: payload.initialFetch,
           submitFetch: payload.submitFetch,
           menu: payload.formMenu,
+          path: payload.path,
         });
         const formattedFormCode = prettify(removeUnusedImport(formCode));
         generateFile(
@@ -178,12 +188,14 @@ export default function(payload: any, type: string, api: IApi) {
       return true;
 
     case 'org.umi-plugin-page-creator.longFormModal':
+      generateValidatorFile(api, getPageNameByPath(payload.path), []);
       if (!payload.generateDetail) {
         code = generateLongFormModalCode({
           formConfig: payload.formConfig,
           formItems: payload.formItems,
           submitFetch: payload.submitFetch,
           fromTable: payload.fromTable,
+          path: payload.path,
         });
         const formattedCode = prettify(removeUnusedImport(code));
         generateFile(
@@ -200,6 +212,7 @@ export default function(payload: any, type: string, api: IApi) {
           formItems: payload.formItems,
           submitFetch: payload.submitFetch,
           fromTable: payload.fromTable,
+          path: payload.formPath,
         });
         const formattedFormCode = prettify(removeUnusedImport(formCode));
         generateFile(
@@ -254,7 +267,7 @@ export default function(payload: any, type: string, api: IApi) {
  * @param code
  * @param payload
  */
-function generateFile(
+export function generateFile(
   code: string,
   payload: { path: string; menu?: string; dirName?: string },
   api: IApi,
@@ -277,7 +290,7 @@ function generateFile(
  * @param path
  * @param code
  */
-function generatePage(path: string, code: string, api: IApi, menu = '', createMenu = true) {
+export function generatePage(path: string, code: string, api: IApi, menu = '', createMenu = true) {
   const absPagesPath = api.paths.absPagesPath;
   if (!existsSync(absPagesPath + path)) {
     // 根据传入的路径，创建对应的文件夹以及index.tsx文件
@@ -313,7 +326,7 @@ function generatePage(path: string, code: string, api: IApi, menu = '', createMe
  * @param dirName
  * @param code
  */
-function generateComponent(path: string, dirName: string, code: string, api: IApi) {
+export function generateComponent(path: string, dirName: string, code: string, api: IApi) {
   const absPagesPath = api.paths.absPagesPath;
   if (!existsSync(absPagesPath + path + '/components')) {
     mkdirSync(absPagesPath + path + '/components', { recursive: true });
@@ -325,7 +338,7 @@ function generateComponent(path: string, dirName: string, code: string, api: IAp
   }
 }
 
-function prettify(code: string) {
+export function prettify(code: string) {
   if (code) {
     return prettier.format(code.replace(/console\.log\(\'emptyline\'\)\;/g, ''), {
       semi: true,
@@ -337,4 +350,114 @@ function prettify(code: string) {
     });
   }
   return '';
+}
+
+/**
+ * 生成表单验证文件
+ * @param api
+ * @param pageName
+ * @param tableVerificationRuleList
+ */
+export function generateValidatorFile(
+  api: IApi,
+  pageName: string,
+  tableVerificationRuleList: TableVerificationRuleList[],
+) {
+  if (!pageName) {
+    return;
+  }
+  const pagePath = `${api.paths.absPagesPath}/${pageName}`;
+  const generatePath = `${pagePath}/validators.ts`;
+  const getMaxLengthValidator = (maxLength: number = 0) =>
+    maxLength > 0
+      ? `{
+          validator: (_: unknown, value: string, callback: (message?: string) => void) => {
+            if (value && value.length > ${maxLength}) {
+              callback('超出最大长度限制');
+            } else {
+              callback();
+            }
+        },`
+      : '';
+  const getMinLengthValidator = (minLength: number = 0) =>
+    minLength > 0
+      ? `{
+          validator: (_: unknown, value: string, callback: (message?: string) => void) => {
+            if (value && value.length < ${minLength}) {
+              callback('小于最小长度限制');
+            } else {
+              callback();
+            }
+        },`
+      : '';
+  const code = `
+  import { Rule } from 'antd/es/form';
+
+  /** 
+   * 表单配置的规则
+   */
+  export const VERIFICATION_RULE = {
+    ${tableVerificationRuleList
+      .map(
+        ({
+          fieldName,
+          isRequired,
+          requiredMaxLength,
+          requiredMinLength,
+          pattern,
+        }) => `${fieldName}: {
+      required: ${isRequired},
+      requiredMaxLength: ${requiredMaxLength},
+      rules: [
+        {
+          required: ${isRequired},
+        },${pattern ? `{ pattern: new RegExp(${pattern})},` : ''}${getMaxLengthValidator(
+          requiredMaxLength,
+        )}${getMinLengthValidator(requiredMinLength)}
+        }
+      ],
+    }`,
+      )
+      .join('\n')}
+  }
+
+  /**
+   * 根据字段获取对应的校验内容
+   */
+  export const getVerificationRules = (fileName: string) => 
+    (VERIFICATION_RULE[fileName] || {
+      rules: [],
+    }) as {
+      required?: boolean;
+      requiredMaxLength?: number;
+      rules: Rule[];
+    };
+  `;
+  // 如果该page文件还没生成，则先生成一个文件夹
+  if (!existsSync(pagePath)) {
+    mkdirSync(pagePath);
+  }
+  reWriteFile(generatePath, prettify(code));
+}
+
+/**
+ * 重写file
+ * @param path
+ * @param content
+ */
+export function reWriteFile(path: string, content: string) {
+  if (existsSync(path)) {
+    writeFileSync(path, content, 'utf8');
+  } else {
+    appendFileSync(path, content, 'utf8');
+  }
+}
+
+/**
+ * 根据路径获取pageName
+ * @param path
+ */
+export function getPageNameByPath(path: string = '') {
+  const paths = path.split('/');
+  return paths[0] || paths[1];
 }
