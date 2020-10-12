@@ -4,7 +4,7 @@
  * @作者: 廖军
  * @Date: 2020-10-10 16:26:10
  * @LastEditors: 廖军
- * @LastEditTime: 2020-10-10 16:38:15
+ * @LastEditTime: 2020-10-12 10:47:09
  */
 
 export interface Payload {
@@ -36,7 +36,7 @@ export default ({ initialFetch = [], generateDetail }: Payload) => {
         ref,
         reload,
       }: {
-        ref: React.MutableRefObject<FormActionMethodsInstance>;
+        ref: React.MutableRefObject<FormActionMethodsInstance | null>;
         reload?: () => void;
       }) => {
         const [editModalConfig, setEditModalConfig] = useImmer<{
@@ -75,31 +75,31 @@ export default ({ initialFetch = [], generateDetail }: Payload) => {
         });
       
         /** 新增 */
-        ref.current.onAdd = () =>
+        ref.current!.onAdd = () =>
           setEditModalConfig(config => {
             config.visible = true;
             config.formData = {};
           });
       
         /** 删除 */
-        ref.current.onDelete = (row: Store) => handleDelete(row.id);
+        ref.current!.onDelete = (row: Store) => handleDelete(row.id);
       
         /** 编辑 */
-        ref.current.onEdit = (row: Store) =>
+        ref.current!.onEdit = (row: Store) =>
           setEditModalConfig(config => {
             config.visible = true;
             config.formData = row;
           });
       
         ${generateDetail ? `/** 查看 */
-        ref.current.onPreview = (row: Store) =>
+        ref.current!.onPreview = (row: Store) =>
           setDetailModalConfig(config => {
             config.visible = true;
             config.formData = row;
           });` : ''}
       
         /** 批量删除 */
-        ref.current.onDeleteBatch = (ids: number[]) => handleDeleteBatch(ids);
+        ref.current!.onDeleteBatch = (ids: number[]) => handleDeleteBatch(ids);
       
         return (
           <>

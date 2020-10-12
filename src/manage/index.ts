@@ -151,7 +151,7 @@ export default function(payload: any, type: string, api: IApi) {
       pageName &&
         generateComponent(
           `/${pageName}`,
-          'FormActionMethodsModal',
+          'FormActionMethods',
           prettify(
             generateFormActionMethodsModalCode({
               initialFetch: payload.initialFetch,
@@ -286,7 +286,7 @@ export default function(payload: any, type: string, api: IApi) {
       pageName &&
         generateComponent(
           `/${pageName}`,
-          'FormActionMethodsModal',
+          'FormActionMethods',
           prettify(
             generateFormActionMethodsModalCode({
               initialFetch: payload.initialFetch,
@@ -312,7 +312,22 @@ export default function(payload: any, type: string, api: IApi) {
       code = generateLongDetailModalCode(payload);
       break;
     case 'org.umi-plugin-page-creator.table':
-      code = generateTableCode(payload);
+      // 生成供table使用的中间组件，仅在不存在该文件时生成，主要通过表单配置生成，这里为了防止table页面引用报错
+      pageName &&
+        !existsSync(`${api.paths.absPagesPath}/${pageName}/components/FormActionMethods`) &&
+        generateComponent(
+          `/${pageName}`,
+          'FormActionMethods',
+          prettify(
+            generateFormActionMethodsCode({
+              pageName,
+              initialFetch: payload.initialFetch,
+              generateDetail: payload.generateDetail,
+            }),
+          ),
+          api,
+        );
+      code = generateTableCode({ ...payload, pageName });
       break;
   }
   const prettifyCode = prettify(removeUnusedImport(code));

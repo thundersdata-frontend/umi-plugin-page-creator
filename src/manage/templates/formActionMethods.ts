@@ -4,7 +4,7 @@
  * @作者: 廖军
  * @Date: 2020-10-10 16:15:04
  * @LastEditors: 廖军
- * @LastEditTime: 2020-10-10 17:34:47
+ * @LastEditTime: 2020-10-12 10:46:43
  */
 
 export interface Payload {
@@ -35,7 +35,7 @@ export default ({ pageName, initialFetch = [], generateDetail }: Payload) => {
         ref,
         reload,
       }: {
-        ref: React.MutableRefObject<FormActionMethodsInstance>;
+        ref: React.MutableRefObject<FormActionMethodsInstance | null>;
         reload?: () => void;
       }) => {
         const { run: handleDelete } = useRequest(${apiStr}.remove.fetch, {
@@ -54,19 +54,19 @@ export default ({ pageName, initialFetch = [], generateDetail }: Payload) => {
         });
 
         /** 新增 */
-        ref.current.onAdd = () => history.push('/${pageName}/edit');
+        ref.current!.onAdd = () => history.push('/${pageName}/edit');
 
         /** 删除 */
-        ref.current.onDelete = (row: Store) => handleDelete(row.id);
+        ref.current!.onDelete = (row: Store) => handleDelete(row.id);
 
         /** 编辑 */
-        ref.current.onEdit = (row: Store) => history.push(\`/${pageName}/edit?id=\${row.id}\`);
+        ref.current!.onEdit = (row: Store) => history.push(\`/${pageName}/edit?id=\${row.id}\`);
 
         ${generateDetail ? `/** 查看 */
-        ref.current.onPreview = (row: Store) => history.push(\`/${pageName}/detail?id=\${row.id}\`);` : ''}
+        ref.current!.onPreview = (row: Store) => history.push(\`/${pageName}/detail?id=\${row.id}\`);` : ''}
 
         /** 批量删除 */
-        ref.current.onDeleteBatch = (ids: number[]) => handleDeleteBatch(ids);
+        ref.current!.onDeleteBatch = (ids: number[]) => handleDeleteBatch(ids);
 
         return <></>;
       };
