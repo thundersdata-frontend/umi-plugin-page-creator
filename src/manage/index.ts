@@ -25,7 +25,7 @@ export default function(payload: any, type: string, api: IApi) {
   switch (type) {
     case 'org.umi-plugin-page-creator.shortForm':
     default:
-      generateValidatorFile(api, getPageNameByPath(payload.path), []);
+      generateValidatorFile(api, pageName, []);
       if (!payload.generateDetail) {
         code = generateShortFormCode({
           formConfig: payload.formConfig,
@@ -97,7 +97,7 @@ export default function(payload: any, type: string, api: IApi) {
       return true;
 
     case 'org.umi-plugin-page-creator.shortFormModal':
-      generateValidatorFile(api, getPageNameByPath(payload.path), []);
+      generateValidatorFile(api, pageName, []);
       if (!payload.generateDetail) {
         code = generateShortFormModalCode({
           formConfig: payload.formConfig,
@@ -163,7 +163,7 @@ export default function(payload: any, type: string, api: IApi) {
       return true;
 
     case 'org.umi-plugin-page-creator.longForm':
-      generateValidatorFile(api, getPageNameByPath(payload.path), []);
+      generateValidatorFile(api, pageName, []);
       if (!payload.generateDetail) {
         code = generateLongFormCode({
           cards: payload.cards,
@@ -232,7 +232,7 @@ export default function(payload: any, type: string, api: IApi) {
       return true;
 
     case 'org.umi-plugin-page-creator.longFormModal':
-      generateValidatorFile(api, getPageNameByPath(payload.path), []);
+      generateValidatorFile(api, pageName, []);
       if (!payload.generateDetail) {
         code = generateLongFormModalCode({
           formConfig: payload.formConfig,
