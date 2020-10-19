@@ -486,7 +486,6 @@ export function generateValidatorFile(
         },${pattern ? `{ pattern: new RegExp(${pattern})},` : ''}${getMaxLengthValidator(
           requiredMaxLength,
         )}${getMinLengthValidator(requiredMinLength)}
-        }
       ],
     }`,
       )
