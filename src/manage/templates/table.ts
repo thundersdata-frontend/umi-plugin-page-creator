@@ -4,7 +4,7 @@
  * @作者: 陈杰
  * @Date: 2020-05-08 16:14:11
  * @LastEditors: 廖军
- * @LastEditTime: 2020-10-12 10:52:09
+ * @LastEditTime: 2020-10-27 14:07:26
  */
 import { Store } from 'antd/lib/form/interface';
 import { ColumnType } from 'antd/lib/table';
@@ -38,7 +38,7 @@ export default function generateTable<T>(payload: Payload<T>): string {
       console.log('emptyline');
       export default () => {
         const actionRef = useRef<ActionType>();
-        const formActionRef = useRef<FormActionMethodsInstance>(null);
+        const formActionRef = useRef<FormActionMethodsInstance>({});
         const columns: ProColumns<${initialFetch && initialFetch.length === 3 ? `defs.${initialFetch[0]}.${initialFetch[2].split('-')[2]}` : 'defs.recruitment.PersonResultDTO'}>[] = [${[...columnsStrings, `
           {
             title: '操作',
