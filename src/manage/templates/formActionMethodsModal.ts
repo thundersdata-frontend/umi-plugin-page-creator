@@ -4,7 +4,7 @@
  * @作者: 廖军
  * @Date: 2020-10-10 16:26:10
  * @LastEditors: 廖军
- * @LastEditTime: 2020-10-12 10:47:09
+ * @LastEditTime: 2020-10-27 14:09:49
  */
 
 export interface Payload {
@@ -16,7 +16,7 @@ export default ({ initialFetch = [], generateDetail }: Payload) => {
     const apiStr = initialFetch.length === 3 ? 
       `API.${initialFetch[0]}.${initialFetch[1]}` : 'API.recruitment.person';
     return `
-      import React from 'react';
+      import React, { forwardRef } from 'react';
       import { Store } from 'antd/es/form/interface';
       import { useRequest } from 'ahooks';
       import { message } from 'antd';
@@ -32,13 +32,8 @@ export default ({ initialFetch = [], generateDetail }: Payload) => {
         onDeleteBatch?: (ids: number[]) => void;
       }
       
-      export default ({
-        ref,
-        reload,
-      }: {
-        ref: React.MutableRefObject<FormActionMethodsInstance | null>;
-        reload?: () => void;
-      }) => {
+      export default forwardRef<FormActionMethodsInstance, { reload?: () => void }>(({ reload }, ref) => {
+        const formActionRef = ref as React.MutableRefObject<FormActionMethodsInstance>;
         const [editModalConfig, setEditModalConfig] = useImmer<{
           visible: boolean;
           formData: Store;
@@ -75,31 +70,31 @@ export default ({ initialFetch = [], generateDetail }: Payload) => {
         });
       
         /** 新增 */
-        ref.current!.onAdd = () =>
+        formActionRef.current.onAdd = () =>
           setEditModalConfig(config => {
             config.visible = true;
             config.formData = {};
           });
       
         /** 删除 */
-        ref.current!.onDelete = (row: Store) => handleDelete(row.id);
+        formActionRef.current.onDelete = (row: Store) => handleDelete(row.id);
       
         /** 编辑 */
-        ref.current!.onEdit = (row: Store) =>
+        formActionRef.current.onEdit = (row: Store) =>
           setEditModalConfig(config => {
             config.visible = true;
             config.formData = row;
           });
       
         ${generateDetail ? `/** 查看 */
-        ref.current!.onPreview = (row: Store) =>
+        formActionRef.current.onPreview = (row: Store) =>
           setDetailModalConfig(config => {
             config.visible = true;
             config.formData = row;
           });` : ''}
       
         /** 批量删除 */
-        ref.current!.onDeleteBatch = (ids: number[]) => handleDeleteBatch(ids);
+        formActionRef.current.onDeleteBatch = (ids: number[]) => handleDeleteBatch(ids);
       
         return (
           <>
@@ -130,6 +125,6 @@ export default ({ initialFetch = [], generateDetail }: Payload) => {
             />` : ''}
           </>
         );
-      };    
+      });    
     `;
 }
