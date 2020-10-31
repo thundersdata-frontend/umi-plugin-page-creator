@@ -1,5 +1,5 @@
 import { IApi } from 'umi';
-import { writeFileSync, mkdirSync, existsSync, appendFileSync } from 'fs';
+import { writeFileSync, mkdirSync, existsSync, appendFileSync, unlinkSync } from 'fs';
 import prettier from 'prettier';
 import {
   generateShortFormCode,
@@ -387,6 +387,13 @@ export function generatePage(path: string, code: string, api: IApi, menu = '', c
       }
       writeNewMenu({ path, menu }, api.paths.cwd + '/mock/route.ts');
     }
+  } else {
+    // 如果该页面文件已存在，重新写入
+    const filePath = absPagesPath + `${path}/index.tsx`;
+    if (existsSync(filePath)) {
+      unlinkSync(filePath);
+    }
+    writeFileSync(filePath, code, 'utf-8');
   }
 }
 
@@ -407,6 +414,13 @@ export function generateComponent(path: string, dirName: string, code: string, a
   if (!existsSync(prefixPath + dirName)) {
     mkdirSync(prefixPath + dirName, { recursive: true });
     writeFileSync(prefixPath + `${dirName}/index.tsx`, code, 'utf-8');
+  } else {
+    // 如果该组件文件已存在，重新写入
+    const filePath = prefixPath + `${dirName}/index.tsx`;
+    if (existsSync(filePath)) {
+      unlinkSync(filePath);
+    }
+    writeFileSync(filePath, code, 'utf-8');
   }
 }
 
@@ -473,13 +487,14 @@ export function generateValidatorFile(
       .map(
         ({
           fieldName,
-          isRequired,
+          isRequired = false,
           requiredMaxLength,
           requiredMinLength,
           pattern,
         }) => `${fieldName}: {
-      required: ${isRequired},
-      requiredMaxLength: ${requiredMaxLength},
+          required: ${isRequired},${
+          requiredMaxLength ? `requiredMaxLength: ${requiredMaxLength},` : ''
+        }
       rules: [
         {
           required: ${isRequired},
@@ -487,7 +502,7 @@ export function generateValidatorFile(
           requiredMaxLength,
         )}${getMinLengthValidator(requiredMinLength)}
       ],
-    }`,
+    },`,
       )
       .join('\n')}
   }
