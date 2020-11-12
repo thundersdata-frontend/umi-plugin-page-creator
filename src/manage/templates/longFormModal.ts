@@ -69,13 +69,13 @@ export default function generateLongFormModalCode(payload: Payload): string {
         toggleVisible,
         formData,
         loading,
-        ${fromTable && `reload,`}
+        ${fromTable ? `reload,` : ''}
       }: {
         visible: boolean;
         toggleVisible: () => void;
         formData: Store;
         loading: boolean;
-        ${fromTable && `reload?: () => void;`}
+        ${fromTable ? `reload?: () => void;` : ''}
       }) => {
         const [form] = Form.useForm();
         const { tip, setTip } = useSpinning();
@@ -109,7 +109,7 @@ export default function generateLongFormModalCode(payload: Payload): string {
           onSuccess: () => {
             message.success('保存成功');
             form.resetFields();
-            ${fromTable && `reload && reload();`}
+            ${fromTable ? `reload && reload();` : ''}
           }
         });
         console.log('emptyline');

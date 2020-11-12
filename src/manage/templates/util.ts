@@ -36,13 +36,13 @@ export function createFormComponentsByType(
       />`;
 
     case 'date':
-      return `<DatePicker placeholder="请选择" ${propsStr} />`;
+      return `<DatePicker ${props.placeholder ? '' : `placeholder="请选择"`} ${propsStr} />`;
 
     case 'number':
       return `<InputNumber ${propsStr} />`;
 
     case 'password':
-      return `<Input.Password placeholder="请输入密码" ${propsStr} />`;
+      return `<Input.Password ${props.placeholder ? '' : `placeholder="请输入密码"`} ${propsStr} />`;
 
     case 'radio':
       const { options: radioOptions, ...radioProps } = props;
@@ -61,7 +61,7 @@ export function createFormComponentsByType(
 
     case 'select':
       const { options: selectOptions, ...selectProps } = props;
-      return `<Select placeholder="请选择" ${generatePropsStr(selectProps)}>
+      return `<Select ${props.placeholder ? '' : `placeholder="请选择"`} ${generatePropsStr(selectProps)}>
         ${(selectOptions
           ? (eval((selectOptions as string).replace(/\u21b5/g, '')) as LabeledValue[])
           : []
@@ -77,13 +77,13 @@ export function createFormComponentsByType(
       return `<Switch ${propsStr} />`;
 
     case 'textarea':
-      return `<Input.TextArea placeholder="请输入" ${propsStr} />`;
+      return `<Input.TextArea ${props.placeholder ? '' : `placeholder="请输入"`} ${propsStr} />`;
 
     case 'time':
       return `<TimePicker ${propsStr} />`;
 
     case 'treeselect':
-      return `<TreeSelect placeholder="请选择" ${propsStr} />`;
+      return `<TreeSelect ${props.placeholder ? '' : `placeholder="请选择"`} ${propsStr} />`;
 
     case 'upload':
       return `<Upload onChange={info => {
